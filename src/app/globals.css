@@ -1,26 +1,50 @@
+@import url('https://api.fontshare.com/v2/css?f[]=chillax@400,500,600,700&display=swap');
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* =========================================
+     COLORE: Sfondo e Testo di Base del Sito
+     Modifica questi HEX per cambiare il livello "root"
+     ========================================= */
+  --background: #315AA3;
+  --foreground: #FFFFFF;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  
+  /* =========================================
+     COLORE: Palette Dinamica del Progetto
+     Queste variabili sono utilizzate in tutto il codice con il prefisso "bg-brand-...", "text-brand-..."
+     ========================================= */
+  --color-brand-bg: #315AA3;       /* Sfondo Blu Principale (es. Hero) */
+  --color-brand-primary: #064789;  /* Sfondo Blu Scuro (es. Footer e Cards) */
+  --color-brand-secondary: #427AA1;/* Sfondo Azzurro (es. CTA) */
+  --color-brand-third: #427AA1;    /* Azzurro di supporto */
+  --color-brand-accent: #FF7A01;   /* Arancione per i bottoni e piccoli accenti di contrasto */
+  --color-brand-neutral: #EBF2FA;  /* Bianco Sporco/Azzurrino Neutro (es. Sfondo Stats) */
+  --color-contrast: #FFFFFF;       /* Colore per i testi scuri su sfondo blu (Bianco) */
+  
+  /* =========================================
+     FONT: Famiglie di Caratteri
+     ========================================= */
+  --font-sans: var(--font-geist-sans), sans-serif;
+  --font-mono: var(--font-geist-mono), monospace;
+  --font-chillax: 'Chillax', sans-serif; /* Font istituzionale e formale (H1-H6) */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  body {
+    background-color: var(--background);
+    color: var(--foreground);
+    @apply font-sans antialiased;
+    overflow-x: hidden;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  /* FORMA E FONT: Tutti i titoli del sito assumono il font Chillax */
+  h1, h2, h3, h4, h5, h6, .font-chillax {
+    font-family: var(--font-chillax);
+    font-weight: 500;
+  }
 }
