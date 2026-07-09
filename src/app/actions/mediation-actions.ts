@@ -37,18 +37,28 @@ const mediationSchema = z.object({
   convenutoTelefono: z.string().max(50).nullable().optional(),
 });
 
-// Helper per ottenere (o creare se assenti) le Sedi/Aree di competenza
 export async function getAreeAction() {
+  const targetNames = ["Maglie", "Manfredonia", "Lecce"];
   let aree = await db.query.area.findMany();
-  if (aree.length === 0) {
-    const defaultAree = [
-      { nomeArea: "Sede Principale - Roma" },
-      { nomeArea: "Sede Milano" },
-      { nomeArea: "Sede Napoli" },
-      { nomeArea: "Sede Torino" },
-    ];
-    await db.insert(area).values(defaultAree).onConflictDoNothing();
-    aree = await db.query.area.findMany();
+  
+  const hasIncorrectAree = aree.some(a => !targetNames.includes(a.nomeArea)) || aree.length !== targetNames.length;
+  
+  if (hasIncorrectAree || aree.length === 0) {
+    try {
+      // Proviamo ad eliminare le vecchie sedi se non ci sono vincoli
+      await db.delete(area);
+      await db.insert(area).values(targetNames.map(name => ({ nomeArea: name })));
+      aree = await db.query.area.findMany();
+    } catch (e) {
+      // Se fallisce per vincoli di integrità (es. mediazioni collegate), inseriamo solo quelle mancanti
+      for (const name of targetNames) {
+        const exists = aree.some(a => a.nomeArea === name);
+        if (!exists) {
+          await db.insert(area).values({ nomeArea: name }).onConflictDoNothing();
+        }
+      }
+      aree = await db.query.area.findMany();
+    }
   }
   return aree;
 }

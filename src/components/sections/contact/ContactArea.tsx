@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Mail,
@@ -21,11 +21,22 @@ import {
   Info,
 } from "lucide-react";
 import Image from "next/image";
-import { createMediationRequestAction } from "@/app/actions/mediation-actions";
+import { createMediationRequestAction, getAreeAction } from "@/app/actions/mediation-actions";
 
 export const ContactArea = () => {
   // SELETTORE TAB PRINCIPALE
   const [activeTab, setActiveTab] = useState<"mediazione" | "generale">("mediazione");
+  const [aree, setAree] = useState<{ id: number; nomeArea: string }[]>([]);
+
+  useEffect(() => {
+    getAreeAction().then((data) => {
+      setAree(data);
+      if (data.length > 0) {
+        setMediationData((prev) => ({ ...prev, areaId: data[0].id.toString() }));
+      }
+    });
+  }, []);
+
 
   // ==========================================
   // TAB 1: WIZARD RICHIESTA DI MEDIAZIONE ADR
@@ -370,10 +381,11 @@ export const ContactArea = () => {
                               onChange={handleMediationChange}
                               className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
                             >
-                              <option value="1">Sede Principale - Roma</option>
-                              <option value="2">Sede Milano</option>
-                              <option value="3">Sede Napoli</option>
-                              <option value="4">Sede Torino</option>
+                              {aree.map((a) => (
+                                <option key={a.id} value={a.id.toString()}>
+                                  {a.nomeArea}
+                                </option>
+                              ))}
                             </select>
                           </div>
 
