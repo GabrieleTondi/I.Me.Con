@@ -1,0 +1,128 @@
+## 1. Dizionario delle Entità
+
+### 1.1 Anagrafiche di Base e Tabelle di Lookup
+
+#### `QUALIFICA`
+
+Contiene le qualifiche professionali dei soggetti censiti nel sistema.
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco autoincrementale.
+* **`nome_qualifica`** (`varchar`, Unique, Not Null): Titolo o qualifica (es. *Avvocato*, *Dottore*, *Ingegnere*).
+
+#### `RUOLO`
+
+Definisce i ruoli operativi interni che gli utenti possono assumere nel sistema.
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco autoincrementale.
+* **`nome_ruolo`** (`varchar`, Unique, Not Null): Nome del ruolo di sistema (es. *Mediatore*, *Operatore di Segreteria*, *Amministratore*).
+
+#### `AREA`
+
+Rappresenta la competenza o la sede territoriale dell'organismo di mediazione.
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco autoincrementale.
+* **`nome_area`** (`varchar`, Unique, Not Null): Denominazione della sede (es. *Roma*, *Milano*, *Lecce*).
+
+#### `STATO_MEDIAZIONE`
+
+Tabella di lookup che centralizza gli stati del ciclo di vita di una pratica. Evita l'uso di testo libero, standardizzando i flussi applicativi.
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco autoincrementale.
+* **`codice`** (`varchar`, Unique, Not Null): Codice mnemonico standardizzato (es. `DA_ASSEGNARE`, `IN_CORSO`, `ARCHIVIATA`).
+* **`descrizione`** (`varchar`, Not Null): Descrizione estesa dello stato per l'interfaccia utente (es. *In attesa di assegnazione mediatore*).
+
+---
+
+### 1.2 Entità Principali
+
+#### `UTENTE`
+
+Censisce il personale interno all'organismo (segreteria, mediatori, admin).
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco.
+* **`nome_cognome`** (`varchar`, Not Null): Nome e cognome dell'utente.
+* **`email`** (`varchar`, Unique, Not Null): Indirizzo email principale e di login.
+* **`telefono`** / **`indirizzo`** (`varchar`, Null): Recapiti opzionali.
+* **`username`** (`varchar`, Unique, Not Null): Identificativo per l'autenticazione.
+* **`attivo`** (`boolean`, Default: `true`): Stato di abilitazione dell'account.
+* **`accreditato`** (`boolean`, Default: `false`): Flag di verifica ministeriale o formale.
+* **`pubblica`** (`boolean`, Default: `false`): Visibilità del profilo in elenchi pubblici.
+* **`ultimo_login`** (`timestamptz`, Null): Data e ora dell'ultimo accesso con fuso orario.
+* **`qualifica_id`** (`integer`, FK, Null): Riferimento alla tabella `QUALIFICA`.
+
+#### `SOGGETTO`
+
+Anagrafica unica e disaccoppiata delle parti esterne coinvolte nelle liti (istanti, convenuti, avvocati).
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco.
+* **`tipo_soggetto`** (`char(2)`, Not Null): Vincolato tramite `CHECK` ai valori `PF` (Persona Fisica) o `PG` (Persona Giuridica).
+* **`denominazione`** (`varchar`, Not Null): Cognome/Nome o Ragione Sociale.
+* **`codice_fiscale_piva`** (`varchar`, Unique, Not Null): Codice Fiscale o Partita IVA (campo unico di controllo fiscale).
+* **`email`** / **`telefono`** (`varchar`, Null): Contatti del soggetto.
+
+#### `MEDIAZIONE`
+
+Il nucleo del database. Rappresenta il fascicolo o la pratica di mediazione.
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco.
+* **`protocollo`** (`varchar`, Unique, Not Null): Chiave naturale di business (es. `126/2026`).
+* **`oggetto`** (`text`, Not Null): Descrizione sintetica della controversia.
+* **`valore`** (`numeric(15,2)`, Default: `0.00`): Valore economico della lite (tipo a precisione esatta).
+* **`data_inserimento`** (`date`, Default: `CURRENT_DATE`): Data di apertura della pratica.
+* **`stato_id`** (`integer`, FK, Not Null): Riferimento allo stato corrente (`STATO_MEDIAZIONE`).
+* **`mediatore_id`** (`integer`, FK, Null): Riferimento all'utente designato come mediatore (`UTENTE`).
+* **`area_id`** (`integer`, FK, Not Null): Sede territoriale di competenza (`AREA`).
+
+---
+
+### 1.3 Entità Dipendenti
+
+#### `SEDUTA`
+
+Rappresenta i singoli incontri fissati per una determinata mediazione. Modella la relazione dinamica 1:N per evitare il limite delle colonne fisse.
+
+* **`id`** (`integer`, PK, Identity): Identificativo univoco della seduta.
+* **`mediazione_id`** (`integer`, FK, Not Null): Pratica di riferimento (`MEDIAZIONE`). Cancella a cascata (`ON DELETE CASCADE`) se la pratica viene rimossa.
+* **`numero_progressivo`** (`integer`, Not Null): Progressivo dell'incontro (es. `1` per il primo incontro, `2` per il secondo, ecc.).
+* **`data_seduta`** (`timestamptz`, Not Null): Data e ora esatta dell'incontro.
+* **`nota_verbale`** (`text`, Null): Annotazioni, esito o rinvii dell'incontro.
+* *Vincolo d'Unicità:* La coppia (`mediazione_id`, `numero_progressivo`) è protetta da un vincolo `UNIQUE` per evitare doppie assegnazioni dello stesso progressivo sulla stessa pratica.
+
+---
+
+## 2. Relazioni e Tabelle Ponte (Molti-a-Molti)
+
+Le relazioni complesse (N:M) sono state normalizzate mediante tabelle ponte con chiavi primarie composte:
+
+### `UTENTE_RUOLO` (Associazione Competenze Interne)
+
+Collega gli utenti ai loro ruoli operativi. Un utente può essere contemporaneamente *Mediatore* e *Operatore*.
+
+* **`utente_id`** (`integer`, PK, FK)
+* **`ruolo_id`** (`integer`, PK, FK)
+
+### `UTENTE_AREA` (Associazione Territoriale Operatori)
+
+Definisce in quali sedi o aree geografiche un utente è abilitato a operare.
+
+* **`utente_id`** (`integer`, PK, FK)
+* **`area_id`** (`integer`, PK, FK)
+
+### `MEDIAZIONE_SOGGETTO` (Coinvolgimento Parti nella Lite)
+
+Collega i soggetti esterni alle pratiche di mediazione, esplicitando il ruolo specifico assunto in quel determinato contesto.
+
+* **`mediazione_id`** (`integer`, PK, FK)
+* **`soggetto_id`** (`integer`, PK, FK)
+* **`ruolo_nella_lite`** (`varchar`, PK): Il ruolo specifico (es. *Istante*, *Convenuto*, *Avvocato Istante*, *Avvocato Convenuto*).
+
+> **Nota Architetturale:** L'inserimento di `ruolo_nella_lite` all'interno della chiave primaria composta permette allo stesso soggetto (es. un Avvocato) di partecipare alla stessa mediazione assistendo più parti, oppure a una persona fisica di essere sia parte in causa che avvocato di se stesso.
+
+---
+
+## 3. Vincoli e Integrità dei Dati (Regole del Database)
+
+1. **Integrità Referenziale Rigida:** Tutte le tabelle di lookup e le entità forti (`QUALIFICA`, `RUOLO`, `AREA`, `STATO_MEDIAZIONE`, `UTENTE`, `SOGGETTO`) adottano la politica `ON DELETE RESTRICT`. Non è possibile eliminare un'anagrafica se è collegata a una pratica o a un utente attivo.
+2. **Integrità Debole Guidata:** La tabella `SEDUTA` adotta `ON DELETE CASCADE` sul riferimento alla mediazione: se un fascicolo viene fisicamente eliminato, tutte le sedute collegate vengono rimosse automaticamente per evitare dati orfani.
+3. **Moneta e Calcoli:** Il campo `valore` in `MEDIAZIONE` usa il tipo `numeric` per impedire l'approssimazione a virgola mobile, garantendo precisione assoluta al centesimo di euro durante le aggregazioni e i report finanziari.
+4. **Gestione del Tempo:** Tutti i campi che registrano eventi con data e ora usano `timestamptz`, demandando a PostgreSQL la normalizzazione sul fuso orario UTC.

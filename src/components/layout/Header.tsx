@@ -1,15 +1,41 @@
 "use client";
 
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import { useState } from 'react';
+import { Menu, X, ChevronDown, LogOut } from 'lucide-react';
+import { useState, useEffect } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Button } from '@/components/ui/Button';
+import { logoutAction } from '@/app/actions/auth-actions';
+
+interface CurrentUser {
+  id: number;
+  nomeCognome: string;
+  email: string;
+  username: string;
+  ruoli: string[];
+  areaIds: number[];
+}
 
 export const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const [user, setUser] = useState<CurrentUser | null>(null);
+  const [showDropdown, setShowDropdown] = useState(false);
 
-  // LOGICA E DATI: Cambia i nomi qui per modficare i link della navigazione
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((res) => res.json())
+      .then((data) => setUser(data.user))
+      .catch(() => setUser(null));
+  }, []);
+
+  const handleLogout = async () => {
+    await logoutAction();
+    setUser(null);
+    setShowDropdown(false);
+  };
+
+  // LOGICA E DATI: Cambia i nomi qui per modificare i link della navigazione
   const links = [
     { name: 'Home', href: '/' },
     { name: 'Chi Siamo', href: '/chi-siamo' },
@@ -59,10 +85,42 @@ export const Header = () => {
       <motion.div 
         initial={{ opacity: 0, x: 20 }} // Appare da destra
         animate={{ opacity: 1, x: 0 }}
-        className="hidden md:block"
+        className="hidden md:block relative"
       >
-        {/* COMPONENTE: Richiama il Button arancione "primary" */}
-        <Button variant="primary" className="text-sm px-5 py-2 rounded-full !text-base">Log In Page</Button>
+        {user ? (
+          <div className="relative">
+            <button 
+              onClick={() => setShowDropdown(!showDropdown)}
+              className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full px-5 py-2 hover:bg-white/20 transition-all font-medium text-sm cursor-pointer"
+            >
+              <span>Ciao, {user.nomeCognome.split(" ")[0]}</span>
+              <ChevronDown size={16} className={`transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} />
+            </button>
+            
+            {showDropdown && (
+              <motion.div 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute right-0 mt-2 w-48 bg-brand-primary border border-white/10 rounded-xl shadow-xl p-2 z-50 text-sm"
+              >
+                <div className="px-3 py-2 border-b border-white/10 text-xs text-white/60">
+                  Ruolo: <span className="font-semibold text-brand-accent">{user.ruoli[0] || "Utente"}</span>
+                </div>
+                <button
+                  onClick={handleLogout}
+                  className="w-full flex items-center gap-2 px-3 py-2 mt-1 text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer"
+                >
+                  <LogOut size={16} />
+                  <span>Disconnetti</span>
+                </button>
+              </motion.div>
+            )}
+          </div>
+        ) : (
+          <Link href="/login">
+            <Button variant="primary" className="text-sm px-5 py-2 rounded-full !text-base">Accedi</Button>
+          </Link>
+        )}
       </motion.div>
 
       {/* ICONA MENU MOBILE (Le lineette "Hamburger") */}
@@ -83,9 +141,24 @@ export const Header = () => {
               {link.name}
             </a>
           ))}
-          <Button variant="secondary" className="w-full mt-2 !text-lg">Log In Page</Button>
+          {user ? (
+            <div className="flex flex-col gap-2 mt-2 border-t border-white/10 pt-4">
+              <div className="text-white/60 text-sm px-2 mb-2">
+                Ciao, <span className="font-medium text-white">{user.nomeCognome}</span> ({user.ruoli[0] || "Utente"})
+              </div>
+              <Button variant="secondary" onClick={handleLogout} className="w-full justify-start gap-2 !text-lg bg-red-950/20 hover:bg-red-950/40 text-red-300 border border-red-900/30">
+                <LogOut size={18} />
+                Disconnetti
+              </Button>
+            </div>
+          ) : (
+            <Link href="/login">
+              <Button variant="secondary" className="w-full mt-2 !text-lg">Accedi</Button>
+            </Link>
+          )}
         </motion.div>
       )}
     </header>
   );
 };
+
