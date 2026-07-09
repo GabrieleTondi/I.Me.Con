@@ -75,6 +75,17 @@ export const seduta = pgTable("seduta", {
   unique("uq_seduta_mediazione_progressivo").on(table.mediazioneId, table.numeroProgressivo),
 ]);
 
+export const documento = pgTable("documento", {
+  id: serial("id").primaryKey(),
+  mediazioneId: integer("mediazione_id").notNull().references(() => mediazione.id, { onDelete: "cascade" }),
+  nomeFile: varchar("nome_file", { length: 255 }).notNull(),
+  nomeOriginale: varchar("nome_originale", { length: 255 }).notNull(),
+  percorsoFile: varchar("percorso_file", { length: 500 }).notNull(),
+  tipoMime: varchar("tipo_mime", { length: 100 }).notNull(),
+  dimensione: integer("dimensione").notNull(),
+  dataCaricamento: timestamp("data_caricamento", { withTimezone: true }).defaultNow().notNull(),
+});
+
 // 2. Relazioni e Tabelle Ponte (Molti-a-Molti)
 
 export const utenteRuolo = pgTable("utente_ruolo", {
@@ -169,6 +180,7 @@ export const mediazioneRelations = relations(mediazione, ({ one, many }) => ({
   }),
   sedute: many(seduta),
   soggetti: many(mediazioneSoggetto),
+  documenti: many(documento),
 }));
 
 export const sedutaRelations = relations(seduta, ({ one }) => ({
@@ -188,3 +200,11 @@ export const mediazioneSoggettoRelations = relations(mediazioneSoggetto, ({ one 
     references: [soggetto.id],
   }),
 }));
+
+export const documentoRelations = relations(documento, ({ one }) => ({
+  mediazione: one(mediazione, {
+    fields: [documento.mediazioneId],
+    references: [mediazione.id],
+  }),
+}));
+
