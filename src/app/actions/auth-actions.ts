@@ -4,9 +4,10 @@ import { db } from "@/db";
 import { utente, utenteRuolo, ruolo } from "@/db/schema";
 import { hashPassword, verifyPassword, encryptSession } from "@/lib/auth";
 import { eq, or } from "drizzle-orm";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { isRateLimited } from "@/lib/rate-limit";
 
 // Schemi di validazione Zod per prevenire DoS su password lunghe e sanificare l'input
 const registerSchema = z.object({
@@ -22,7 +23,26 @@ const loginSchema = z.object({
   password: z.string().min(1, "Password obbligatoria").max(128, "Password troppo lunga"),
 });
 
+async function getClientIp(): Promise<string> {
+  try {
+    const reqHeaders = await headers();
+    const forwardedFor = reqHeaders.get("x-forwarded-for");
+    if (forwardedFor) {
+      return forwardedFor.split(",")[0].trim();
+    }
+    return reqHeaders.get("x-real-ip") || "127.0.0.1";
+  } catch {
+    return "127.0.0.1";
+  }
+}
+
 export async function registerAction(prevState: { error: string | null } | unknown, formData: FormData) {
+  const ip = await getClientIp();
+  // Limita a 10 tentativi al minuto per IP
+  if (await isRateLimited(ip, 10, 60000)) {
+    return { error: "Troppi tentativi. Riprova tra un minuto." };
+  }
+
   // Parsing dei campi dal form
   const rawFields = {
     nomeCognome: formData.get("nomeCognome")?.toString().trim(),
@@ -121,6 +141,12 @@ export async function registerAction(prevState: { error: string | null } | unkno
 }
 
 export async function loginAction(prevState: { error: string | null } | unknown, formData: FormData) {
+  const ip = await getClientIp();
+  // Limita a 10 tentativi al minuto per IP
+  if (await isRateLimited(ip, 10, 60000)) {
+    return { error: "Troppi tentativi. Riprova tra un minuto." };
+  }
+
   const rawFields = {
     loginInput: formData.get("loginInput")?.toString().trim(),
     password: formData.get("password")?.toString(),
