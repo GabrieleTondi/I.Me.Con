@@ -29,6 +29,13 @@ export const ContactArea = () => {
   const [aree, setAree] = useState<{ id: number; nomeArea: string }[]>([]);
 
   useEffect(() => {
+    // Leggi il parametro 'tab' dall'URL per decidere quale scheda visualizzare all'avvio
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get("tab");
+    if (tab === "generale" || tab === "mediazione") {
+      setActiveTab(tab);
+    }
+
     getAreeAction().then((data) => {
       setAree(data);
       if (data.length > 0) {

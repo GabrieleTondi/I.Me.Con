@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/Button';
+import Link from 'next/link';
 
 export const CTA = () => {
   return (
@@ -44,13 +45,17 @@ export const CTA = () => {
            className="pt-8 flex flex-col sm:flex-row justify-center gap-6"
         >
            {/* PULSANTE ARANCIONE: variant='primary'. L'ombra è estesa con 'shadow-2xl' */}
-           <Button variant="primary" className="text-xl px-12 py-5 shadow-2xl w-full sm:w-auto">
-             Compila il Form
-           </Button>
+           <Link href="/contatti?tab=mediazione" legacyBehavior passHref>
+             <Button variant="primary" className="text-xl px-12 py-5 shadow-2xl w-full sm:w-auto">
+               Compila il Form
+             </Button>
+           </Link>
            {/* PULSANTE BIANCO: variant='white' */}
-           <Button variant="white" className="text-xl px-12 py-5 shadow-xl w-full sm:w-auto">
-             Contattaci
-           </Button>
+           <Link href="/contatti?tab=generale" legacyBehavior passHref>
+             <Button variant="white" className="text-xl px-12 py-5 shadow-xl w-full sm:w-auto">
+               Contattaci
+             </Button>
+           </Link>
         </motion.div>
       </div>
     </section>

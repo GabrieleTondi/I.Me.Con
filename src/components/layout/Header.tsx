@@ -42,7 +42,6 @@ export const Header = () => {
     { name: 'Dove siamo', href: '/dove-siamo' },
     { name: 'Contatti', href: '/contatti' },
     { name: 'News', href: '/news' },
-    { name: 'Corsi di Aggiornamento', href: '#' }
   ];
 
   return (
