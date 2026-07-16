@@ -8,7 +8,7 @@ async function verify() {
     // 1. Verifica la presenza dei Ruoli
     const roles = await db.select().from(ruolo);
     console.log(`Ruoli trovati nel DB: ${roles.length}`);
-    roles.forEach(r => console.log(` - [ID ${r.id}] ${r.nomeQualifica || r.nomeRuolo}`));
+    roles.forEach(r => console.log(` - [ID ${r.id}] ${r.nomeRuolo}`));
 
     const requiredRoles = ["Amministratore", "Mediatore", "Segreteria", "Utente Standard"];
     const foundRoleNames = roles.map(r => r.nomeRuolo);
