@@ -71,7 +71,7 @@ export async function DELETE(req: Request) {
 
   try {
     const testCFs = ["TESTISTANTE12345", "TESTCONVENUTO123", "TESTAVVOCATO1234"];
-    const testEmail = "test_user_unique@example.com";
+    const testEmails = ["test_user_unique@example.com", "direzione@imecon.it"];
 
     await db.transaction(async (tx) => {
       // 1. Trova i soggetti di test
@@ -99,7 +99,7 @@ export async function DELETE(req: Request) {
       }
 
       // 5. Elimina l'utente di test (le relazioni utenteRuolo e utenteArea si eliminano in cascata)
-      await tx.delete(utente).where(eq(utente.email, testEmail));
+      await tx.delete(utente).where(inArray(utente.email, testEmails));
     });
 
     return NextResponse.json({ success: true, message: "Cleaned up test data successfully." });

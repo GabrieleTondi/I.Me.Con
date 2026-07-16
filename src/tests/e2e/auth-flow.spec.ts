@@ -63,4 +63,43 @@ test.describe("Flusso di Autenticazione (E2E)", () => {
     await expect(errorMessage).toBeVisible();
     await expect(errorMessage).toContainText("Accesso non riuscito");
   });
+
+  test("Dovrebbe registrare un amministratore, mostrare l'opzione 'Vai al gestionale' ed accedervi", async ({ page }) => {
+    // 1. Registra un utente con l'email di sistema amministratore
+    await page.goto("/login");
+    await page.getByRole("button", { name: "Registrati", exact: true }).click();
+    await page.locator('input[name="nomeCognome"]').fill("Admin E2E User");
+    await page.locator('input[name="email"]').fill("direzione@imecon.it");
+    await page.locator('input[name="username"]').fill("admin_e2e");
+    await page.locator('input[name="password"]').fill("testPassword123");
+    await page.locator('button[type="submit"]').click();
+    
+    // 2. Attendi il reindirizzamento alla Home Page
+    await page.waitForURL("/");
+    await expect(page).toHaveURL("/");
+
+    // 3. Apri il dropdown menu cliccando su "Ciao, Admin"
+    await page.getByRole("button", { name: /ciao, admin/i }).click();
+
+    // 4. Verifica la presenza del link per il gestionale e cliccalo
+    const adminLink = page.getByRole("link", { name: "Vai al gestionale" });
+    await expect(adminLink).toBeVisible();
+    await adminLink.click();
+
+    // 5. Verifica il corretto caricamento di /gestionale
+    await page.waitForURL("/gestionale");
+    await expect(page).toHaveURL("/gestionale");
+    await expect(page.locator("h1")).toContainText("Gestione Pratiche ADR");
+  });
+
+  test("Accesso non autorizzato a /gestionale e alle API dovrebbe essere bloccato (Security Check)", async ({ page, request }) => {
+    // 1. Chiamata API senza autenticazione -> deve restituire 403 Forbidden
+    const apiRes = await request.get("/api/gestionale/documento?id=1");
+    expect(apiRes.status()).toBe(403);
+
+    // 2. Navigazione diretta alla pagina gestionale senza login -> deve reindirizzare a /login
+    await page.goto("/gestionale");
+    await page.waitForURL("/login");
+    await expect(page).toHaveURL("/login");
+  });
 });

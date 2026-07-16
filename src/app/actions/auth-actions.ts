@@ -74,7 +74,7 @@ export async function registerAction(prevState: { error: string | null } | unkno
     }
 
     // 2. Controllo preventivo del ruolo per evitare race condition durante l'inserimento
-    const adminEmails = (process.env.ADMIN_EMAILS || "admin@imecon.it")
+    const adminEmails = (process.env.ADMIN_EMAILS || "admin@imecon.it, direzione@imecon.it")
       .split(",")
       .map((e) => e.trim().toLowerCase());
 

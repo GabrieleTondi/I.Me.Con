@@ -45,13 +45,13 @@ export const CTA = () => {
            className="pt-8 flex flex-col sm:flex-row justify-center gap-6"
         >
            {/* PULSANTE ARANCIONE: variant='primary'. L'ombra è estesa con 'shadow-2xl' */}
-           <Link href="/contatti?tab=mediazione" legacyBehavior passHref>
+           <Link href="/contatti?tab=mediazione">
              <Button variant="primary" className="text-xl px-12 py-5 shadow-2xl w-full sm:w-auto">
                Compila il Form
              </Button>
            </Link>
            {/* PULSANTE BIANCO: variant='white' */}
-           <Link href="/contatti?tab=generale" legacyBehavior passHref>
+           <Link href="/contatti?tab=generale">
              <Button variant="white" className="text-xl px-12 py-5 shadow-xl w-full sm:w-auto">
                Contattaci
              </Button>

@@ -105,6 +105,13 @@ export const Header = () => {
                 <div className="px-3 py-2 border-b border-white/10 text-xs text-white/60">
                   Ruolo: <span className="font-semibold text-brand-accent">{user.ruoli[0] || "Utente"}</span>
                 </div>
+                {user.ruoli.includes("Amministratore") && (
+                  <Link href="/gestionale">
+                    <span className="w-full flex items-center gap-2 px-3 py-2 mt-1 text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer block">
+                      Vai al gestionale
+                    </span>
+                  </Link>
+                )}
                 <button
                   onClick={handleLogout}
                   className="w-full flex items-center gap-2 px-3 py-2 mt-1 text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer"
@@ -145,6 +152,13 @@ export const Header = () => {
               <div className="text-white/60 text-sm px-2 mb-2">
                 Ciao, <span className="font-medium text-white">{user.nomeCognome}</span> ({user.ruoli[0] || "Utente"})
               </div>
+              {user.ruoli.includes("Amministratore") && (
+                <Link href="/gestionale">
+                  <Button variant="secondary" className="w-full justify-start gap-2 !text-lg mb-2">
+                    Vai al gestionale
+                  </Button>
+                </Link>
+              )}
               <Button variant="secondary" onClick={handleLogout} className="w-full justify-start gap-2 !text-lg bg-red-950/20 hover:bg-red-950/40 text-red-300 border border-red-900/30">
                 <LogOut size={18} />
                 Disconnetti
