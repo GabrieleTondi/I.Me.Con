@@ -9,7 +9,21 @@
 [![Vitest](https://img.shields.io/badge/Vitest-Passed-green?logo=vitest&logoColor=white)](https://vitest.dev/)
 [![Playwright](https://img.shields.io/badge/Playwright-E2E_Passed-green?logo=playwright&logoColor=white)](https://playwright.dev/)
 
-Institutional and management web platform for the **I.Me.Con Mediation and Conciliation Institute**, an organization accredited by the Italian Ministry of Justice. It enables the online submission and management of mediation requests for Alternative Dispute Resolution (ADR), featuring a private area for users and advanced security and control tools.
+Institutional and management web platform for the **I.Me.Con Mediation and Conciliation Institute**, an organization accredited by the Italian Ministry of Justice. It enables the online submission and management of mediation requests for Alternative Dispute Resolution (ADR), featuring a public informative portal, a private user area, and an advanced **Administration Dashboard** (`/gestionale`) for online case monitoring.
+
+---
+
+## 🌟 Key Features
+
+* **Public Informative Portal**: Dynamic pages presenting institutional services, branch office locations (`OfficesMap`), mission, values, and real-time legal updates and news (`NewsContainer`).
+* **Multi-Step Mediation Wizard**: Guided submission of formal mediation requests (`/contatti`), automatically generating official protocols in the format `ADR-YYYY-XXXXXX` upon submission.
+* **Role-Based Authentication**: Secure JWT session handling stored in HttpOnly/Secure cookies with role verification (`Amministratore`, `Mediatore`, `Segreteria`, `Utente`).
+* **Online Administration Portal (`/gestionale`)**:
+  * **Quick Navigation**: Directly accessible from the header profile dropdown (`"Vai al gestionale"`) for authenticated administrators.
+  * **Real-Time Search & Filtering**: Filter mediation practices by protocol, keywords, dispute object, competent seat (`Sede`), or case status (`Stato`).
+  * **Interactive Case Inspection**: Detailed modal interface presenting full dispute details, involved parties (`soggetti`), scheduled hearings (`sedute`), and financial indicators.
+  * **Browser-Based Document Preview**: Online viewing of uploaded mediation attachments (`/api/gestionale/documento`) directly within the browser without requiring repeated local downloads.
+* **Enterprise Security & OWASP Hardening**: HTTP security headers (CSP, HSTS, X-Frame-Options) and an in-memory IP Rate Limiter protecting sensitive authentication endpoints.
 
 ---
 
@@ -18,7 +32,7 @@ Institutional and management web platform for the **I.Me.Con Mediation and Conci
 2. [Project Structure](#-project-structure)
 3. [System Requirements](#-system-requirements)
 4. [Configuration and Installation](#-configuration-and-installation)
-5. [Database & Migrazioni](#-database--migrations)
+5. [Database & Migrations](#-database--migrations)
 6. [Local Development](#-local-development)
 7. [Testing Suite](#-testing-suite)
 8. [Security & Hardening (OWASP)](#-security--hardening-owasp)
@@ -31,19 +45,19 @@ Institutional and management web platform for the **I.Me.Con Mediation and Conci
 ### Frontend & Logic
 * **Next.js 16.2.4** (App Router & React Server Actions)
 * **React 19.2.4**
-* **Tailwind CSS v4** with PostCSS for a modern and flexible style
-* **Framer Motion** for smooth micro-animations and page transitions
-* **Lucide React** for vector iconography
+* **Tailwind CSS v4** with PostCSS for modern, responsive styling and glassmorphism UI
+* **Framer Motion** for smooth micro-animations, modals, and page transitions
+* **Lucide React** for crisp vector iconography
 
 ### Backend & Database
-* **PostgreSQL** as the relational database for production and testing
-* **Drizzle ORM** for schema definition, typed query management, and migrations
-* **Zod** for robust input data validation and form security
+* **PostgreSQL** as the relational database engine
+* **Drizzle ORM** for type-safe schema definition, relational query management, and automated migrations
+* **Zod** for strict runtime validation of server actions and forms
 
 ### Testing Suite
-* **Vitest** for unit testing (password hashing, session encryption)
-* **Playwright** for E2E testing (registration flow, login, mediation request wizard)
-* **PowerShell Custom Runner** for complete end-to-end integration tests (DB checks, GET routes, APIs, and submission outcomes)
+* **Vitest** for unit testing (authentication hashing, session encryption, and management logic)
+* **Playwright** for End-to-End browser testing (registration flow, login, multi-step mediation wizard)
+* **PowerShell Integration Runner** for automated end-to-end API and database lifecycle verification
 
 ---
 
@@ -51,41 +65,44 @@ Institutional and management web platform for the **I.Me.Con Mediation and Conci
 
 ```text
 I.Me.Con/
-├── .github/workflows/    # CI/CD Pipeline (GitHub Actions)
-├── public/               # Graphic and static assets
+├── .github/workflows/    # CI/CD Pipeline configuration (GitHub Actions)
+├── public/               # Static assets and curated imagery
 ├── src/
 │   ├── app/              # Next.js App Router pages
-│   │   ├── actions/      # Server Actions (Registration, Login, Mediation Submission)
-│   │   ├── api/          # API endpoints and special testing/cleanup endpoints
-│   │   ├── chi-siamo/    # "About Us" information page
-│   │   ├── contatti/     # Contacts Page & Mediation Request Wizard
-│   │   ├── dove-siamo/   # Contacts and branch offices map page
-│   │   └── login/        # Restricted Area (Registration/Login)
+│   │   ├── actions/      # Server Actions (Auth, Registration, Mediation Submission)
+│   │   ├── api/          # API routes (`/api/auth/me`, `/api/gestionale/documento`, test helpers)
+│   │   ├── chi-siamo/    # "About Us" institutional page
+│   │   ├── contatti/     # Contacts & Multi-Step Mediation Submission Wizard
+│   │   ├── dove-siamo/   # Branch offices map and directions
+│   │   ├── gestionale/   # Admin Management Portal (`page.tsx`, `GestionaleClient.tsx`)
+│   │   ├── login/        # Restricted Area (Login/Registration)
+│   │   └── news/         # Legal updates and press releases
 │   ├── components/       # Reusable React components
-│   │   ├── layout/       # Structural components (Header, Footer)
-│   │   ├── sections/     # Page blocks (Contacts, Home)
-│   │   └── ui/           # Atomic UI components (Button)
-│   ├── db/               # Database Configuration
-│   │   ├── schema.ts     # Drizzle table schemas (Postgres)
-│   │   └── seed.ts       # Database initial seeding script
-│   ├── lib/              # Utilities and configuration classes
-│   │   ├── auth.ts       # Authentication, cookie, and session encryption management
-│   │   └── rate-limit.ts # IP Rate Limiter implementation (in-memory)
-│   └── tests/            # Automated tests
-│       ├── e2e/          # Playwright End-to-End tests
-│       ├── unit/         # Vitest Unit tests
-│       └── run_tests.ps1 # PowerShell script for global integration tests
+│   │   ├── layout/       # Structural components (`Header.tsx` with role dropdowns, `Footer.tsx`)
+│   │   ├── sections/     # Page-specific blocks (Hero, CTA, ContactArea, NewsContainer)
+│   │   └── ui/           # Atomic design components (`Button.tsx`)
+│   ├── db/               # Database Layer
+│   │   ├── schema.ts     # Drizzle PostgreSQL tables and relational definitions
+│   │   └── seed.ts       # Initial seeding script (Roles, Statuses, Admin accounts)
+│   ├── lib/              # Core utility functions
+│   │   ├── auth.ts       # Bcrypt hashing, session tokens, and cookie utilities
+│   │   └── rate-limit.ts # In-memory IP rate limiter against brute-force attempts
+│   └── tests/            # Comprehensive automated test suites
+│       ├── e2e/          # Playwright End-to-End flow specifications
+│       ├── unit/         # Vitest unit tests (`auth.test.ts`, `gestionale.test.ts`)
+│       ├── verify-db.ts  # Database schema integrity check script
+│       └── run_tests.ps1 # Global integration runner for Windows PowerShell
 ├── drizzle.config.ts     # Drizzle ORM configuration
-├── playwright.config.ts  # Playwright configuration
-├── vitest.config.ts      # Vitest configuration
-└── next.config.ts        # Next.js configuration (OWASP Headers)
+├── playwright.config.ts  # Playwright browser automation configuration
+├── vitest.config.ts      # Vitest unit testing configuration
+└── next.config.ts        # Next.js configuration and OWASP security headers
 ```
 
 ---
 
 ## 📋 System Requirements
 * **Node.js**: version `20.x` or higher
-* **PostgreSQL**: local or remote instance version `15` or higher
+* **PostgreSQL**: local or remote server instance (version `15` or higher)
 
 ---
 
@@ -103,7 +120,7 @@ I.Me.Con/
    ```
 
 3. **Configure environment variables**:
-   Create a `.env` file in the project root and define the following variables:
+   Create a `.env` file in the project root and provide the following configuration:
    ```env
    # PostgreSQL connection string
    DATABASE_URL="postgres://postgres:password@localhost:5432/imecon"
@@ -111,93 +128,85 @@ I.Me.Con/
    # Session encryption key (at least 32 characters in production)
    SESSION_SECRET="replace_with_secure_and_random_32_char_secret_key"
 
-   # Local directory path for storing uploaded files
+   # Storage directory path for uploaded mediation attachments
    UPLOAD_DIR="./uploads/mediazioni"
 
-   # Comma-separated authorized admin email addresses
-   ADMIN_EMAILS="admin@imecon.it"
+   # Comma-separated list of authorized administrator emails
+   ADMIN_EMAILS="gtondi36@gmail.com,admin@imecon.it"
    ```
 
 ---
 
 ## 🗄️ Database & Migrations
 
-The project manages database schemas using Drizzle ORM.
+The database layer uses Drizzle ORM to maintain type safety across tables and relationships.
 
 * **Schema Synchronization (Drizzle Push)**:
-  Directly synchronizes the database based on the schema defined in `src/db/schema.ts` (useful during development):
-  ```bash
-  npx drizzle-kit push
-  ```
+   Directly push schema changes from `src/db/schema.ts` to the connected PostgreSQL instance:
+   ```bash
+   npx drizzle-kit push
+   ```
 
 * **Initial Seeding**:
-  Populates the database with predefined roles (Amministratore, Mediatore, Segreteria, Utente) and mediation states:
-  ```bash
-  npm run db:seed
-  ```
+   Populates lookup tables with required operational roles (`Amministratore`, `Mediatore`, `Segreteria`, `Utente`), mediation statuses, and initial administrative credentials:
+   ```bash
+   npm run db:seed
+   ```
 
-* **Database Visualizer (Studio)**:
-  Open Drizzle's visual dashboard to explore the tables:
-  ```bash
-  npm run db:studio
-  ```
+* **Database Visualizer (Drizzle Studio)**:
+   Launch the visual UI dashboard to browse and manage database entries:
+   ```bash
+   npm run db:studio
+   ```
 
 * **Database Integrity Check**:
-  Run the script to verify table structure consistency and minimum required data existence:
-  ```bash
-  npx tsx src/tests/verify-db.ts
-  ```
+   Verify that all required tables and constraints are present and accessible:
+   ```bash
+   npx tsx src/tests/verify-db.ts
+   ```
 
 ---
 
 ## 🚀 Local Development
 
-* **Development Server (with fast Turbopack compilation)**:
-  ```bash
-  npm run dev
-  ```
-  The application will be available at [http://localhost:3000](http://localhost:3000).
+* **Start Development Server (with fast Turbopack bundling)**:
+   ```bash
+   npm run dev
+   ```
+   The application will be accessible at [http://localhost:3000](http://localhost:3000).
 
 * **Production Build**:
-  ```bash
-  npm run build
-  # Starts the compiled application
-  npm run start
-  ```
+   ```bash
+   npm run build
+   # Launch the optimized production bundle
+   npm run start
+   ```
 
 ---
 
 ## 🧪 Testing Suite
 
-The suite consists of three complementary testing layers:
+The application guarantees reliability through three complementary testing layers:
 
 ### 1. Unit Tests (Vitest)
-Cover core security logic, correct password hashing, and secure encoding/decoding of session tokens.
+Tests core authentication mechanisms (password hashing and session encryption) as well as administration management dashboard serialization and filtering logic (`auth.test.ts` and `gestionale.test.ts`).
 ```bash
 npx vitest run
 ```
 
 ### 2. End-to-End Tests (Playwright)
-Validate complex user flows by simulating real user actions in a Chromium browser.
-* **Install browser**:
-  ```bash
-  npx playwright install chromium
-  ```
-* **Run E2E tests**:
-  ```bash
-  npx playwright test
-  ```
-  *(Starts a local background server on port `3000` automatically during execution).*
+Validates real user browser interactions across registration, login, and multi-step mediation submission flows.
+* **Install Chromium browser**:
+   ```bash
+   npx playwright install chromium
+   ```
+* **Run automated browser tests**:
+   ```bash
+   npx playwright test
+   ```
 
-### 3. Complete Integration Tests (PowerShell)
-An integrated script that simulates sequential HTTP requests to test:
-* Server reachability
-* Database structural integrity
-* Public GET routes response
-* Full authentication flow (creation, duplication, and login)
-* Successful mediation request submission, official protocol generation (`ADR-YYYY-XXXXXX`), and automatic test data cleanup.
-
-Execution:
+### 3. Complete Integration Suite (PowerShell / Bash)
+An automated script simulating sequential API operations to verify database integrity, public GET routes, user registration/login flows, mediation request deposits (`ADR-YYYY-XXXXXX`), and automated data cleanup.
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\src\tests\run_tests.ps1
 ```
@@ -206,26 +215,27 @@ powershell -ExecutionPolicy Bypass -File .\src\tests\run_tests.ps1
 
 ## 🔒 Security & Hardening (OWASP)
 
-The application implements robust security criteria to protect user data:
+The system enforces strict security practices to safeguard sensitive legal and personal information:
 
 ### 1. HTTP Security Headers
-Within [next.config.ts](file:///c:/WEB SITES/I.Me.Con/next.config.ts), security headers aligned with OWASP standards are defined:
-* **Content-Security-Policy (CSP)**: Restricts sources for authorized scripts, styles, and connections.
-* **X-Frame-Options (DENY)**: Prevents Clickjacking attacks by blocking the site from being embedded in external iframes.
-* **X-Content-Type-Options (nosniff)**: Prevents the browser from interpreting files outside declared MIME types.
-* **Referrer-Policy**: Protects navigation details by sending referrer information only in secure contexts.
-* **HTTP Strict Transport Security (HSTS)**: Forces exclusive use of the HTTPS protocol.
+Within [next.config.ts](file:///c:/WEB SITES/I.Me.Con/next.config.ts), security headers aligned with OWASP guidelines are actively enforced:
+* **Content-Security-Policy (CSP)**: Restricts executable scripts and resources to trusted domains.
+* **X-Frame-Options (DENY)**: Prevents Clickjacking attacks by forbidding external iframe embedding.
+* **X-Content-Type-Options (nosniff)**: Forces strict MIME-type compliance.
+* **Referrer-Policy**: Protects internal navigation details when traversing external links.
+* **HTTP Strict Transport Security (HSTS)**: Mandates secure HTTPS communication across production environments.
 
-### 2. IP Rate Limiting
-An in-memory rate limiter implemented in [rate-limit.ts](file:///c:/WEB SITES/I.Me.Con/src/lib/rate-limit.ts) protects sensitive endpoints (registration, login) from brute-force attacks by limiting submissions to a **maximum of 10 requests per minute per IP address**.
+### 2. IP Rate Limiting & Role-Based Access Control
+* **Brute-Force Protection**: An in-memory rate limiter implemented in [rate-limit.ts](file:///c:/WEB SITES/I.Me.Con/src/lib/rate-limit.ts) limits authentication attempts to a **maximum of 10 requests per minute per IP**.
+* **RBAC Enforcement**: Server-side role checks (`getCurrentUser` and `user.ruoli.includes("Amministratore")`) restrict access to the `/gestionale` dashboard and document endpoints strictly to authorized administrators.
 
 ---
 
 ## ⛓️ CI/CD Integration (GitHub Actions)
 
-The workflow configured in `.github/workflows/test.yml` automates checks on every push or Pull Request to main branches (`main`, `master`):
-1. Starts a built-in PostgreSQL service in Docker.
-2. Installs dependencies in clean install mode (`npm ci`).
-3. Syncs Drizzle schema and seeds the DB (`seed`).
-4. Runs the database integrity check.
-5. Runs the entire unit testing suite using Vitest.
+The continuous integration pipeline (`.github/workflows/test.yml`) automatically runs against every push and Pull Request targeting `main` or `master` branches:
+1. Provisions a clean, isolated PostgreSQL database container in Docker.
+2. Performs deterministic dependency installation (`npm ci`).
+3. Executes Drizzle schema migrations and seeds default test data.
+4. Verifies database schema integrity.
+5. Runs the complete Vitest unit testing suite to certify code reliability before merging.
