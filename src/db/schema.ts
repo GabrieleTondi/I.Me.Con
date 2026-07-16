@@ -48,6 +48,11 @@ export const soggetto = pgTable("soggetto", {
   codiceFiscalePiva: varchar("codice_fiscale_piva", { length: 255 }).unique().notNull(),
   email: varchar("email", { length: 255 }),
   telefono: varchar("telefono", { length: 255 }),
+  dataNascita: varchar("data_nascita", { length: 50 }),
+  indirizzoResidenza: varchar("indirizzo_residenza", { length: 255 }),
+  comuneResidenza: varchar("comune_residenza", { length: 100 }),
+  capResidenza: varchar("cap_residenza", { length: 10 }),
+  provinciaResidenza: varchar("provincia_residenza", { length: 10 }),
 }, (table) => [
   check("check_tipo_soggetto", sql`${table.tipoSoggetto} IN ('PF', 'PG')`),
 ]);

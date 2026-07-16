@@ -30,9 +30,12 @@ export const Header = () => {
   }, []);
 
   const handleLogout = async () => {
-    await logoutAction();
-    setUser(null);
-    setShowDropdown(false);
+    const res = await logoutAction();
+    if (res?.success) {
+      setUser(null);
+      setShowDropdown(false);
+      window.location.href = "/";
+    }
   };
 
   // LOGICA E DATI: Cambia i nomi qui per modificare i link della navigazione

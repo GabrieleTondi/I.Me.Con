@@ -210,5 +210,5 @@ export async function loginAction(prevState: { error: string | null } | unknown,
 export async function logoutAction() {
   const cookieStore = await cookies();
   cookieStore.delete("session");
-  redirect("/");
+  return { success: true };
 }

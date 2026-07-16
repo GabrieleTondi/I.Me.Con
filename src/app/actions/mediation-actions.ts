@@ -6,6 +6,7 @@ import { eq } from "drizzle-orm";
 import fs from "fs/promises";
 import path from "path";
 import { z } from "zod";
+import { sendMediationNotifications } from "@/lib/notifications";
 
 // 1. Schema di validazione Zod per i dati testuali della richiesta di mediazione
 const mediationSchema = z.object({
@@ -22,6 +23,11 @@ const mediationSchema = z.object({
   istanteCodiceFiscale: z.string().min(5, "Codice Fiscale / P.IVA non valido").max(50),
   istanteEmail: z.string().email("Email istante non valida").max(255),
   istanteTelefono: z.string().max(50).nullable().optional(),
+  istanteDataNascita: z.string().min(1, "Data di nascita o costituzione dell'istante obbligatoria"),
+  istanteIndirizzo: z.string().min(1, "Indirizzo dell'istante obbligatorio").max(255),
+  istanteComune: z.string().min(1, "Comune dell'istante obbligatorio").max(100),
+  istanteCap: z.string().min(5, "CAP dell'istante obbligatorio (5 cifre)").max(10),
+  istanteProvincia: z.string().min(2, "Provincia dell'istante obbligatoria (2-3 lettere)").max(10),
 
   // Sezione 2b: Dati Avvocato (opzionale)
   haAvvocato: z.enum(["true", "false"]).default("false"),
@@ -35,6 +41,11 @@ const mediationSchema = z.object({
   convenutoCodiceFiscale: z.string().max(50).nullable().optional(),
   convenutoEmail: z.string().email("Email/PEC convenuto non valida").max(255),
   convenutoTelefono: z.string().max(50).nullable().optional(),
+  convenutoDataNascita: z.string().min(1, "Data di nascita o costituzione del convenuto obbligatoria"),
+  convenutoIndirizzo: z.string().min(1, "Indirizzo del convenuto obbligatorio").max(255),
+  convenutoComune: z.string().min(1, "Comune del convenuto obbligatorio").max(100),
+  convenutoCap: z.string().min(5, "CAP del convenuto obbligatorio (5 cifre)").max(10),
+  convenutoProvincia: z.string().min(2, "Provincia del convenuto obbligatoria (2-3 lettere)").max(10),
 });
 
 export async function getAreeAction() {
@@ -82,6 +93,11 @@ export async function createMediationRequestAction(formData: FormData) {
       istanteCodiceFiscale: formData.get("istanteCodiceFiscale")?.toString().trim().toUpperCase() || "",
       istanteEmail: formData.get("istanteEmail")?.toString().trim().toLowerCase() || "",
       istanteTelefono: formData.get("istanteTelefono")?.toString().trim() || null,
+      istanteDataNascita: formData.get("istanteDataNascita")?.toString().trim() || "",
+      istanteIndirizzo: formData.get("istanteIndirizzo")?.toString().trim() || "",
+      istanteComune: formData.get("istanteComune")?.toString().trim() || "",
+      istanteCap: formData.get("istanteCap")?.toString().trim() || "",
+      istanteProvincia: formData.get("istanteProvincia")?.toString().trim().toUpperCase() || "",
 
       haAvvocato: formData.get("haAvvocato")?.toString() || "false",
       avvocatoNome: formData.get("avvocatoNome")?.toString().trim() || "",
@@ -93,6 +109,11 @@ export async function createMediationRequestAction(formData: FormData) {
       convenutoCodiceFiscale: formData.get("convenutoCodiceFiscale")?.toString().trim().toUpperCase() || null,
       convenutoEmail: formData.get("convenutoEmail")?.toString().trim().toLowerCase() || "",
       convenutoTelefono: formData.get("convenutoTelefono")?.toString().trim() || null,
+      convenutoDataNascita: formData.get("convenutoDataNascita")?.toString().trim() || "",
+      convenutoIndirizzo: formData.get("convenutoIndirizzo")?.toString().trim() || "",
+      convenutoComune: formData.get("convenutoComune")?.toString().trim() || "",
+      convenutoCap: formData.get("convenutoCap")?.toString().trim() || "",
+      convenutoProvincia: formData.get("convenutoProvincia")?.toString().trim().toUpperCase() || "",
     };
 
     const parsed = mediationSchema.safeParse(rawData);
@@ -221,6 +242,11 @@ export async function createMediationRequestAction(formData: FormData) {
           codiceFiscalePiva: data.istanteCodiceFiscale,
           email: data.istanteEmail,
           telefono: data.istanteTelefono || null,
+          dataNascita: data.istanteDataNascita || null,
+          indirizzoResidenza: data.istanteIndirizzo || null,
+          comuneResidenza: data.istanteComune || null,
+          capResidenza: data.istanteCap || null,
+          provinciaResidenza: data.istanteProvincia || null,
         })
         .onConflictDoUpdate({
           target: [soggetto.codiceFiscalePiva],
@@ -228,6 +254,11 @@ export async function createMediationRequestAction(formData: FormData) {
             denominazione: data.istanteDenominazione,
             email: data.istanteEmail,
             telefono: data.istanteTelefono || null,
+            dataNascita: data.istanteDataNascita || null,
+            indirizzoResidenza: data.istanteIndirizzo || null,
+            comuneResidenza: data.istanteComune || null,
+            capResidenza: data.istanteCap || null,
+            provinciaResidenza: data.istanteProvincia || null,
           },
         })
         .returning();
@@ -269,6 +300,11 @@ export async function createMediationRequestAction(formData: FormData) {
           codiceFiscalePiva: convenutoCF,
           email: data.convenutoEmail,
           telefono: data.convenutoTelefono || null,
+          dataNascita: data.convenutoDataNascita || null,
+          indirizzoResidenza: data.convenutoIndirizzo || null,
+          comuneResidenza: data.convenutoComune || null,
+          capResidenza: data.convenutoCap || null,
+          provinciaResidenza: data.convenutoProvincia || null,
         })
         .onConflictDoUpdate({
           target: [soggetto.codiceFiscalePiva],
@@ -276,6 +312,11 @@ export async function createMediationRequestAction(formData: FormData) {
             denominazione: data.convenutoDenominazione,
             email: data.convenutoEmail,
             telefono: data.convenutoTelefono || null,
+            dataNascita: data.convenutoDataNascita || null,
+            indirizzoResidenza: data.convenutoIndirizzo || null,
+            comuneResidenza: data.convenutoComune || null,
+            capResidenza: data.convenutoCap || null,
+            provinciaResidenza: data.convenutoProvincia || null,
           },
         })
         .returning();
@@ -331,6 +372,44 @@ export async function createMediationRequestAction(formData: FormData) {
         );
       }
     });
+
+    // Invia notifiche e-mail e SMS (no-reply) ai soggetti coinvolti (ed eventuali avvocati)
+    try {
+      const valoreLite = data.valoreIndeterminato === "true" ? "0.00" : data.valore || "0.00";
+      await sendMediationNotifications({
+        protocollo,
+        materia: data.materia,
+        valore: valoreLite,
+        descrizioneFatti: data.descrizioneFatti,
+        istante: {
+          denominazione: data.istanteDenominazione,
+          email: data.istanteEmail,
+          telefono: data.istanteTelefono,
+          dataNascita: data.istanteDataNascita || null,
+          indirizzoResidenza: data.istanteIndirizzo || null,
+          comuneResidenza: data.istanteComune || null,
+          capResidenza: data.istanteCap || null,
+          provinciaResidenza: data.istanteProvincia || null,
+        },
+        convenuto: {
+          denominazione: data.convenutoDenominazione,
+          email: data.convenutoEmail,
+          telefono: data.convenutoTelefono,
+          dataNascita: data.convenutoDataNascita || null,
+          indirizzoResidenza: data.convenutoIndirizzo || null,
+          comuneResidenza: data.convenutoComune || null,
+          capResidenza: data.convenutoCap || null,
+          provinciaResidenza: data.convenutoProvincia || null,
+        },
+        avvocato: data.haAvvocato === "true" && data.avvocatoEmail ? {
+          denominazione: data.avvocatoNome || "Avvocato Istante",
+          email: data.avvocatoEmail,
+        } : null,
+      });
+    } catch (notifError) {
+      console.error("Errore durante l'invio delle notifiche automatiche:", notifError);
+      // Non blocchiamo il successo della creazione della mediazione se fallisce solo l'invio delle notifiche
+    }
 
     return {
       success: true,

@@ -71,6 +71,11 @@ export const ContactArea = () => {
     istanteCodiceFiscale: "",
     istanteEmail: "",
     istanteTelefono: "",
+    istanteDataNascita: "",
+    istanteIndirizzo: "",
+    istanteComune: "",
+    istanteCap: "",
+    istanteProvincia: "",
 
     haAvvocato: "false",
     avvocatoNome: "",
@@ -83,6 +88,11 @@ export const ContactArea = () => {
     convenutoCodiceFiscale: "",
     convenutoEmail: "",
     convenutoTelefono: "",
+    convenutoDataNascita: "",
+    convenutoIndirizzo: "",
+    convenutoComune: "",
+    convenutoCap: "",
+    convenutoProvincia: "",
   });
 
   const handleMediationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
@@ -113,8 +123,25 @@ export const ContactArea = () => {
         return;
       }
     } else if (step === 2) {
-      if (!mediationData.istanteDenominazione.trim() || !mediationData.istanteCodiceFiscale.trim() || !mediationData.istanteEmail.trim()) {
-        setMediationError("Compila tutti i campi obbligatori relativi all'Istante.");
+      if (
+        !mediationData.istanteDenominazione.trim() ||
+        !mediationData.istanteCodiceFiscale.trim() ||
+        !mediationData.istanteEmail.trim() ||
+        !mediationData.istanteDataNascita.trim() ||
+        !mediationData.istanteIndirizzo.trim() ||
+        !mediationData.istanteComune.trim() ||
+        !mediationData.istanteCap.trim() ||
+        !mediationData.istanteProvincia.trim()
+      ) {
+        setMediationError("Compila tutti i campi obbligatori relativi all'Istante (inclusi Nascita e Residenza).");
+        return;
+      }
+      if (mediationData.istanteCap.trim().length !== 5) {
+        setMediationError("Il CAP dell'Istante deve essere composto da 5 cifre.");
+        return;
+      }
+      if (mediationData.istanteProvincia.trim().length < 2) {
+        setMediationError("La Provincia dell'Istante deve essere di almeno 2 caratteri.");
         return;
       }
       if (mediationData.haAvvocato === "true" && (!mediationData.avvocatoNome || !mediationData.avvocatoCodiceFiscale || !mediationData.avvocatoEmail)) {
@@ -122,8 +149,24 @@ export const ContactArea = () => {
         return;
       }
     } else if (step === 3) {
-      if (!mediationData.convenutoDenominazione.trim() || !mediationData.convenutoEmail.trim()) {
-        setMediationError("Compila la denominazione e l'indirizzo Email/PEC del Convenuto.");
+      if (
+        !mediationData.convenutoDenominazione.trim() ||
+        !mediationData.convenutoEmail.trim() ||
+        !mediationData.convenutoDataNascita.trim() ||
+        !mediationData.convenutoIndirizzo.trim() ||
+        !mediationData.convenutoComune.trim() ||
+        !mediationData.convenutoCap.trim() ||
+        !mediationData.convenutoProvincia.trim()
+      ) {
+        setMediationError("Compila tutti i campi obbligatori relativi al Convenuto (inclusi Nascita e Residenza).");
+        return;
+      }
+      if (mediationData.convenutoCap.trim().length !== 5) {
+        setMediationError("Il CAP del Convenuto deve essere composto da 5 cifre.");
+        return;
+      }
+      if (mediationData.convenutoProvincia.trim().length < 2) {
+        setMediationError("La Provincia del Convenuto deve essere di almeno 2 caratteri.");
         return;
       }
     }
@@ -153,6 +196,11 @@ export const ContactArea = () => {
       formData.append("istanteCodiceFiscale", mediationData.istanteCodiceFiscale);
       formData.append("istanteEmail", mediationData.istanteEmail);
       if (mediationData.istanteTelefono) formData.append("istanteTelefono", mediationData.istanteTelefono);
+      if (mediationData.istanteDataNascita) formData.append("istanteDataNascita", mediationData.istanteDataNascita);
+      if (mediationData.istanteIndirizzo) formData.append("istanteIndirizzo", mediationData.istanteIndirizzo);
+      if (mediationData.istanteComune) formData.append("istanteComune", mediationData.istanteComune);
+      if (mediationData.istanteCap) formData.append("istanteCap", mediationData.istanteCap);
+      if (mediationData.istanteProvincia) formData.append("istanteProvincia", mediationData.istanteProvincia);
 
       formData.append("haAvvocato", mediationData.haAvvocato);
       if (mediationData.haAvvocato === "true") {
@@ -166,6 +214,11 @@ export const ContactArea = () => {
       if (mediationData.convenutoCodiceFiscale) formData.append("convenutoCodiceFiscale", mediationData.convenutoCodiceFiscale);
       formData.append("convenutoEmail", mediationData.convenutoEmail);
       if (mediationData.convenutoTelefono) formData.append("convenutoTelefono", mediationData.convenutoTelefono);
+      if (mediationData.convenutoDataNascita) formData.append("convenutoDataNascita", mediationData.convenutoDataNascita);
+      if (mediationData.convenutoIndirizzo) formData.append("convenutoIndirizzo", mediationData.convenutoIndirizzo);
+      if (mediationData.convenutoComune) formData.append("convenutoComune", mediationData.convenutoComune);
+      if (mediationData.convenutoCap) formData.append("convenutoCap", mediationData.convenutoCap);
+      if (mediationData.convenutoProvincia) formData.append("convenutoProvincia", mediationData.convenutoProvincia);
 
       // Aggiungiamo i file caricati nella sezione Dati Controversia
       for (const file of controversyFiles) {
@@ -592,7 +645,20 @@ export const ContactArea = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                              Data Nascita / Costituzione *
+                            </label>
+                            <input
+                              type="date"
+                              name="istanteDataNascita"
+                              value={mediationData.istanteDataNascita}
+                              onChange={handleMediationChange}
+                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                            />
+                          </div>
+
                           <div>
                             <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
                               Email di Contatto / PEC *
@@ -617,6 +683,61 @@ export const ContactArea = () => {
                               placeholder="333 1234567"
                               className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
                             />
+                          </div>
+                        </div>
+
+                        {/* RESIDENZA / SEDE LEGALE */}
+                        <div className="bg-[#f4f8fc] p-4 rounded-xl border border-[#cbe1f8] space-y-3">
+                          <p className="text-xs font-bold text-[#42649B] uppercase tracking-wide">
+                            {mediationData.istanteTipo === "PF" ? "Indirizzo di Residenza" : "Sede Legale"}
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                            <div className="md:col-span-5">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Indirizzo (Via/Piazza, n° civico) *</label>
+                              <input
+                                type="text"
+                                name="istanteIndirizzo"
+                                value={mediationData.istanteIndirizzo}
+                                onChange={handleMediationChange}
+                                placeholder="Via Roma 10"
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
+                            <div className="md:col-span-4">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Comune *</label>
+                              <input
+                                type="text"
+                                name="istanteComune"
+                                value={mediationData.istanteComune}
+                                onChange={handleMediationChange}
+                                placeholder="Roma"
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">CAP *</label>
+                              <input
+                                type="text"
+                                name="istanteCap"
+                                value={mediationData.istanteCap}
+                                onChange={handleMediationChange}
+                                placeholder="00100"
+                                maxLength={5}
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
+                            <div className="md:col-span-1">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Provincia *</label>
+                              <input
+                                type="text"
+                                name="istanteProvincia"
+                                value={mediationData.istanteProvincia}
+                                onChange={handleMediationChange}
+                                placeholder="RM"
+                                maxLength={3}
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
                           </div>
                         </div>
 
@@ -741,7 +862,20 @@ export const ContactArea = () => {
                           </div>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                          <div>
+                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                              Data Nascita / Costituzione *
+                            </label>
+                            <input
+                              type="date"
+                              name="convenutoDataNascita"
+                              value={mediationData.convenutoDataNascita}
+                              onChange={handleMediationChange}
+                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                            />
+                          </div>
+
                           <div>
                             <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
                               Email / PEC Notifica *
@@ -766,6 +900,61 @@ export const ContactArea = () => {
                               placeholder="Recapito controparte"
                               className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
                             />
+                          </div>
+                        </div>
+
+                        {/* RESIDENZA / SEDE LEGALE CONVENUTO */}
+                        <div className="bg-[#f4f8fc] p-4 rounded-xl border border-[#cbe1f8] space-y-3">
+                          <p className="text-xs font-bold text-[#42649B] uppercase tracking-wide">
+                            {mediationData.convenutoTipo === "PF" ? "Indirizzo di Residenza Convenuto" : "Sede Legale Convenuto"}
+                          </p>
+                          <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
+                            <div className="md:col-span-5">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Indirizzo (Via/Piazza, n° civico) *</label>
+                              <input
+                                type="text"
+                                name="convenutoIndirizzo"
+                                value={mediationData.convenutoIndirizzo}
+                                onChange={handleMediationChange}
+                                placeholder="Via Milano 20"
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
+                            <div className="md:col-span-4">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Comune *</label>
+                              <input
+                                type="text"
+                                name="convenutoComune"
+                                value={mediationData.convenutoComune}
+                                onChange={handleMediationChange}
+                                placeholder="Milano"
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
+                            <div className="md:col-span-2">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">CAP *</label>
+                              <input
+                                type="text"
+                                name="convenutoCap"
+                                value={mediationData.convenutoCap}
+                                onChange={handleMediationChange}
+                                placeholder="20100"
+                                maxLength={5}
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
+                            <div className="md:col-span-1">
+                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Provincia *</label>
+                              <input
+                                type="text"
+                                name="convenutoProvincia"
+                                value={mediationData.convenutoProvincia}
+                                onChange={handleMediationChange}
+                                placeholder="MI"
+                                maxLength={3}
+                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-[#42649B]"
+                              />
+                            </div>
                           </div>
                         </div>
                       </motion.div>
@@ -800,11 +989,27 @@ export const ContactArea = () => {
                               <p className="text-gray-400 font-bold uppercase">Istante</p>
                               <p className="text-gray-800 font-semibold">{mediationData.istanteDenominazione}</p>
                               <p className="text-gray-500">{mediationData.istanteEmail}</p>
+                              {mediationData.istanteDataNascita && (
+                                <p className="text-gray-500 text-[11px]">Nato/a il: {mediationData.istanteDataNascita}</p>
+                              )}
+                              {mediationData.istanteIndirizzo && (
+                                <p className="text-gray-500 text-[11px]">
+                                  Residenza/Sede: {mediationData.istanteIndirizzo}, {mediationData.istanteCap} {mediationData.istanteComune} ({mediationData.istanteProvincia})
+                                </p>
+                              )}
                             </div>
                             <div>
                               <p className="text-gray-400 font-bold uppercase">Convenuto</p>
                               <p className="text-gray-800 font-semibold">{mediationData.convenutoDenominazione}</p>
                               <p className="text-gray-500">{mediationData.convenutoEmail}</p>
+                              {mediationData.convenutoDataNascita && (
+                                <p className="text-gray-500 text-[11px]">Nato/a il: {mediationData.convenutoDataNascita}</p>
+                              )}
+                              {mediationData.convenutoIndirizzo && (
+                                <p className="text-gray-500 text-[11px]">
+                                  Residenza/Sede: {mediationData.convenutoIndirizzo}, {mediationData.convenutoCap} {mediationData.convenutoComune} ({mediationData.convenutoProvincia})
+                                </p>
+                              )}
                             </div>
                           </div>
 

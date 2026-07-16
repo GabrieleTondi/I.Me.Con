@@ -29,6 +29,11 @@ interface SubjectDetail {
     codiceFiscalePiva: string;
     email: string | null;
     telefono: string | null;
+    dataNascita?: string | null;
+    indirizzoResidenza?: string | null;
+    comuneResidenza?: string | null;
+    capResidenza?: string | null;
+    provinciaResidenza?: string | null;
   };
 }
 
@@ -509,6 +514,12 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                             <p className="text-sm font-bold text-gray-900">{s.soggetto.denominazione}</p>
                             <p className="text-gray-500 font-semibold">Ruolo: {s.ruoloNellaLite}</p>
                             <p className="text-gray-500">Codice Fiscale/P.IVA: <strong className="font-mono text-gray-700">{s.soggetto.codiceFiscalePiva}</strong></p>
+                            {s.soggetto.dataNascita && <p className="text-gray-500">Data Nascita/Costituzione: <span className="text-gray-700 font-medium">{s.soggetto.dataNascita}</span></p>}
+                            {s.soggetto.indirizzoResidenza && (
+                              <p className="text-gray-500">
+                                Residenza/Sede: <span className="text-gray-700 font-medium">{s.soggetto.indirizzoResidenza}, {s.soggetto.capResidenza || ""} {s.soggetto.comuneResidenza || ""} ({s.soggetto.provinciaResidenza || ""})</span>
+                              </p>
+                            )}
                             {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-[#42649B] font-semibold">{s.soggetto.email}</span></p>}
                             {s.soggetto.telefono && <p className="text-gray-500">Tel: {s.soggetto.telefono}</p>}
                           </div>
@@ -525,6 +536,12 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                             <p className="text-sm font-bold text-gray-900">{s.soggetto.denominazione}</p>
                             <p className="text-gray-500 font-semibold">Ruolo: {s.ruoloNellaLite}</p>
                             <p className="text-gray-500">Codice Fiscale/P.IVA: <strong className="font-mono text-gray-700">{s.soggetto.codiceFiscalePiva}</strong></p>
+                            {s.soggetto.dataNascita && <p className="text-gray-500">Data Nascita/Costituzione: <span className="text-gray-700 font-medium">{s.soggetto.dataNascita}</span></p>}
+                            {s.soggetto.indirizzoResidenza && (
+                              <p className="text-gray-500">
+                                Residenza/Sede: <span className="text-gray-700 font-medium">{s.soggetto.indirizzoResidenza}, {s.soggetto.capResidenza || ""} {s.soggetto.comuneResidenza || ""} ({s.soggetto.provinciaResidenza || ""})</span>
+                              </p>
+                            )}
                             {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-[#42649B] font-semibold">{s.soggetto.email}</span></p>}
                             {s.soggetto.telefono && <p className="text-gray-500">Tel: {s.soggetto.telefono}</p>}
                           </div>
