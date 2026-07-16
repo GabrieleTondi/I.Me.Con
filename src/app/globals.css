@@ -4,9 +4,8 @@
 :root {
   /* =========================================
      COLORE: Sfondo e Testo di Base del Sito
-     Modifica questi HEX per cambiare il livello "root"
      ========================================= */
-  --background: #315AA3;
+  --background: #082F49;
   --foreground: #FFFFFF;
 }
 
@@ -15,23 +14,26 @@
   --color-foreground: var(--foreground);
   
   /* =========================================
-     COLORE: Palette Dinamica del Progetto
-     Queste variabili sono utilizzate in tutto il codice con il prefisso "bg-brand-...", "text-brand-..."
+     COLORE: Palette Dinamica Royal & Slate I.Me.Con
      ========================================= */
-  --color-brand-bg: #315AA3;       /* Sfondo Blu Principale (es. Hero) */
-  --color-brand-primary: #064789;  /* Sfondo Blu Scuro (es. Footer e Cards) */
-  --color-brand-secondary: #427AA1;/* Sfondo Azzurro (es. CTA) */
-  --color-brand-third: #427AA1;    /* Azzurro di supporto */
-  --color-brand-accent: #FF7A01;   /* Arancione per i bottoni e piccoli accenti di contrasto */
-  --color-brand-neutral: #EBF2FA;  /* Bianco Sporco/Azzurrino Neutro (es. Sfondo Stats) */
-  --color-contrast: #FFFFFF;       /* Colore per i testi scuri su sfondo blu (Bianco) */
+  --color-brand-bg: #082F49;       /* Deep Royal Navy (Sfondo sezioni principali scure) */
+  --color-brand-primary: #082F49;  /* Deep Royal Navy (Sfondo e Card scure istituzionali) */
+  --color-brand-secondary: #0369A1;/* Slate Blue / Action Blue (Pulsanti secondari ed elementi di supporto) */
+  --color-brand-third: #38BDF8;    /* Sky Blue (Accenti luminosi su sfondi scuri) */
+  --color-brand-accent: #F97316;   /* Vibrant Saffron Orange (Call-to-action primarie ed evidenziazioni) */
+  --color-brand-neutral: #F8FAFC;  /* Slate White / Soft Neutral (Sfondo sezioni chiare e tabelle) */
+  --color-brand-surface: #FFFFFF;  /* Pure Surface (Card chiare e box in primo piano) */
+  --color-brand-dark: #0F172A;     /* Deep Slate Text (Titoli H1-H6 su sfondi chiari) */
+  --color-brand-muted: #475569;    /* Balanced Slate (Testi descrittivi e sottotitoli su chiaro) */
+  --color-brand-border: #E2E8F0;   /* Refined Border (Bordi sottili di divisione e card outline) */
+  --color-contrast: #FFFFFF;       /* Pure White (Testi ed icone ad alto contrasto su blu scuro) */
   
   /* =========================================
      FONT: Famiglie di Caratteri
      ========================================= */
   --font-sans: var(--font-geist-sans), sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
-  --font-chillax: 'Chillax', sans-serif; /* Font istituzionale e formale (H1-H6) */
+  --font-chillax: 'Chillax', sans-serif; /* Font istituzionale e geometrico (H1-H6) */
 }
 
 @layer base {
@@ -42,9 +44,8 @@
     overflow-x: hidden;
   }
 
-  /* FORMA E FONT: Tutti i titoli del sito assumono il font Chillax */
+  /* FORMA E FONT: Tutti i titoli del sito assumono il font Chillax con peso bilanciato */
   h1, h2, h3, h4, h5, h6, .font-chillax {
     font-family: var(--font-chillax);
-    font-weight: 500;
   }
 }

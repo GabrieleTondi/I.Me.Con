@@ -267,28 +267,28 @@ export const ContactArea = () => {
   };
 
   return (
-    <section className="w-full flex flex-col relative bg-brand-bg pt-20">
+    <section className="w-full flex flex-col relative bg-brand-neutral pt-20 font-sans">
       <div className="flex flex-col lg:flex-row min-h-[88vh]">
         {/* ===== SETTORE INFORMATIVO BLU SCURO - SINISTRA (40%) ===== */}
         <motion.div
-          className="w-full lg:w-[40%] bg-[#42649B] text-white p-10 md:p-16 flex flex-col justify-between space-y-12"
+          className="w-full lg:w-[40%] bg-brand-primary text-white p-10 md:p-16 flex flex-col justify-between space-y-12"
           variants={parentVariants}
           initial="hidden"
           animate="visible"
         >
           <motion.div variants={itemVariants} className="space-y-4">
-            <h1 className="text-4xl md:text-5xl font-bold leading-tight">
+            <h1 className="text-4xl md:text-5xl font-bold font-chillax leading-tight">
               Mettiamoci in <br />
-              <span className="text-[#FFC629]">Contatto</span>
+              <span className="text-brand-accent">Contatto</span>
             </h1>
-            <p className="text-base text-white/90 font-light leading-relaxed max-w-sm pt-3">
-              L'Istituto di Mediazione e Conciliazione I.Me.Con è al tuo fianco per risolvere controversie civili e commerciali in modo rapido e qualificato.
+            <p className="text-base text-white/85 font-light leading-relaxed max-w-sm pt-3 font-sans">
+              L&apos;Istituto di Mediazione e Conciliazione I.Me.Con è al tuo fianco per risolvere controversie civili e commerciali in modo rapido e qualificato.
             </p>
           </motion.div>
 
           <motion.div variants={itemVariants} className="space-y-6">
             <div className="flex items-start gap-4">
-              <Mail className="mt-1 text-[#FFC629] shrink-0" size={22} />
+              <Mail className="mt-1 text-brand-accent shrink-0" size={22} />
               <div>
                 <p className="text-[11px] text-white/60 tracking-wider uppercase font-semibold">Email Segreteria</p>
                 <p className="font-medium text-lg">imecon@gmail.com</p>
@@ -296,7 +296,7 @@ export const ContactArea = () => {
             </div>
 
             <div className="flex items-start gap-4">
-              <ShieldCheck className="mt-1 text-[#FFC629] shrink-0" size={22} />
+              <ShieldCheck className="mt-1 text-brand-accent shrink-0" size={22} />
               <div>
                 <p className="text-[11px] text-white/60 tracking-wider uppercase font-semibold">PEC Ufficiale</p>
                 <p className="font-medium text-lg">imecon@pec.it</p>
@@ -304,7 +304,7 @@ export const ContactArea = () => {
             </div>
 
             <div className="flex items-start gap-4">
-              <Phone className="mt-1 text-[#FFC629] shrink-0" size={22} />
+              <Phone className="mt-1 text-brand-accent shrink-0" size={22} />
               <div>
                 <p className="text-[11px] text-white/60 tracking-wider uppercase font-semibold">Telefono</p>
                 <p className="font-medium text-lg">333 333 3333</p>
@@ -312,10 +312,10 @@ export const ContactArea = () => {
             </div>
 
             <div className="flex items-start gap-4">
-              <Building className="mt-1 text-[#FFC629] shrink-0" size={22} />
+              <Building className="mt-1 text-brand-accent shrink-0" size={22} />
               <div>
                 <p className="text-[11px] text-white/60 tracking-wider uppercase font-semibold">Sede Centrale</p>
-                <p className="font-light text-sm text-white/90">Organismo accreditato dal Ministero della Giustizia</p>
+                <p className="font-light text-sm text-white/85">Organismo accreditato dal Ministero della Giustizia</p>
               </div>
             </div>
           </motion.div>
@@ -326,19 +326,19 @@ export const ContactArea = () => {
         </motion.div>
 
         {/* ===== SETTORE MODULI INTERATTIVI AZZURRINO - DESTRA (60%) ===== */}
-        <div className="w-full lg:w-[60%] bg-[#F3F6F9] p-6 md:p-14 xl:p-20 flex flex-col justify-start">
+        <div className="w-full lg:w-[60%] bg-brand-neutral p-6 md:p-14 xl:p-20 flex flex-col justify-start">
           {/* SELETTORE INTERATTIVO A SCHEDE (TAB) */}
-          <div className="flex bg-[#D9E6F6] p-1.5 rounded-xl mb-8 max-w-xl mx-auto w-full shadow-inner">
+          <div className="flex bg-white p-1.5 rounded-2xl mb-8 max-w-xl mx-auto w-full shadow-sm border border-brand-border">
             <button
               type="button"
               onClick={() => {
                 setActiveTab("mediazione");
                 setMediationError(null);
               }}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-2 ${
                 activeTab === "mediazione"
-                  ? "bg-[#42649B] text-white shadow-md"
-                  : "text-[#42649B] hover:bg-white/40"
+                  ? "bg-brand-primary text-white shadow-md"
+                  : "text-brand-primary hover:bg-brand-neutral"
               }`}
             >
               <Scale size={16} />
@@ -347,10 +347,10 @@ export const ContactArea = () => {
             <button
               type="button"
               onClick={() => setActiveTab("generale")}
-              className={`flex-1 py-3 px-4 rounded-lg font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-2 ${
+              className={`flex-1 py-3 px-4 rounded-xl font-semibold text-xs md:text-sm transition-all flex items-center justify-center gap-2 ${
                 activeTab === "generale"
-                  ? "bg-[#42649B] text-white shadow-md"
-                  : "text-[#42649B] hover:bg-white/40"
+                  ? "bg-brand-primary text-white shadow-md"
+                  : "text-brand-primary hover:bg-brand-neutral"
               }`}
             >
               <Info size={16} />
@@ -377,7 +377,7 @@ export const ContactArea = () => {
                   <p className="text-gray-600 text-sm max-w-md mx-auto">
                     La tua richiesta è stata registrata con successo. Conserva il seguente numero di protocollo ufficiale per qualsiasi comunicazione con la segreteria I.Me.Con:
                   </p>
-                  <div className="bg-[#EBF3FC] border border-[#42649B]/30 rounded-xl p-4 inline-block font-mono text-xl font-bold text-[#42649B] tracking-wider">
+                  <div className="bg-brand-neutral/80 border border-brand-primary/30 rounded-xl p-4 inline-block font-mono text-xl font-bold text-brand-primary tracking-wider">
                     {mediationSuccessProtocol}
                   </div>
                   <div className="pt-4">
@@ -388,7 +388,7 @@ export const ContactArea = () => {
                         setStep(1);
                         setControversyFiles([]);
                       }}
-                      className="px-6 py-2.5 bg-[#42649B] text-white text-sm font-medium rounded-lg hover:bg-[#34507d] transition-all"
+                      className="px-6 py-2.5 bg-brand-primary text-white text-sm font-medium rounded-xl hover:bg-brand-dark transition-all shadow-sm"
                     >
                       Invia una nuova pratica
                     </button>
@@ -398,15 +398,15 @@ export const ContactArea = () => {
                 <>
                   {/* BARRA PROGRESSIVA DEGLI STEP */}
                   <div className="mb-8">
-                    <div className="flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">
-                      <span className={step >= 1 ? "text-[#42649B] font-bold" : ""}>1. Lite & Documenti</span>
-                      <span className={step >= 2 ? "text-[#42649B] font-bold" : ""}>2. Istante</span>
-                      <span className={step >= 3 ? "text-[#42649B] font-bold" : ""}>3. Convenuto</span>
-                      <span className={step >= 4 ? "text-[#42649B] font-bold" : ""}>4. Riepilogo</span>
+                    <div className="flex justify-between items-center text-xs font-semibold uppercase tracking-wider text-brand-muted mb-2">
+                      <span className={step >= 1 ? "text-brand-primary font-bold" : ""}>1. Lite & Documenti</span>
+                      <span className={step >= 2 ? "text-brand-primary font-bold" : ""}>2. Istante</span>
+                      <span className={step >= 3 ? "text-brand-primary font-bold" : ""}>3. Convenuto</span>
+                      <span className={step >= 4 ? "text-brand-primary font-bold" : ""}>4. Riepilogo</span>
                     </div>
-                    <div className="w-full bg-gray-200 h-2 rounded-full overflow-hidden">
+                    <div className="w-full bg-brand-border h-2 rounded-full overflow-hidden">
                       <div
-                        className="bg-[#42649B] h-full transition-all duration-300 rounded-full"
+                        className="bg-brand-primary h-full transition-all duration-300 rounded-full"
                         style={{ width: `${(step / 4) * 100}%` }}
                       />
                     </div>
@@ -423,23 +423,23 @@ export const ContactArea = () => {
                     {/* STEP 1: DATI CONTROVERSIA E UPLOAD DOCUMENTI */}
                     {step === 1 && (
                       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                        <div className="border-b border-gray-200 pb-3">
-                          <h3 className="text-xl font-bold text-[#42649B]">Dati della Controversia & Documenti</h3>
-                          <p className="text-xs text-gray-500 mt-1">
+                        <div className="border-b border-brand-border pb-3">
+                          <h3 className="text-xl font-chillax font-semibold text-brand-dark">Dati della Controversia & Documenti</h3>
+                          <p className="text-xs text-brand-muted mt-1">
                             Seleziona la materia ministeriale e allega in questa sezione i documenti relativi alla lite.
                           </p>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Sede Competente *
                             </label>
                             <select
                               name="areaId"
                               value={mediationData.areaId}
                               onChange={handleMediationChange}
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             >
                               {aree.map((a) => (
                                 <option key={a.id} value={a.id.toString()}>
@@ -450,14 +450,14 @@ export const ContactArea = () => {
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Materia / Oggetto *
                             </label>
                             <select
                               name="materia"
                               value={mediationData.materia}
                               onChange={handleMediationChange}
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             >
                               <option value="">Seleziona Materia...</option>
                               <option value="Condominio">Condominio</option>
@@ -477,7 +477,7 @@ export const ContactArea = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 items-center">
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Valore Stimato della Lite (€)
                             </label>
                             <input
@@ -488,7 +488,7 @@ export const ContactArea = () => {
                               value={mediationData.valore}
                               onChange={handleMediationChange}
                               placeholder="es. 15000.00"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B] disabled:opacity-50"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 disabled:opacity-50"
                             />
                           </div>
                           <div className="flex items-center gap-3 pt-4">
@@ -503,16 +503,16 @@ export const ContactArea = () => {
                                   valore: e.target.checked ? "0.00" : prev.valore,
                                 }))
                               }
-                              className="w-4 h-4 text-[#42649B] rounded focus:ring-[#42649B]"
+                              className="w-4 h-4 text-brand-primary rounded border-brand-border focus:ring-brand-primary"
                             />
-                            <label htmlFor="valoreIndeterminato" className="text-sm font-medium text-gray-700 cursor-pointer">
+                            <label htmlFor="valoreIndeterminato" className="text-sm font-medium text-brand-dark cursor-pointer">
                               Valore Indeterminato / Non Quantificabile
                             </label>
                           </div>
                         </div>
 
                         <div>
-                          <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                          <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                             Sintesi e Descrizione dei Fatti *
                           </label>
                           <textarea
@@ -521,25 +521,25 @@ export const ContactArea = () => {
                             value={mediationData.descrizioneFatti}
                             onChange={handleMediationChange}
                             placeholder="Descrivi chiaramente i motivi del contendere e le pretese dell'Istante..."
-                            className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B] resize-none"
+                            className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 resize-none"
                           />
                         </div>
 
                         {/* CARICAMENTO FILE ESCLUSIVAMENTE PER DATI CONTROVERSIA */}
-                        <div className="bg-white p-5 rounded-xl border border-gray-200 shadow-sm space-y-3">
+                        <div className="bg-white p-5 rounded-2xl border border-brand-border shadow-sm space-y-3">
                           <div className="flex items-center justify-between">
-                            <label className="block text-xs font-bold text-[#42649B] uppercase">
+                            <label className="block text-xs font-bold text-brand-primary uppercase">
                               Allegati della Controversia (Istanza / Contratti / Diffide)
                             </label>
-                            <span className="text-[11px] text-gray-500">Salvataggio Sicuro Locale su Server</span>
+                            <span className="text-[11px] text-brand-muted">Salvataggio Sicuro Locale su Server</span>
                           </div>
 
-                          <label className="border-2 border-dashed border-[#42649B]/40 hover:border-[#42649B] rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all bg-[#F8FAFD]">
-                            <Upload size={28} className="text-[#42649B] mb-2" />
-                            <span className="text-sm font-semibold text-gray-700">
+                          <label className="border-2 border-dashed border-brand-primary/30 hover:border-brand-primary rounded-xl p-6 flex flex-col items-center justify-center cursor-pointer transition-all bg-brand-neutral/40">
+                            <Upload size={28} className="text-brand-primary mb-2" />
+                            <span className="text-sm font-semibold text-brand-dark">
                               Clicca per selezionare i documenti della lite
                             </span>
-                            <span className="text-xs text-gray-500 mt-1">
+                            <span className="text-xs text-brand-muted mt-1">
                               Formati consentiti: PDF, DOC, DOCX, JPG, PNG, P7M (Max 10 MB per file)
                             </span>
                             <input
@@ -553,21 +553,21 @@ export const ContactArea = () => {
 
                           {controversyFiles.length > 0 && (
                             <div className="space-y-2 pt-2">
-                              <p className="text-xs font-semibold text-gray-600">File selezionati ({controversyFiles.length}):</p>
+                              <p className="text-xs font-semibold text-brand-dark">File selezionati ({controversyFiles.length}):</p>
                               {controversyFiles.map((file, idx) => (
                                 <div
                                   key={idx}
-                                  className="flex items-center justify-between bg-gray-50 px-3 py-2 rounded-lg text-xs border border-gray-200"
+                                  className="flex items-center justify-between bg-brand-neutral px-3 py-2 rounded-lg text-xs border border-brand-border"
                                 >
                                   <div className="flex items-center gap-2 truncate">
-                                    <FileText size={15} className="text-[#42649B] shrink-0" />
-                                    <span className="font-medium text-gray-800 truncate">{file.name}</span>
-                                    <span className="text-gray-400">({(file.size / (1024 * 1024)).toFixed(2)} MB)</span>
+                                    <FileText size={15} className="text-brand-primary shrink-0" />
+                                    <span className="font-medium text-brand-dark truncate">{file.name}</span>
+                                    <span className="text-brand-muted">({(file.size / (1024 * 1024)).toFixed(2)} MB)</span>
                                   </div>
                                   <button
                                     type="button"
                                     onClick={() => removeFile(idx)}
-                                    className="text-red-500 hover:text-red-700 p-1"
+                                    className="text-red-500 hover:text-red-700 p-1 transition-colors"
                                     title="Rimuovi file"
                                   >
                                     <Trash2 size={15} />
@@ -583,33 +583,33 @@ export const ContactArea = () => {
                     {/* STEP 2: ISTANTE & AVVOCATO */}
                     {step === 2 && (
                       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                        <div className="border-b border-gray-200 pb-3">
-                          <h3 className="text-xl font-bold text-[#42649B]">Dati dell'Istante (Chi introduce la mediazione)</h3>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Inserisci i dati anagrafici e i recapiti ufficiali dell'Istante.
+                        <div className="border-b border-brand-border pb-3">
+                          <h3 className="text-xl font-chillax font-semibold text-brand-dark">Dati dell&apos;Istante (Chi introduce la mediazione)</h3>
+                          <p className="text-xs text-brand-muted mt-1">
+                            Inserisci i dati anagrafici e i recapiti ufficiali dell&apos;Istante.
                           </p>
                         </div>
 
                         <div className="flex gap-4">
-                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-dark">
                             <input
                               type="radio"
                               name="istanteTipo"
                               value="PF"
                               checked={mediationData.istanteTipo === "PF"}
                               onChange={handleMediationChange}
-                              className="text-[#42649B] focus:ring-[#42649B]"
+                              className="text-brand-primary border-brand-border focus:ring-brand-primary"
                             />
                             Persona Fisica
                           </label>
-                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-dark">
                             <input
                               type="radio"
                               name="istanteTipo"
                               value="PG"
                               checked={mediationData.istanteTipo === "PG"}
                               onChange={handleMediationChange}
-                              className="text-[#42649B] focus:ring-[#42649B]"
+                              className="text-brand-primary border-brand-border focus:ring-brand-primary"
                             />
                             Persona Giuridica / Società / Condominio
                           </label>
@@ -617,7 +617,7 @@ export const ContactArea = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               {mediationData.istanteTipo === "PF" ? "Nome e Cognome *" : "Ragione Sociale *"}
                             </label>
                             <input
@@ -626,12 +626,12 @@ export const ContactArea = () => {
                               value={mediationData.istanteDenominazione}
                               onChange={handleMediationChange}
                               placeholder={mediationData.istanteTipo === "PF" ? "Mario Rossi" : "Condominio Via Roma 10"}
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Codice Fiscale / P.IVA *
                             </label>
                             <input
@@ -640,14 +640,14 @@ export const ContactArea = () => {
                               value={mediationData.istanteCodiceFiscale}
                               onChange={handleMediationChange}
                               placeholder="RSSMRA80A01H501Z oppure 01234567890"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B] uppercase"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 uppercase"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Data Nascita / Costituzione *
                             </label>
                             <input
@@ -655,12 +655,12 @@ export const ContactArea = () => {
                               name="istanteDataNascita"
                               value={mediationData.istanteDataNascita}
                               onChange={handleMediationChange}
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Email di Contatto / PEC *
                             </label>
                             <input
@@ -669,53 +669,53 @@ export const ContactArea = () => {
                               value={mediationData.istanteEmail}
                               onChange={handleMediationChange}
                               placeholder="mario.rossi@email.it"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Telefono</label>
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">Telefono</label>
                             <input
                               type="tel"
                               name="istanteTelefono"
                               value={mediationData.istanteTelefono}
                               onChange={handleMediationChange}
                               placeholder="333 1234567"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
                         </div>
 
                         {/* RESIDENZA / SEDE LEGALE */}
-                        <div className="bg-[#f4f8fc] p-4 rounded-xl border border-[#cbe1f8] space-y-3">
-                          <p className="text-xs font-bold text-[#42649B] uppercase tracking-wide">
+                        <div className="bg-brand-neutral/60 p-4 rounded-xl border border-brand-border space-y-3">
+                          <p className="text-xs font-bold text-brand-primary uppercase tracking-wide">
                             {mediationData.istanteTipo === "PF" ? "Indirizzo di Residenza" : "Sede Legale"}
                           </p>
                           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
                             <div className="md:col-span-5">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Indirizzo (Via/Piazza, n° civico) *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">Indirizzo (Via/Piazza, n° civico) *</label>
                               <input
                                 type="text"
                                 name="istanteIndirizzo"
                                 value={mediationData.istanteIndirizzo}
                                 onChange={handleMediationChange}
                                 placeholder="Via Roma 10"
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                             <div className="md:col-span-4">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Comune *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">Comune *</label>
                               <input
                                 type="text"
                                 name="istanteComune"
                                 value={mediationData.istanteComune}
                                 onChange={handleMediationChange}
                                 placeholder="Roma"
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                             <div className="md:col-span-2">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">CAP *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">CAP *</label>
                               <input
                                 type="text"
                                 name="istanteCap"
@@ -723,11 +723,11 @@ export const ContactArea = () => {
                                 onChange={handleMediationChange}
                                 placeholder="00100"
                                 maxLength={5}
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                             <div className="md:col-span-1">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Provincia *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">Provincia *</label>
                               <input
                                 type="text"
                                 name="istanteProvincia"
@@ -735,21 +735,21 @@ export const ContactArea = () => {
                                 onChange={handleMediationChange}
                                 placeholder="RM"
                                 maxLength={3}
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                           </div>
                         </div>
 
                         {/* ASSISTENZA LEGALE AVVOCATO */}
-                        <div className="bg-white p-5 rounded-xl border border-gray-200 space-y-4">
+                        <div className="bg-white p-5 rounded-2xl border border-brand-border shadow-sm space-y-4">
                           <div className="flex items-center justify-between">
-                            <span className="text-sm font-bold text-gray-800">Sei assistito da un Avvocato?</span>
+                            <span className="text-sm font-bold text-brand-dark">Sei assistito da un Avvocato?</span>
                             <select
                               name="haAvvocato"
                               value={mediationData.haAvvocato}
                               onChange={handleMediationChange}
-                              className="bg-gray-100 px-3 py-1.5 rounded-lg text-xs font-bold text-[#42649B]"
+                              className="bg-brand-neutral px-3 py-1.5 rounded-lg text-xs font-bold text-brand-primary border border-brand-border"
                             >
                               <option value="false">No</option>
                               <option value="true">Sì, aggiungi Avvocato</option>
@@ -759,36 +759,36 @@ export const ContactArea = () => {
                           {mediationData.haAvvocato === "true" && (
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
                               <div>
-                                <label className="block text-xs font-semibold text-gray-600 mb-1">Nome Avvocato *</label>
+                                <label className="block text-xs font-semibold text-brand-muted mb-1">Nome Avvocato *</label>
                                 <input
                                   type="text"
                                   name="avvocatoNome"
                                   value={mediationData.avvocatoNome}
                                   onChange={handleMediationChange}
                                   placeholder="Avv. Luigi Bianchi"
-                                  className="w-full bg-gray-50 border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs"
+                                  className="w-full bg-brand-neutral/50 border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-semibold text-gray-600 mb-1">Codice Fiscale Avv. *</label>
+                                <label className="block text-xs font-semibold text-brand-muted mb-1">Codice Fiscale Avv. *</label>
                                 <input
                                   type="text"
                                   name="avvocatoCodiceFiscale"
                                   value={mediationData.avvocatoCodiceFiscale}
                                   onChange={handleMediationChange}
                                   placeholder="BNCLGU75..."
-                                  className="w-full bg-gray-50 border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs uppercase"
+                                  className="w-full bg-brand-neutral/50 border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-brand-primary/30"
                                 />
                               </div>
                               <div>
-                                <label className="block text-xs font-semibold text-gray-600 mb-1">PEC Avvocato *</label>
+                                <label className="block text-xs font-semibold text-brand-muted mb-1">PEC Avvocato *</label>
                                 <input
                                   type="email"
                                   name="avvocatoEmail"
                                   value={mediationData.avvocatoEmail}
                                   onChange={handleMediationChange}
                                   placeholder="avv.bianchi@pec.it"
-                                  className="w-full bg-gray-50 border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs"
+                                  className="w-full bg-brand-neutral/50 border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                                 />
                               </div>
                             </div>
@@ -800,33 +800,33 @@ export const ContactArea = () => {
                     {/* STEP 3: CONVENUTO */}
                     {step === 3 && (
                       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-5">
-                        <div className="border-b border-gray-200 pb-3">
-                          <h3 className="text-xl font-bold text-[#42649B]">Dati del Convenuto (La controparte chiamata)</h3>
-                          <p className="text-xs text-gray-500 mt-1">
+                        <div className="border-b border-brand-border pb-3">
+                          <h3 className="text-xl font-chillax font-semibold text-brand-dark">Dati del Convenuto (La controparte chiamata)</h3>
+                          <p className="text-xs text-brand-muted mt-1">
                             Inserisci i dati e l&apos;indirizzo di notifica per convocare la controparte al procedimento di mediazione.
                           </p>
                         </div>
 
                         <div className="flex gap-4">
-                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-dark">
                             <input
                               type="radio"
                               name="convenutoTipo"
                               value="PF"
                               checked={mediationData.convenutoTipo === "PF"}
                               onChange={handleMediationChange}
-                              className="text-[#42649B] focus:ring-[#42649B]"
+                              className="text-brand-primary border-brand-border focus:ring-brand-primary"
                             />
                             Persona Fisica
                           </label>
-                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold">
+                          <label className="flex items-center gap-2 cursor-pointer text-sm font-semibold text-brand-dark">
                             <input
                               type="radio"
                               name="convenutoTipo"
                               value="PG"
                               checked={mediationData.convenutoTipo === "PG"}
                               onChange={handleMediationChange}
-                              className="text-[#42649B] focus:ring-[#42649B]"
+                              className="text-brand-primary border-brand-border focus:ring-brand-primary"
                             />
                             Persona Giuridica / Impresa
                           </label>
@@ -834,7 +834,7 @@ export const ContactArea = () => {
 
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Denominazione Convenuto *
                             </label>
                             <input
@@ -843,12 +843,12 @@ export const ContactArea = () => {
                               value={mediationData.convenutoDenominazione}
                               onChange={handleMediationChange}
                               placeholder="Nome Cognome o Società Controparte"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Codice Fiscale / P.IVA (Se noto)
                             </label>
                             <input
@@ -857,14 +857,14 @@ export const ContactArea = () => {
                               value={mediationData.convenutoCodiceFiscale}
                               onChange={handleMediationChange}
                               placeholder="CF o P.IVA controparte"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B] uppercase"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 uppercase"
                             />
                           </div>
                         </div>
 
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Data Nascita / Costituzione *
                             </label>
                             <input
@@ -872,12 +872,12 @@ export const ContactArea = () => {
                               name="convenutoDataNascita"
                               value={mediationData.convenutoDataNascita}
                               onChange={handleMediationChange}
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Email / PEC Notifica *
                             </label>
                             <input
@@ -886,53 +886,53 @@ export const ContactArea = () => {
                               value={mediationData.convenutoEmail}
                               onChange={handleMediationChange}
                               placeholder="controparte@pec.it o email"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
 
                           <div>
-                            <label className="block text-xs font-bold text-gray-700 uppercase mb-1">Telefono Convenuto</label>
+                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">Telefono Convenuto</label>
                             <input
                               type="tel"
                               name="convenutoTelefono"
                               value={mediationData.convenutoTelefono}
                               onChange={handleMediationChange}
                               placeholder="Recapito controparte"
-                              className="w-full bg-[#DEECFA] text-gray-800 px-4 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                             />
                           </div>
                         </div>
 
                         {/* RESIDENZA / SEDE LEGALE CONVENUTO */}
-                        <div className="bg-[#f4f8fc] p-4 rounded-xl border border-[#cbe1f8] space-y-3">
-                          <p className="text-xs font-bold text-[#42649B] uppercase tracking-wide">
+                        <div className="bg-brand-neutral/60 p-4 rounded-xl border border-brand-border space-y-3">
+                          <p className="text-xs font-bold text-brand-primary uppercase tracking-wide">
                             {mediationData.convenutoTipo === "PF" ? "Indirizzo di Residenza Convenuto" : "Sede Legale Convenuto"}
                           </p>
                           <div className="grid grid-cols-1 md:grid-cols-12 gap-3">
                             <div className="md:col-span-5">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Indirizzo (Via/Piazza, n° civico) *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">Indirizzo (Via/Piazza, n° civico) *</label>
                               <input
                                 type="text"
                                 name="convenutoIndirizzo"
                                 value={mediationData.convenutoIndirizzo}
                                 onChange={handleMediationChange}
                                 placeholder="Via Milano 20"
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                             <div className="md:col-span-4">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Comune *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">Comune *</label>
                               <input
                                 type="text"
                                 name="convenutoComune"
                                 value={mediationData.convenutoComune}
                                 onChange={handleMediationChange}
                                 placeholder="Milano"
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                             <div className="md:col-span-2">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">CAP *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">CAP *</label>
                               <input
                                 type="text"
                                 name="convenutoCap"
@@ -940,11 +940,11 @@ export const ContactArea = () => {
                                 onChange={handleMediationChange}
                                 placeholder="20100"
                                 maxLength={5}
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                             <div className="md:col-span-1">
-                              <label className="block text-[11px] font-bold text-gray-600 mb-1">Provincia *</label>
+                              <label className="block text-[11px] font-bold text-brand-muted mb-1">Provincia *</label>
                               <input
                                 type="text"
                                 name="convenutoProvincia"
@@ -952,7 +952,7 @@ export const ContactArea = () => {
                                 onChange={handleMediationChange}
                                 placeholder="MI"
                                 maxLength={3}
-                                className="w-full bg-white border border-gray-300 text-gray-800 px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-[#42649B]"
+                                className="w-full bg-white border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-brand-primary/30"
                               />
                             </div>
                           </div>
@@ -963,50 +963,50 @@ export const ContactArea = () => {
                     {/* STEP 4: RIEPILOGO FINALE */}
                     {step === 4 && (
                       <motion.div initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} className="space-y-6">
-                        <div className="border-b border-gray-200 pb-3">
-                          <h3 className="text-xl font-bold text-[#42649B]">Riepilogo e Invio Istanza</h3>
-                          <p className="text-xs text-gray-500 mt-1">
+                        <div className="border-b border-brand-border pb-3">
+                          <h3 className="text-xl font-chillax font-semibold text-brand-dark">Riepilogo e Invio Istanza</h3>
+                          <p className="text-xs text-brand-muted mt-1">
                             Controlla attentamente i dati inseriti e clicca sul pulsante sottostante per depositare la domanda.
                           </p>
                         </div>
 
-                        <div className="bg-white p-6 rounded-2xl border border-gray-200 shadow-sm space-y-4 text-xs">
-                          <div className="grid grid-cols-2 gap-2 border-b pb-3">
+                        <div className="bg-white p-6 rounded-2xl border border-brand-border shadow-sm space-y-4 text-xs">
+                          <div className="grid grid-cols-2 gap-2 border-b border-brand-border/60 pb-3">
                             <div>
-                              <p className="text-gray-400 font-bold uppercase">Materia</p>
-                              <p className="text-gray-800 font-semibold text-sm">{mediationData.materia}</p>
+                              <p className="text-brand-muted font-bold uppercase">Materia</p>
+                              <p className="text-brand-dark font-semibold text-sm">{mediationData.materia}</p>
                             </div>
                             <div>
-                              <p className="text-gray-400 font-bold uppercase">Valore Lite</p>
-                              <p className="text-gray-800 font-semibold text-sm">
+                              <p className="text-brand-muted font-bold uppercase">Valore Lite</p>
+                              <p className="text-brand-dark font-semibold text-sm">
                                 {mediationData.valoreIndeterminato === "true" ? "Indeterminato" : `€ ${mediationData.valore}`}
                               </p>
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-2 border-b pb-3">
+                          <div className="grid grid-cols-2 gap-2 border-b border-brand-border/60 pb-3">
                             <div>
-                              <p className="text-gray-400 font-bold uppercase">Istante</p>
-                              <p className="text-gray-800 font-semibold">{mediationData.istanteDenominazione}</p>
-                              <p className="text-gray-500">{mediationData.istanteEmail}</p>
+                              <p className="text-brand-muted font-bold uppercase">Istante</p>
+                              <p className="text-brand-dark font-semibold">{mediationData.istanteDenominazione}</p>
+                              <p className="text-brand-muted">{mediationData.istanteEmail}</p>
                               {mediationData.istanteDataNascita && (
-                                <p className="text-gray-500 text-[11px]">Nato/a il: {mediationData.istanteDataNascita}</p>
+                                <p className="text-brand-muted text-[11px]">Nato/a il: {mediationData.istanteDataNascita}</p>
                               )}
                               {mediationData.istanteIndirizzo && (
-                                <p className="text-gray-500 text-[11px]">
+                                <p className="text-brand-muted text-[11px]">
                                   Residenza/Sede: {mediationData.istanteIndirizzo}, {mediationData.istanteCap} {mediationData.istanteComune} ({mediationData.istanteProvincia})
                                 </p>
                               )}
                             </div>
                             <div>
-                              <p className="text-gray-400 font-bold uppercase">Convenuto</p>
-                              <p className="text-gray-800 font-semibold">{mediationData.convenutoDenominazione}</p>
-                              <p className="text-gray-500">{mediationData.convenutoEmail}</p>
+                              <p className="text-brand-muted font-bold uppercase">Convenuto</p>
+                              <p className="text-brand-dark font-semibold">{mediationData.convenutoDenominazione}</p>
+                              <p className="text-brand-muted">{mediationData.convenutoEmail}</p>
                               {mediationData.convenutoDataNascita && (
-                                <p className="text-gray-500 text-[11px]">Nato/a il: {mediationData.convenutoDataNascita}</p>
+                                <p className="text-brand-muted text-[11px]">Nato/a il: {mediationData.convenutoDataNascita}</p>
                               )}
                               {mediationData.convenutoIndirizzo && (
-                                <p className="text-gray-500 text-[11px]">
+                                <p className="text-brand-muted text-[11px]">
                                   Residenza/Sede: {mediationData.convenutoIndirizzo}, {mediationData.convenutoCap} {mediationData.convenutoComune} ({mediationData.convenutoProvincia})
                                 </p>
                               )}
@@ -1014,13 +1014,13 @@ export const ContactArea = () => {
                           </div>
 
                           <div>
-                            <p className="text-gray-400 font-bold uppercase mb-1">
+                            <p className="text-brand-muted font-bold uppercase mb-1">
                               Documenti Allegati in Dati Controversia ({controversyFiles.length})
                             </p>
                             {controversyFiles.length === 0 ? (
-                              <p className="text-gray-500 italic">Nessun file allegato</p>
+                              <p className="text-brand-muted italic">Nessun file allegato</p>
                             ) : (
-                              <ul className="list-disc pl-5 space-y-1 text-gray-700">
+                              <ul className="list-disc pl-5 space-y-1 text-brand-dark">
                                 {controversyFiles.map((f, i) => (
                                   <li key={i}>
                                     {f.name} ({(f.size / 1024).toFixed(0)} KB)
@@ -1034,12 +1034,12 @@ export const ContactArea = () => {
                     )}
 
                     {/* PULSANTI AVANTI / INDIETRO / INVIO */}
-                    <div className="flex justify-between items-center pt-6 border-t border-gray-200">
+                    <div className="flex justify-between items-center pt-6 border-t border-brand-border">
                       {step > 1 ? (
                         <button
                           type="button"
                           onClick={prevStep}
-                          className="px-6 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium text-sm flex items-center gap-2 hover:bg-gray-100 transition-all"
+                          className="px-6 py-2.5 rounded-xl border border-brand-border text-brand-dark font-medium text-sm flex items-center gap-2 hover:bg-brand-neutral transition-all"
                         >
                           <ArrowLeft size={16} />
                           Indietro
@@ -1053,7 +1053,7 @@ export const ContactArea = () => {
                           key="btn-prosegui"
                           type="button"
                           onClick={nextStep}
-                          className="px-8 py-3 rounded-lg bg-[#42649B] text-white font-medium text-sm flex items-center gap-2 hover:bg-[#34507d] transition-all shadow-md"
+                          className="px-8 py-3 rounded-xl bg-brand-primary text-white font-medium text-sm flex items-center gap-2 hover:bg-brand-dark transition-all shadow-md"
                         >
                           Prosegui
                           <ArrowRight size={16} />
@@ -1063,7 +1063,7 @@ export const ContactArea = () => {
                           key="btn-submit"
                           type="submit"
                           disabled={isSubmittingMediation}
-                          className="px-10 py-3 rounded-lg bg-[#42649B] text-white font-bold text-sm flex items-center gap-2 hover:bg-[#34507d] disabled:bg-gray-400 transition-all shadow-lg"
+                          className="px-10 py-3 rounded-xl bg-brand-primary text-white font-bold text-sm flex items-center gap-2 hover:bg-brand-dark disabled:bg-gray-400 transition-all shadow-lg"
                         >
                           {isSubmittingMediation ? "Deposito in corso..." : "Deposita Richiesta di Mediazione"}
                         </button>
@@ -1081,8 +1081,8 @@ export const ContactArea = () => {
           {activeTab === "generale" && (
             <div className="max-w-xl mx-auto w-full">
               <div className="mb-6">
-                <h3 className="text-xl font-bold text-[#42649B]">Richiedi Informazioni Generali</h3>
-                <p className="text-xs text-gray-500 mt-1">
+                <h3 className="text-xl font-chillax font-semibold text-brand-dark">Richiedi Informazioni Generali</h3>
+                <p className="text-xs text-brand-muted mt-1">
                   Hai domande sui nostri corsi o sulle tariffe di mediazione? Scrivici e ti risponderemo entro 24 ore.
                 </p>
               </div>
@@ -1093,13 +1093,13 @@ export const ContactArea = () => {
                     required
                     type="text"
                     placeholder="Nome *"
-                    className="w-full bg-[#DEECFA] text-gray-800 placeholder:text-gray-500 px-5 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                    className="w-full bg-white text-brand-dark placeholder:text-brand-muted/60 px-5 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                   <input
                     required
                     type="text"
                     placeholder="Cognome *"
-                    className="w-full bg-[#DEECFA] text-gray-800 placeholder:text-gray-500 px-5 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                    className="w-full bg-white text-brand-dark placeholder:text-brand-muted/60 px-5 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                   />
                 </div>
 
@@ -1107,26 +1107,26 @@ export const ContactArea = () => {
                   required
                   type="email"
                   placeholder="Indirizzo email *"
-                  className="w-full bg-[#DEECFA] text-gray-800 placeholder:text-gray-500 px-5 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B]"
+                  className="w-full bg-white text-brand-dark placeholder:text-brand-muted/60 px-5 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
                 />
 
                 <textarea
                   required
                   rows={5}
                   placeholder="Scrivi qui il tuo messaggio o quesito..."
-                  className="w-full bg-[#DEECFA] text-gray-800 placeholder:text-gray-500 px-5 py-3 rounded-lg text-sm font-medium outline-none focus:ring-2 focus:ring-[#42649B] resize-none"
+                  className="w-full bg-white text-brand-dark placeholder:text-brand-muted/60 px-5 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 resize-none"
                 />
 
                 <div className="pt-2 flex justify-end">
                   <button
                     type="submit"
                     disabled={isSubmittingGeneral || isSuccessGeneral}
-                    className={`px-8 py-3 rounded-lg text-white font-medium text-sm transition-all shadow-md ${
+                    className={`px-8 py-3 rounded-xl text-white font-medium text-sm transition-all shadow-md ${
                       isSuccessGeneral
                         ? "bg-green-600"
                         : isSubmittingGeneral
                         ? "bg-gray-400"
-                        : "bg-[#42649B] hover:bg-[#34507d]"
+                        : "bg-brand-primary hover:bg-brand-dark"
                     }`}
                   >
                     {isSubmittingGeneral ? "Invio..." : isSuccessGeneral ? "Messaggio Inviato!" : "Invia Messaggio"}
@@ -1139,9 +1139,9 @@ export const ContactArea = () => {
       </div>
 
       {/* ===== IMMAGINE O MOTTO BOTTOM ===== */}
-      <div className="w-full h-44 md:h-64 relative border-t-4 border-[#FFC629] overflow-hidden bg-[#243c64]">
+      <div className="w-full h-44 md:h-64 relative border-t-4 border-brand-accent overflow-hidden bg-brand-primary">
         <div className="absolute inset-0 flex items-center justify-center p-6 text-center">
-          <h2 className="text-2xl md:text-4xl font-bold text-white tracking-widest drop-shadow-lg uppercase">
+          <h2 className="text-2xl md:text-4xl font-bold font-chillax text-white tracking-widest drop-shadow-lg uppercase">
             La legge è uguale per tutti • I.Me.Con
           </h2>
         </div>

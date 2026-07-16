@@ -56,7 +56,7 @@ export const OfficesMap = () => {
 
   return (
     /* COLORE SFONDO SEZIONE: Il fondo è grigio chiarissimo (bg-brand-neutral) */
-    <section className="bg-brand-neutral py-24 px-6 md:px-12 relative overflow-hidden">
+    <section className="bg-brand-neutral py-24 px-6 md:px-12 relative overflow-hidden border-b border-brand-border font-sans">
       
       {/* FORMA MAIN WRAPPER: grid-cols-1 su telefono per impilare mappa e testi. lg:grid-cols-2 divide in 2 su Desktop. */}
       <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
@@ -70,49 +70,48 @@ export const OfficesMap = () => {
            className="space-y-10"
         >
           <div className="space-y-4">
-            <h2 className="text-4xl md:text-5xl font-chillax text-brand-primary">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-chillax font-semibold text-brand-dark leading-tight">
               Le Nostre <span className="text-brand-accent">Sedi</span>
             </h2>
-            <p className="text-brand-primary/80 leading-relaxed font-light text-lg">
-              Operiamo attivamente in una rete di triplice presidio. Seleziona l'ufficio più vicino a te e prenota un appuntamento conoscitivo.
+            <p className="text-brand-muted leading-relaxed font-sans font-normal text-base sm:text-lg">
+              Operiamo attivamente in una rete di triplice presidio. Seleziona l&apos;ufficio più vicino a te e prenota un appuntamento conoscitivo.
             </p>
           </div>
 
           <div className="space-y-6">
              {OFFICES.map((office) => (
-               /* LOGICA HOVER MAPPA: Sfiorando una Card col mouse o dito si illumina la Cartina! */
+               /* LOGICA HOVER MAPPA */
                <motion.div 
                  key={office.id} 
                  variants={cardVariants}
                  onMouseEnter={() => setHoveredOffice(office.id)}
                  onMouseLeave={() => setHoveredOffice(null)}
-                 /* COLORE CARD SEDE: bg-white. hover:border-brand-accent svela la cornicetta colorata sopra la card su cui stiamo hoverando */
                  className={`group bg-white p-6 md:p-8 rounded-3xl shadow-md border cursor-pointer transition-all duration-300 ${
-                   hoveredOffice === office.id ? 'border-brand-accent shadow-xl scale-[1.02]' : 'border-gray-100 hover:border-brand-third/30'
+                   hoveredOffice === office.id ? 'border-brand-accent shadow-xl scale-[1.02]' : 'border-brand-border hover:border-brand-accent/40'
                  }`}
                >
                   <div className="flex justify-between items-start mb-4">
-                    <h3 className="font-chillax text-2xl md:text-3xl text-brand-primary group-hover:text-brand-accent transition-colors">
-                      {office.city} <span className="text-sm font-sans text-gray-400">({office.province})</span>
+                    <h3 className="font-chillax font-semibold text-2xl md:text-3xl text-brand-dark group-hover:text-brand-accent transition-colors">
+                      {office.city} <span className="text-sm font-sans font-normal text-brand-muted">({office.province})</span>
                     </h3>
-                    <div className={`p-3 rounded-full transition-colors ${hoveredOffice === office.id ? 'bg-brand-accent text-white' : 'bg-brand-neutral text-brand-primary'}`}>
+                    <div className={`p-3 rounded-2xl transition-colors ${hoveredOffice === office.id ? 'bg-brand-accent text-white' : 'bg-brand-neutral text-brand-primary'}`}>
                       <MapPin size={24} />
                     </div>
                   </div>
                   
-                  <div className="space-y-3 pt-2 border-t border-gray-50 flex justify-between items-end">
+                  <div className="space-y-3 pt-3 border-t border-brand-border/60 flex justify-between items-end">
                     <div className="space-y-2">
-                       <p className="text-gray-600 font-light text-sm md:text-base flex items-center gap-2">
-                         <Navigation size={16} className="text-gray-400" />
-                         {office.address}
+                       <p className="text-brand-muted font-sans font-light text-sm md:text-base flex items-center gap-2.5">
+                         <Navigation size={16} className="text-brand-primary shrink-0" />
+                         <span>{office.address}</span>
                        </p>
-                       <p className="text-gray-600 font-light text-sm md:text-base flex items-center gap-2">
-                         <Phone size={16} className="text-gray-400" />
-                         {office.phone}
+                       <p className="text-brand-muted font-sans font-light text-sm md:text-base flex items-center gap-2.5">
+                         <Phone size={16} className="text-brand-primary shrink-0" />
+                         <span>{office.phone}</span>
                        </p>
                     </div>
-                    {/* BOTTONE INDICATORE: Call to action minore all'interno della singola Filiale */}
-                    <button className="text-brand-accent text-sm font-medium hover:underline underline-offset-4 opacity-0 group-hover:opacity-100 transition-opacity">
+                    {/* BOTTONE INDICATORE */}
+                    <button className="text-brand-accent text-sm font-semibold hover:underline underline-offset-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 ml-2">
                       Ottieni Indicazioni
                     </button>
                   </div>

@@ -23,6 +23,11 @@ export async function POST(req: Request) {
     formData.append("istanteCodiceFiscale", data.istanteCodiceFiscale || "");
     formData.append("istanteEmail", data.istanteEmail || "");
     formData.append("istanteTelefono", data.istanteTelefono || "");
+    formData.append("istanteDataNascita", data.istanteDataNascita || "1980-01-01");
+    formData.append("istanteIndirizzo", data.istanteIndirizzo || "Via Roma 1");
+    formData.append("istanteComune", data.istanteComune || "Milano");
+    formData.append("istanteCap", data.istanteCap || "20100");
+    formData.append("istanteProvincia", data.istanteProvincia || "MI");
 
     formData.append("haAvvocato", data.haAvvocato || "false");
     if (data.haAvvocato === "true") {
@@ -36,6 +41,11 @@ export async function POST(req: Request) {
     formData.append("convenutoCodiceFiscale", data.convenutoCodiceFiscale || "");
     formData.append("convenutoEmail", data.convenutoEmail || "");
     formData.append("convenutoTelefono", data.convenutoTelefono || "");
+    formData.append("convenutoDataNascita", data.convenutoDataNascita || "1975-05-15");
+    formData.append("convenutoIndirizzo", data.convenutoIndirizzo || "Corso Italia 10");
+    formData.append("convenutoComune", data.convenutoComune || "Roma");
+    formData.append("convenutoCap", data.convenutoCap || "00100");
+    formData.append("convenutoProvincia", data.convenutoProvincia || "RM");
 
     // Esegui l'azione server
     const result = await createMediationRequestAction(formData);

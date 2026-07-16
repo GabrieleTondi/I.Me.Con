@@ -179,7 +179,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
       <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-5 space-y-4 md:space-y-0">
         <div>
           <div className="flex items-center gap-3">
-            <div className="p-2.5 bg-[#42649B]/10 text-[#42649B] rounded-xl">
+            <div className="p-2.5 bg-brand-secondary/10 text-brand-secondary rounded-xl">
               <FileSpreadsheet size={28} />
             </div>
             <h1 className="text-3xl font-chillax font-bold text-gray-900 tracking-wide">
@@ -190,10 +190,10 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
             Pannello di controllo dell&apos;Amministratore per la visualizzazione delle domande di mediazione.
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-[#DEECFA]/40 px-4 py-2.5 rounded-xl border border-[#42649B]/10 self-start md:self-auto">
+        <div className="flex items-center gap-2 bg-brand-neutral px-4 py-2.5 rounded-xl border border-brand-border self-start md:self-auto shadow-sm">
           <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
           <span className="text-xs font-semibold text-gray-700">
-            Connesso come <strong className="text-[#42649B]">{user.nomeCognome}</strong> (Amministratore)
+            Connesso come <strong className="text-brand-secondary">{user.nomeCognome}</strong> (Amministratore)
           </span>
         </div>
       </div>
@@ -207,7 +207,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
         >
           <div className="flex items-center justify-between text-gray-400">
             <span className="text-xs font-bold uppercase tracking-wider">Totale Pratiche</span>
-            <Scale size={20} className="text-[#42649B]" />
+            <Scale size={20} className="text-brand-secondary" />
           </div>
           <div className="mt-4">
             <h3 className="text-2xl font-bold text-gray-900 font-chillax">{stats.total}</h3>
@@ -222,7 +222,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
         >
           <div className="flex items-center justify-between text-gray-400">
             <span className="text-xs font-bold uppercase tracking-wider">Valore Gestito</span>
-            <TrendingUp size={20} className="text-[#42649B]" />
+            <TrendingUp size={20} className="text-brand-secondary" />
           </div>
           <div className="mt-4">
             <h3 className="text-xl font-bold text-gray-900 font-chillax truncate">
@@ -288,7 +288,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
             placeholder="Cerca per protocollo, oggetto, o nome soggetti..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full pl-11 pr-4 py-3 bg-[#F3F6F9] border border-transparent rounded-xl text-sm font-medium outline-none focus:bg-white focus:border-[#42649B]/30 focus:ring-2 focus:ring-[#42649B]/10 transition-all text-gray-800 placeholder:text-gray-400"
+            className="w-full pl-11 pr-4 py-3 bg-brand-neutral border border-transparent rounded-xl text-sm font-medium outline-none focus:bg-white focus:border-brand-secondary/30 focus:ring-2 focus:ring-brand-secondary/10 transition-all text-gray-800 placeholder:text-gray-400"
           />
         </div>
 
@@ -298,7 +298,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
           <select
             value={selectedArea}
             onChange={(e) => setSelectedArea(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-[#F3F6F9] border border-transparent rounded-xl text-sm font-semibold outline-none focus:bg-white focus:border-[#42649B]/30 transition-all text-gray-700 appearance-none cursor-pointer"
+            className="w-full pl-10 pr-4 py-3 bg-brand-neutral border border-transparent rounded-xl text-sm font-semibold outline-none focus:bg-white focus:border-brand-secondary/30 transition-all text-gray-700 appearance-none cursor-pointer"
           >
             <option value="all">Tutte le Sedi</option>
             {areeDisponibili.map((area) => (
@@ -315,7 +315,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
           <select
             value={selectedStato}
             onChange={(e) => setSelectedStato(e.target.value)}
-            className="w-full pl-10 pr-4 py-3 bg-[#F3F6F9] border border-transparent rounded-xl text-sm font-semibold outline-none focus:bg-white focus:border-[#42649B]/30 transition-all text-gray-700 appearance-none cursor-pointer"
+            className="w-full pl-10 pr-4 py-3 bg-brand-neutral border border-transparent rounded-xl text-sm font-semibold outline-none focus:bg-white focus:border-brand-secondary/30 transition-all text-gray-700 appearance-none cursor-pointer"
           >
             <option value="all">Tutti gli Stati</option>
             {statiDisponibili.map(([code, desc]) => (
@@ -332,7 +332,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
         <div className="overflow-x-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="bg-[#F8FAFD] border-b border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-500">
+              <tr className="bg-brand-neutral border-b border-gray-100 text-xs font-bold uppercase tracking-wider text-gray-500">
                 <th className="px-6 py-4.5">Protocollo</th>
                 <th className="px-6 py-4.5">Data Deposito</th>
                 <th className="px-6 py-4.5">Sede</th>
@@ -352,8 +352,8 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                 </tr>
               ) : (
                 filteredMediazioni.map((m) => (
-                  <tr key={m.id} className="hover:bg-[#F8FAFD]/50 transition-colors">
-                    <td className="px-6 py-4 font-mono text-[#42649B] font-bold">
+                  <tr key={m.id} className="hover:bg-brand-neutral/60 transition-colors">
+                    <td className="px-6 py-4 font-mono text-brand-secondary font-bold">
                       {m.protocollo}
                     </td>
                     <td className="px-6 py-4 text-gray-500">
@@ -393,7 +393,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                       <button
                         type="button"
                         onClick={() => setSelectedMediation(m)}
-                        className="px-4 py-2 text-xs font-bold bg-[#42649B] text-white hover:bg-[#34507d] rounded-lg transition-all shadow-sm hover:shadow"
+                        className="px-4 py-2 text-xs font-bold bg-brand-secondary text-white hover:bg-brand-primary rounded-lg transition-all shadow-sm hover:shadow"
                       >
                         Vedi Dettagli
                       </button>
@@ -404,7 +404,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
             </tbody>
           </table>
         </div>
-        <div className="bg-[#F8FAFD] px-6 py-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 font-semibold">
+        <div className="bg-brand-neutral px-6 py-4 border-t border-gray-100 flex items-center justify-between text-xs text-gray-500 font-semibold">
           <span>Mostrate {filteredMediazioni.length} di {mediazioni.length} pratiche totali</span>
           <span>Sedi Attive: {areeDisponibili.join(", ")}</span>
         </div>
@@ -458,8 +458,8 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
               {/* Corpo Modale Scrollabile */}
               <div className="p-6 md:p-8 space-y-6 overflow-y-auto flex-1">
                 {/* 1. SEZIONE DATI CONTROVERSIA */}
-                <div className="bg-[#F8FAFD] p-5 rounded-2xl border border-gray-100 space-y-4">
-                  <h3 className="text-sm font-bold text-[#42649B] uppercase tracking-wider flex items-center gap-2">
+                <div className="bg-brand-neutral p-5 rounded-2xl border border-gray-100 space-y-4">
+                  <h3 className="text-sm font-bold text-brand-secondary uppercase tracking-wider flex items-center gap-2">
                     <FileText size={16} />
                     Dettagli Controversia
                   </h3>
@@ -499,7 +499,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
 
                 {/* 2. SEZIONE SOGGETTI COINVOLTI */}
                 <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-[#42649B] uppercase tracking-wider flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-brand-secondary uppercase tracking-wider flex items-center gap-2">
                     <Users size={16} />
                     Soggetti Coinvolti nella Lite
                   </h3>
@@ -520,7 +520,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                                 Residenza/Sede: <span className="text-gray-700 font-medium">{s.soggetto.indirizzoResidenza}, {s.soggetto.capResidenza || ""} {s.soggetto.comuneResidenza || ""} ({s.soggetto.provinciaResidenza || ""})</span>
                               </p>
                             )}
-                            {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-[#42649B] font-semibold">{s.soggetto.email}</span></p>}
+                            {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-brand-secondary font-semibold">{s.soggetto.email}</span></p>}
                             {s.soggetto.telefono && <p className="text-gray-500">Tel: {s.soggetto.telefono}</p>}
                           </div>
                         ))}
@@ -542,7 +542,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                                 Residenza/Sede: <span className="text-gray-700 font-medium">{s.soggetto.indirizzoResidenza}, {s.soggetto.capResidenza || ""} {s.soggetto.comuneResidenza || ""} ({s.soggetto.provinciaResidenza || ""})</span>
                               </p>
                             )}
-                            {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-[#42649B] font-semibold">{s.soggetto.email}</span></p>}
+                            {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-brand-secondary font-semibold">{s.soggetto.email}</span></p>}
                             {s.soggetto.telefono && <p className="text-gray-500">Tel: {s.soggetto.telefono}</p>}
                           </div>
                         ))}
@@ -552,7 +552,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
 
                 {/* 3. ALLEGATI DOCUMENTALI */}
                 <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-[#42649B] uppercase tracking-wider flex items-center gap-2">
+                  <h3 className="text-sm font-bold text-brand-secondary uppercase tracking-wider flex items-center gap-2">
                     <Paperclip size={16} />
                     Documenti ed Allegati depositati ({selectedMediation.documenti.length})
                   </h3>
@@ -566,9 +566,9 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                           href={`/api/gestionale/documento?id=${doc.id}`}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs hover:bg-[#EBF3FC] hover:border-[#42649B]/30 transition-all cursor-pointer block"
+                          className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs hover:bg-brand-neutral hover:border-brand-secondary/30 transition-all cursor-pointer block"
                         >
-                          <FileText size={20} className="text-[#42649B] shrink-0" />
+                          <FileText size={20} className="text-brand-secondary shrink-0" />
                           <div className="truncate flex-1">
                             <p className="font-bold text-gray-800 truncate" title={doc.nomeOriginale}>
                               {doc.nomeOriginale}
@@ -585,7 +585,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
               </div>
 
               {/* Piè di pagina Modale */}
-              <div className="bg-[#F8FAFD] p-4 border-t border-gray-100 flex justify-end">
+              <div className="bg-brand-neutral p-4 border-t border-gray-100 flex justify-end">
                 <button
                   type="button"
                   onClick={() => setSelectedMediation(null)}

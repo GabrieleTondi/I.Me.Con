@@ -10,28 +10,28 @@ interface ButtonProps extends HTMLMotionProps<"button"> {
 export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(({ children, variant = 'primary', className = '', ...props }, ref) => {
   /* 
     FORMA E STRUTTURA: 
-    - px-6 py-3: Spaziatura (Padding)
-    - rounded-lg: Arrotondamento dei bordi
-    - text-base font-medium: Dimensione e spessore del testo
+    - px-6 py-3.5: Spaziatura (Padding bilanciato per touch e click)
+    - rounded-xl: Arrotondamento moderno dei bordi
+    - text-sm sm:text-base font-semibold: Dimensione e spessore istituzionale
   */
-  const baseClasses = "px-6 py-3 rounded-lg font-chillax tracking-wide transition-all focus:outline-none focus:ring-4 text-base flex items-center justify-center gap-2 font-medium";
+  const baseClasses = "px-6 py-3.5 rounded-xl font-chillax font-semibold tracking-wide transition-all duration-300 focus:outline-none focus:ring-4 text-sm sm:text-base flex items-center justify-center gap-2.5 cursor-pointer select-none";
   
   /* 
     COLORI VARIANTI: 
-    Modifica i "bg-..." e "text-..." qui sotto per alterare i colori dei bottoni
+    Allineate alla palette Royal & Slate istituzionale di I.Me.Con
   */
   const variants = {
-    // Bottone Arancione (Azione Primaria)
-    primary: "bg-brand-accent text-contrast hover:opacity-90 focus:ring-brand-accent/50 shadow-md",
+    // Bottone Arancione Vibrante (Call-to-Action Primaria)
+    primary: "bg-brand-accent text-contrast hover:bg-orange-600 focus:ring-brand-accent/40 shadow-lg hover:shadow-xl hover:shadow-brand-accent/20",
     
-    // Bottone Blu Scuro
-    secondary: "bg-brand-primary text-contrast hover:bg-brand-secondary focus:ring-brand-primary/50 shadow-md",
+    // Bottone Slate Blue (Azione Secondaria)
+    secondary: "bg-brand-secondary text-contrast hover:bg-brand-primary focus:ring-brand-secondary/40 shadow-md hover:shadow-lg",
     
-    // Bottone con solo bordo
-    outline: "border border-brand-primary text-brand-primary hover:bg-brand-primary/5 focus:ring-brand-primary/20",
+    // Bottone con solo bordo per sfondi chiari o scuri
+    outline: "border-2 border-brand-primary/40 text-brand-primary hover:bg-brand-primary hover:text-contrast focus:ring-brand-primary/20",
     
-    // Bottone Bianco (Usato su sfondi scuri)
-    white: "bg-contrast text-brand-primary border border-gray-200 hover:bg-gray-50 focus:ring-gray-200 shadow-sm"
+    // Bottone Bianco Puro (Ottimizzato per sezioni scure Hero/CTA)
+    white: "bg-brand-surface text-brand-primary border border-white/20 hover:bg-brand-neutral focus:ring-white/30 shadow-lg hover:shadow-xl"
   };
 
   return (

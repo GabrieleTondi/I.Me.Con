@@ -49,7 +49,7 @@ export const Header = () => {
 
   return (
     /* FORMA COMPONENTE NAVBAR: "absolute" permette all'header di sedersi SOPRA la sezione Hero sottostante */
-    <header className="absolute top-0 left-0 right-0 z-50 p-6 md:px-12 flex items-center justify-between">
+    <header className="absolute top-0 left-0 right-0 z-50 py-5 px-6 md:px-12 flex items-center justify-between">
       
       {/* FORMA E LOGO: Il logo fluttua a sinistra all'avvio. */}
       <motion.div 
@@ -57,15 +57,17 @@ export const Header = () => {
         animate={{ opacity: 1, x: 0 }}
         className="flex items-center"
       >
-        <Image 
-          src="/logo.png" 
-          alt="I.Me.Con Logo" 
-          width={220}
-          height={60}
-          priority
-          /* DIMENSIONE LOGO: h-10 su mobile, h-14 su desktop. */
-          className="h-10 md:h-14 w-auto object-contain"
-        />
+        <Link href="/">
+          <Image 
+            src="/imecon logo.png" 
+            alt="I.Me.Con Logo" 
+            width={220}
+            height={60}
+            priority
+            /* DIMENSIONE LOGO: h-10 su mobile, h-14 su desktop. */
+            className="h-10 md:h-14 w-auto object-contain cursor-pointer"
+          />
+        </Link>
       </motion.div>
 
       {/* BLOCCO MENU DESKTOP */}
@@ -73,11 +75,11 @@ export const Header = () => {
         initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
         /* COLORE SFONDO BARRA: bg-white/10 aggiunge bianco trasparente per isolarsi ma vedere dietro (effetto vetro con backdrop-blur-md) */
-        className="hidden lg:flex items-center gap-6 bg-white/10 backdrop-blur-md rounded-full px-6 py-3 border border-white/10 shadow-sm"
+        className="hidden lg:flex items-center gap-7 bg-white/10 backdrop-blur-md rounded-full px-8 py-3 border border-white/15 shadow-lg"
       >
         {links.map((link, i) => (
-          /* COLORE LINK: text-contrast/90 (Bianco opaco), hover:text-brand-accent (Diventa arancio al passaggio del mouse!) */
-          <a key={i} href={link.href} className="text-contrast/90 hover:text-brand-accent text-sm transition-colors hover:underline underline-offset-4 font-medium">
+          /* COLORE E FONT LINK: text-contrast/90, hover:text-brand-accent, font-sans ad alta leggibilità */
+          <a key={i} href={link.href} className="text-contrast/90 hover:text-brand-accent text-sm font-sans font-medium transition-colors hover:underline underline-offset-4 tracking-wide">
             {link.name}
           </a>
         ))}
@@ -93,7 +95,7 @@ export const Header = () => {
           <div className="relative">
             <button 
               onClick={() => setShowDropdown(!showDropdown)}
-              className="flex items-center gap-2 bg-white/10 backdrop-blur-md border border-white/20 text-white rounded-full px-5 py-2 hover:bg-white/20 transition-all font-medium text-sm cursor-pointer"
+              className="flex items-center gap-2.5 bg-white/10 backdrop-blur-md border border-white/20 text-contrast rounded-full px-5 py-2.5 hover:bg-white/20 transition-all font-sans font-medium text-sm cursor-pointer shadow-sm"
             >
               <span>Ciao, {user.nomeCognome.split(" ")[0]}</span>
               <ChevronDown size={16} className={`transition-transform duration-200 ${showDropdown ? 'rotate-180' : ''}`} />
@@ -103,21 +105,21 @@ export const Header = () => {
               <motion.div 
                 initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="absolute right-0 mt-2 w-48 bg-brand-primary border border-white/10 rounded-xl shadow-xl p-2 z-50 text-sm"
+                className="absolute right-0 mt-3 w-56 bg-brand-primary/95 backdrop-blur-xl border border-white/15 rounded-2xl shadow-2xl p-2.5 z-50 text-sm font-sans"
               >
-                <div className="px-3 py-2 border-b border-white/10 text-xs text-white/60">
-                  Ruolo: <span className="font-semibold text-brand-accent">{user.ruoli[0] || "Utente"}</span>
+                <div className="px-3.5 py-2.5 border-b border-white/10 text-xs text-contrast/70">
+                  Ruolo: <span className="font-semibold text-brand-accent ml-1">{user.ruoli[0] || "Utente"}</span>
                 </div>
                 {user.ruoli.includes("Amministratore") && (
                   <Link href="/gestionale">
-                    <span className="w-full flex items-center gap-2 px-3 py-2 mt-1 text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer block">
+                    <span className="w-full flex items-center gap-2 px-3.5 py-2.5 mt-1.5 text-contrast hover:bg-white/10 rounded-xl text-left transition-colors cursor-pointer block font-medium">
                       Vai al gestionale
                     </span>
                   </Link>
                 )}
                 <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-2 px-3 py-2 mt-1 text-white hover:bg-white/10 rounded-lg text-left transition-colors cursor-pointer"
+                  className="w-full flex items-center gap-2.5 px-3.5 py-2.5 mt-1.5 text-red-300 hover:bg-red-950/40 rounded-xl text-left transition-colors cursor-pointer font-medium"
                 >
                   <LogOut size={16} />
                   <span>Disconnetti</span>
@@ -127,13 +129,13 @@ export const Header = () => {
           </div>
         ) : (
           <Link href="/login">
-            <Button variant="primary" className="text-sm px-5 py-2 rounded-full !text-base">Accedi</Button>
+            <Button variant="primary" className="text-sm px-6 py-2.5 rounded-xl">Accedi</Button>
           </Link>
         )}
       </motion.div>
 
       {/* ICONA MENU MOBILE (Le lineette "Hamburger") */}
-      <button className="lg:hidden text-contrast z-50 relative" onClick={() => setIsOpen(!isOpen)}>
+      <button className="lg:hidden text-contrast z-50 relative p-2 focus:outline-none" onClick={() => setIsOpen(!isOpen)}>
         {isOpen ? <X size={28} className="text-contrast" /> : <Menu size={28} />}
       </button>
 
@@ -142,34 +144,34 @@ export const Header = () => {
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          /* COLORE PANNELLO MOBILE: bg-brand-primary (#064789). Scende sopra a tutto con la shadow-xl */
-          className="absolute top-full left-0 right-0 bg-brand-primary p-6 flex flex-col gap-4 shadow-xl z-40 lg:hidden"
+          /* COLORE PANNELLO MOBILE: bg-brand-primary/95 con backdrop-blur-xl. Scende sopra a tutto con shadow-2xl */
+          className="absolute top-full left-0 right-0 bg-brand-primary/95 backdrop-blur-xl border-b border-white/15 p-6 flex flex-col gap-3 shadow-2xl z-40 lg:hidden font-sans"
         >
           {links.map((link, i) => (
-            <a key={i} href={link.href} className="text-contrast text-lg hover:bg-brand-secondary p-2 rounded">
+            <a key={i} href={link.href} className="text-contrast font-medium text-base hover:text-brand-accent hover:bg-white/5 px-4 py-3 rounded-xl transition-colors">
               {link.name}
             </a>
           ))}
           {user ? (
-            <div className="flex flex-col gap-2 mt-2 border-t border-white/10 pt-4">
-              <div className="text-white/60 text-sm px-2 mb-2">
-                Ciao, <span className="font-medium text-white">{user.nomeCognome}</span> ({user.ruoli[0] || "Utente"})
+            <div className="flex flex-col gap-2.5 mt-2 border-t border-white/15 pt-4">
+              <div className="text-contrast/80 text-sm px-2 mb-1 font-medium">
+                Ciao, <span className="font-semibold text-contrast">{user.nomeCognome}</span> ({user.ruoli[0] || "Utente"})
               </div>
               {user.ruoli.includes("Amministratore") && (
                 <Link href="/gestionale">
-                  <Button variant="secondary" className="w-full justify-start gap-2 !text-lg mb-2">
+                  <Button variant="secondary" className="w-full justify-center gap-2">
                     Vai al gestionale
                   </Button>
                 </Link>
               )}
-              <Button variant="secondary" onClick={handleLogout} className="w-full justify-start gap-2 !text-lg bg-red-950/20 hover:bg-red-950/40 text-red-300 border border-red-900/30">
+              <Button variant="secondary" onClick={handleLogout} className="w-full justify-center gap-2 !bg-red-950/40 hover:!bg-red-950/60 !text-red-200 border border-red-900/40">
                 <LogOut size={18} />
                 Disconnetti
               </Button>
             </div>
           ) : (
-            <Link href="/login">
-              <Button variant="secondary" className="w-full mt-2 !text-lg">Accedi</Button>
+            <Link href="/login" className="mt-2">
+              <Button variant="primary" className="w-full justify-center">Accedi all&apos;Area Riservata</Button>
             </Link>
           )}
         </motion.div>

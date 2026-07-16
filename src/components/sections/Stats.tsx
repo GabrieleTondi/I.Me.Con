@@ -44,37 +44,33 @@ export const Stats = () => {
   };
 
   return (
-    /* COLORE SFONDO SEZIONE: 'bg-brand-neutral' utilizza il codice neutro (#EBF2FA). */
-    <section className="bg-brand-neutral py-24 px-6 md:px-12 relative z-10">
+    /* COLORE SFONDO SEZIONE: 'bg-brand-neutral' (#F8FAFC) */
+    <section className="bg-brand-neutral py-24 px-6 md:px-12 relative z-10 border-y border-brand-border">
       <div className="max-w-7xl mx-auto">
-        {/* GRIGLIA FORMA: 'grid-cols-1' su mobile, 'grid-cols-3' (3 colonne affiancate) su desktop */}
         <motion.div 
           className="grid grid-cols-1 md:grid-cols-3 gap-8"
           variants={containerVariants}
           initial="hidden"
-          whileInView="visible" // TRANSIZIONE: Scatta solo quando scorri la pagina fino a qui!
+          whileInView="visible"
           viewport={{ once: true, margin: "-100px" }}
         >
           {stats.map((stat) => (
             <motion.div 
               key={stat.id}
               variants={itemVariants}
-              /* FORMA E COLORE CARD: bg-brand-primary (Sfondo Blu Profondo), rounded-2xl (Bordi smussati) */
-              className="bg-brand-primary p-8 rounded-2xl border border-white/5 shadow-2xl hover:border-brand-accent transition-colors group"
+              className="bg-brand-primary p-8 md:p-10 rounded-2xl border border-white/10 shadow-xl hover:shadow-2xl hover:border-brand-accent/60 transition-all duration-300 group flex flex-col justify-between"
             >
-              {/* FORMA QUADRATELLO ICONA: bg-white/10 (Trasparente bianco), w-20 h-20 (Grandezza) */}
-              <div className="bg-white/10 w-20 h-20 rounded-2xl flex items-center justify-center text-brand-accent mb-6 group-hover:scale-110 transition-transform">
-                {stat.icon}
+              <div>
+                <div className="bg-white/10 w-18 h-18 rounded-2xl flex items-center justify-center text-brand-accent mb-6 group-hover:scale-110 transition-transform duration-300 shadow-inner">
+                  {stat.icon}
+                </div>
+                
+                <h2 className="text-4xl sm:text-5xl font-chillax font-bold text-contrast mb-2 tracking-tight">{stat.title}</h2>
+                <h3 className="text-lg sm:text-xl text-brand-accent font-sans font-semibold mb-3">{stat.subtitle}</h3>
+                <p className="text-contrast/80 leading-relaxed font-sans font-light text-base">
+                  {stat.description}
+                </p>
               </div>
-              
-              {/* COLORE TESTO RISULTATO: text-contrast (Bianco puro) */}
-              <h2 className="text-5xl font-chillax text-contrast mb-2">{stat.title}</h2>
-              {/* COLORE TESTO SOTTOTITOLO: text-brand-accent (Arancione) */}
-              <h3 className="text-xl text-brand-accent font-medium mb-4">{stat.subtitle}</h3>
-              {/* TESTO DESCRIZIONE: text-contrast/80 (Bianco opaco all'80%) */}
-              <p className="text-contrast/80 leading-relaxed font-light">
-                {stat.description}
-              </p>
             </motion.div>
           ))}
         </motion.div>
