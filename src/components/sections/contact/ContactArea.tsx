@@ -845,6 +845,7 @@ export const ContactArea = () => {
 
                       {step < 4 ? (
                         <button
+                          key="btn-prosegui"
                           type="button"
                           onClick={nextStep}
                           className="px-8 py-3 rounded-lg bg-[#42649B] text-white font-medium text-sm flex items-center gap-2 hover:bg-[#34507d] transition-all shadow-md"
@@ -854,6 +855,7 @@ export const ContactArea = () => {
                         </button>
                       ) : (
                         <button
+                          key="btn-submit"
                           type="submit"
                           disabled={isSubmittingMediation}
                           className="px-10 py-3 rounded-lg bg-[#42649B] text-white font-bold text-sm flex items-center gap-2 hover:bg-[#34507d] disabled:bg-gray-400 transition-all shadow-lg"

@@ -25,7 +25,7 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
 
     // 2. Naviga alla pagina dei contatti
     await page.goto("/contatti");
-    await expect(page.locator("h2")).toContainText("Contatti");
+    await expect(page.locator("h1")).toContainText("Contatto");
 
     // 3. STEP 1: Dati della Controversia
     // Seleziona la materia
@@ -67,8 +67,8 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
     await page.getByRole("button", { name: /deposita richiesta/i }).click();
 
     // 7. Verifica schermata di successo con il numero di protocollo generato
-    const successHeader = page.locator("h3");
-    await expect(successHeader).toContainText("Domanda di Mediazione Depositata!");
+    const successHeader = page.getByRole("heading", { name: "Domanda di Mediazione Depositata!" });
+    await expect(successHeader).toBeVisible();
     
     // Controlla che sia visualizzato un codice di protocollo valido (ADR-YYYY-XXXXXX)
     const protocolCode = page.locator("div.font-mono");
