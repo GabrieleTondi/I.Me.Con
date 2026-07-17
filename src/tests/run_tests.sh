@@ -61,6 +61,11 @@ echo -e "\n${YELLOW}[2/6] Verifica integrità database ed esito seeding...${NC}"
 npx tsx src/tests/verify-db.ts
 print_result $? "Integrità database verificata con successo"
 
+# 2b. Esecuzione dei test unitari (Vitest)
+echo -e "\n${YELLOW}[2b/6] Esecuzione dei test unitari con Vitest...${NC}"
+npx vitest run
+print_result $? "Test unitari eseguiti con successo"
+
 # 3. Test delle rotte pubbliche (GET)
 echo -e "\n${YELLOW}[3/6] Test delle rotte pubbliche...${NC}"
 
@@ -145,6 +150,27 @@ print_result $? "Invio richiesta mediazione riuscito"
 
 PROTOCOLLO=$(echo "$MED_RES" | sed -n 's/.*"protocollo":"\([^"]*\)".*/\1/p')
 echo -e "  Generato Protocollo: ${GREEN}${PROTOCOLLO}${NC}"
+
+# 5b. Test di Generazione PDF Riassuntivo Pratica ADR
+echo -e "\n${YELLOW}[5b/6] Test di generazione PDF riassuntivo...${NC}"
+MEDIATION_ID=$(echo "$MED_RES" | sed -E 's/.*"id":([0-9]+).*/\1/')
+
+# A. Tentativo di accesso come utente standard (deve fallire con 403 Forbidden)
+echo "  Accesso al PDF come utente standard..."
+curl -s -b "$COOKIE_FILE" -o /dev/null -w "%{http_code}" "$BASE_URL/api/gestionale/pdf-riassunto?id=$MEDIATION_ID" | grep -q "403"
+print_result $? "Accesso negato correttamente per utente standard (atteso 403 Forbidden)"
+
+# B. Promozione utente a Amministratore
+echo "  Promozione utente a ruolo Amministratore..."
+PROMOTE_BODY='{"action":"promoteToAdmin","data":{"username":"test_user_unique"}}'
+PROMOTE_RES=$(curl -s -X POST -H "Content-Type: application/json" -d "$PROMOTE_BODY" "$BASE_URL/api/test/auth")
+echo "$PROMOTE_RES" | grep -q '"success":true'
+print_result $? "Utente promosso ad Amministratore con successo"
+
+# C. Accesso al PDF come Amministratore (deve riuscire)
+echo "  Accesso al PDF come Amministratore..."
+curl -s -b "$COOKIE_FILE" -o /dev/null -w "%{http_code} %{content_type}" "$BASE_URL/api/gestionale/pdf-riassunto?id=$MEDIATION_ID" | grep -q "200 application/pdf"
+print_result $? "PDF scaricato con successo (Status 200, Content-Type: application/pdf)"
 
 # 6. Esecuzione Cleanup Dati di Test
 echo -e "\n${YELLOW}[6/6] Esecuzione pulizia dati di test (Cleanup)...${NC}"

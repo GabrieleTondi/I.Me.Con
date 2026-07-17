@@ -232,6 +232,8 @@ export async function createMediationRequestAction(formData: FormData) {
       });
     }
 
+    let newMediationId: number | undefined = undefined;
+
     await db.transaction(async (tx) => {
       // A. Inserimento o upsert del Soggetto Istante
       const [soggettoIstante] = await tx
@@ -336,6 +338,8 @@ export async function createMediationRequestAction(formData: FormData) {
         })
         .returning();
 
+      newMediationId = nuovaMediazione.id;
+
       // E. Collegamento dei Soggetti alla Mediazione tramite mediazione_soggetto
       await tx.insert(mediazioneSoggetto).values([
         {
@@ -413,6 +417,7 @@ export async function createMediationRequestAction(formData: FormData) {
 
     return {
       success: true,
+      id: newMediationId,
       protocollo,
       message: "Richiesta di mediazione inviata con successo",
     };

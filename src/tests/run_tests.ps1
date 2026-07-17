@@ -70,6 +70,15 @@ if ($LASTEXITCODE -eq 0) {
     Print-Result $false "Errore durante la verifica del database"
 }
 
+# 2b. Esecuzione dei test unitari (Vitest)
+Write-Host "`n[2b/6] Esecuzione dei test unitari con Vitest..." -ForegroundColor Yellow
+npx vitest run
+if ($LASTEXITCODE -eq 0) {
+    Print-Result $true "Test unitari eseguiti con successo"
+} else {
+    Print-Result $false "Errore durante l'esecuzione dei test unitari"
+}
+
 # 3. Test delle rotte pubbliche (GET)
 Write-Host "`n[3/6] Test delle rotte pubbliche..." -ForegroundColor Yellow
 
@@ -193,6 +202,50 @@ try {
     }
 } catch {
     Print-Result $false "Richiesta mediazione fallita: $_"
+}
+
+# 5b. Test di Generazione PDF Riassuntivo Pratica ADR
+Write-Host "`n[5b/6] Test di generazione PDF riassuntivo..." -ForegroundColor Yellow
+$newMediationId = $medRes.id
+
+# A. Tentativo di accesso come utente standard (deve fallire con 403 Forbidden)
+Write-Host "  Accesso al PDF come utente standard..."
+try {
+    $pdfRes = Invoke-WebRequest -Uri "$baseUrl/api/gestionale/pdf-riassunto?id=$newMediationId" -WebSession $webSession -UseBasicParsing
+    Print-Result $false "L'utente standard non dovrebbe poter accedere al PDF"
+} catch [System.Net.WebException] {
+    $res = $_.Exception.Response
+    $isForbidden = ($res -ne $null -and [int]$res.StatusCode -eq 403)
+    Print-Result $isForbidden "Accesso negato correttamente per utente standard (atteso 403 Forbidden)"
+} catch {
+    Print-Result $false "Errore imprevisto durante l'accesso al PDF: $_"
+}
+
+# B. Promozione utente a Amministratore
+Write-Host "  Promozione utente a ruolo Amministratore..."
+$promoteBody = @{
+    action = "promoteToAdmin"
+    data = @{
+        username = "test_user_unique"
+    }
+} | ConvertTo-Json -Depth 5
+
+try {
+    $promoteRes = Invoke-RestMethod -Uri "$baseUrl/api/test/auth" -Method Post -Headers $headers -Body $promoteBody
+    Print-Result ($promoteRes.success -eq $true) "Utente promosso ad Amministratore con successo"
+} catch {
+    Print-Result $false "Promozione utente fallita: $_"
+}
+
+# C. Accesso al PDF come Amministratore (deve riuscire)
+Write-Host "  Accesso al PDF come Amministratore..."
+try {
+    $pdfRes = Invoke-WebRequest -Uri "$baseUrl/api/gestionale/pdf-riassunto?id=$newMediationId" -WebSession $webSession -UseBasicParsing
+    $contentType = $pdfRes.Headers["Content-Type"]
+    $isPdf = ($pdfRes.StatusCode -eq 200 -and $contentType -eq "application/pdf")
+    Print-Result $isPdf "PDF scaricato con successo (Status 200, Content-Type: application/pdf)"
+} catch {
+    Print-Result $false "Accesso al PDF come Amministratore fallito: $_"
 }
 
 # 6. Esecuzione Cleanup Dati di Test

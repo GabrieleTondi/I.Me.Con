@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { db } from "@/db";
-import { utente, soggetto, mediazione, mediazioneSoggetto } from "@/db/schema";
+import { utente, soggetto, mediazione, mediazioneSoggetto, utenteRuolo, ruolo } from "@/db/schema";
 import { registerAction, loginAction } from "@/app/actions/auth-actions";
 import { eq, or, inArray } from "drizzle-orm";
 
@@ -54,6 +54,31 @@ export async function POST(req: Request) {
         }
         throw err;
       }
+    }
+
+    if (action === "promoteToAdmin") {
+      const user = await db.query.utente.findFirst({
+        where: eq(utente.username, data.username || ""),
+      });
+      if (!user) {
+        return NextResponse.json({ success: false, error: "User not found" }, { status: 404 });
+      }
+      const roleObj = await db.query.ruolo.findFirst({
+        where: eq(ruolo.nomeRuolo, "Amministratore"),
+      });
+      if (!roleObj) {
+        return NextResponse.json({ success: false, error: "Admin role not found" }, { status: 500 });
+      }
+      const existing = await db.query.utenteRuolo.findFirst({
+        where: (fields, { and, eq }) => and(eq(fields.utenteId, user.id), eq(fields.ruoloId, roleObj.id)),
+      });
+      if (!existing) {
+        await db.insert(utenteRuolo).values({
+          utenteId: user.id,
+          ruoloId: roleObj.id,
+        });
+      }
+      return NextResponse.json({ success: true });
     }
 
     return NextResponse.json({ error: "Invalid action" }, { status: 400 });
