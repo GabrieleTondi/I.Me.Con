@@ -585,7 +585,16 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
               </div>
 
               {/* Piè di pagina Modale */}
-              <div className="bg-brand-neutral p-4 border-t border-gray-100 flex justify-end">
+              <div className="bg-brand-neutral p-4 border-t border-gray-100 flex justify-between items-center">
+                <a
+                  href={`/api/gestionale/pdf-riassunto?id=${selectedMediation.id}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="px-6 py-2.5 text-xs font-bold bg-brand-secondary text-white rounded-xl hover:bg-brand-primary transition-all flex items-center gap-2 shadow-sm cursor-pointer"
+                >
+                  <FileText size={14} />
+                  Stampa / Scarica Riassunto PDF
+                </a>
                 <button
                   type="button"
                   onClick={() => setSelectedMediation(null)}
