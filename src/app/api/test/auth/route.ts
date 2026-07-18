@@ -96,7 +96,7 @@ export async function DELETE(req: Request) {
 
   try {
     const testCFs = ["TESTISTANTE12345", "TESTCONVENUTO123", "TESTAVVOCATO1234"];
-    const testEmails = ["test_user_unique@example.com", "direzione@imecon.it"];
+    const testEmails = ["test_user_unique@example.com", "test_user_unique2@example.com", "direzione@imecon.it"];
 
     await db.transaction(async (tx) => {
       // 1. Trova i soggetti di test

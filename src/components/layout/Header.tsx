@@ -38,11 +38,11 @@ export const Header = () => {
     }
   };
 
-  // LOGICA E DATI: Cambia i nomi qui per modificare i link della navigazione
   const links = [
     { name: 'Home', href: '/' },
     { name: 'Chi Siamo', href: '/chi-siamo' },
     { name: 'Dove siamo', href: '/dove-siamo' },
+    { name: 'Modulistica', href: '/modulistica' },
     { name: 'Contatti', href: '/contatti' },
     { name: 'News', href: '/news' },
   ];
