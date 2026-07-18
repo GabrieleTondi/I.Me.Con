@@ -25,7 +25,7 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
 
     // 2. Naviga alla pagina dei contatti
     await page.goto("/contatti");
-    await expect(page.locator("h1")).toContainText("Contatto");
+    await expect(page.locator("h1").first()).toContainText("Contatti");
 
     // 3. STEP 1: Dati della Controversia
     // Seleziona la materia

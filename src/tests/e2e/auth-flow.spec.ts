@@ -59,7 +59,7 @@ test.describe("Flusso di Autenticazione (E2E)", () => {
     await page.locator('button[type="submit"]').click();
 
     // Verifica la visualizzazione del messaggio di errore
-    const errorMessage = page.locator("div.bg-red-950\\/50");
+    const errorMessage = page.locator("div.bg-red-950\\/60");
     await expect(errorMessage).toBeVisible();
     await expect(errorMessage).toContainText("Accesso non riuscito");
   });
