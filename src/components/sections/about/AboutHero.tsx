@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 
 export const AboutHero = () => {
   return (
-    /* COLORE SFONDO SEZIONE: 'bg-brand-primary' (#082F49) */
+    /* COLORE SFONDO SEZIONE: 'bg-brand-primary' (#1E40AF - Deep Royal Blue) */
     <section className="relative min-h-[55vh] flex items-center pt-32 pb-20 px-6 md:px-12 bg-brand-primary overflow-hidden border-b border-white/10">
       {/* EFFETTO VISIVO (BLOB LUMINOSO) */}
       <div className="absolute top-0 right-0 w-[60%] h-[100%] rounded-full bg-brand-third opacity-15 blur-[120px] pointer-events-none" />

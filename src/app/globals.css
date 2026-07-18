@@ -5,7 +5,7 @@
   /* =========================================
      COLORE: Sfondo e Testo di Base del Sito
      ========================================= */
-  --background: #082F49;
+  --background: #1E40AF;
   --foreground: #FFFFFF;
 }
 
@@ -14,11 +14,11 @@
   --color-foreground: var(--foreground);
   
   /* =========================================
-     COLORE: Palette Dinamica Royal & Slate I.Me.Con
+     COLORE: Palette Dinamica Royal Blue I.Me.Con
      ========================================= */
-  --color-brand-bg: #082F49;       /* Deep Royal Navy (Sfondo sezioni principali scure) */
-  --color-brand-primary: #082F49;  /* Deep Royal Navy (Sfondo e Card scure istituzionali) */
-  --color-brand-secondary: #0369A1;/* Slate Blue / Action Blue (Pulsanti secondari ed elementi di supporto) */
+  --color-brand-bg: #1E40AF;       /* Deep Royal Blue (Sfondo sezioni principali scure ed eleganti) */
+  --color-brand-primary: #1E40AF;  /* Deep Royal Blue (Sfondo e Card scure istituzionali ad alto contrasto) */
+  --color-brand-secondary: #4169E1;/* Royal Blue (Pulsanti secondari, badge ed elementi di supporto vivaci) */
   --color-brand-third: #38BDF8;    /* Sky Blue (Accenti luminosi su sfondi scuri) */
   --color-brand-accent: #F97316;   /* Vibrant Saffron Orange (Call-to-action primarie ed evidenziazioni) */
   --color-brand-neutral: #F8FAFC;  /* Slate White / Soft Neutral (Sfondo sezioni chiare e tabelle) */

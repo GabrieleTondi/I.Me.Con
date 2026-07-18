@@ -106,8 +106,11 @@ async function main() {
   const statesList = [
     { codice: "DA_ASSEGNARE", descrizione: "In attesa di assegnazione mediatore" },
     { codice: "IN_CORSO", descrizione: "Procedimento in corso" },
-    { codice: "CONCILIATA", descrizione: "Mediazione conclusa con accordo" },
-    { codice: "NON_CONCILIATA", descrizione: "Mediazione conclusa senza accordo" },
+    { codice: "ACCORDO_RAGGIUNTO", descrizione: "ACCORDO RAGGIUNTO" },
+    { codice: "ASSENZA_CONVENUTO", descrizione: "ASSENZA PARTE CONVENUTA" },
+    { codice: "ASSENZA_CONVENUTO_PROPOSTA", descrizione: "ASSENZA PARTE CONVENUTA CON PROPOSTA CONCILIATIVA" },
+    { codice: "MANCATO_ACCORDO", descrizione: "MANCATO ACCORDO" },
+    { codice: "ESTINTO_ASSENZA_PARTI", descrizione: "ESTINTO PER ASSENZA ENTRAMBI LE PARTI" },
     { codice: "ARCHIVIATA", descrizione: "Pratica archiviata" },
   ];
   const stateMap: Record<string, number> = {};

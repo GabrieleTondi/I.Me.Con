@@ -355,7 +355,7 @@ export async function GET(req: Request) {
     headers.set("Content-Type", "application/pdf");
     headers.set("Content-Disposition", `inline; filename="riassunto-${protocol}.pdf"`);
 
-    return new NextResponse(pdfBuffer, { headers });
+    return new NextResponse(new Uint8Array(pdfBuffer), { headers });
   } catch (error: any) {
     console.error("Errore durante la generazione del PDF riassuntivo:", error);
     return new NextResponse(error.message || "Errore Interno del Server", { status: 500 });

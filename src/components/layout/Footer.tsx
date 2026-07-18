@@ -4,7 +4,7 @@ import Image from 'next/image';
 export const Footer = () => {
   return (
     /* 
-      COLORE E FORMA SFONDO: bg-brand-primary assicura lo sfondo reale istituzionale (#082F49).
+      COLORE E FORMA SFONDO: bg-brand-primary assicura lo sfondo reale istituzionale (#1E40AF - Deep Royal Blue).
       text-contrast/80 e border-white/15 formano una separazione chiara e raffinata.
     */
     <footer className="bg-brand-primary text-contrast/80 py-16 px-6 md:px-12 border-t border-white/15 font-sans">

@@ -267,7 +267,7 @@ export const ContactArea = () => {
   };
 
   return (
-    <section className="w-full flex flex-col relative bg-brand-neutral pt-20 font-sans">
+    <section className="w-full flex flex-col relative bg-brand-neutral pt-12 md:pt-16 font-sans">
       <div className="flex flex-col lg:flex-row min-h-[88vh]">
         {/* ===== SETTORE INFORMATIVO BLU SCURO - SINISTRA (40%) ===== */}
         <motion.div

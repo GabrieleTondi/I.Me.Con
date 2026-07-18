@@ -7,7 +7,7 @@ import Link from 'next/link';
 
 export const Hero = () => {
   return (
-    /* COLORE SFONDO: bg-brand-primary definisce lo sfondo di partenza (#082F49). */
+    /* COLORE SFONDO: bg-brand-primary definisce lo sfondo di partenza (#1E40AF - Deep Royal Blue). */
     <section className="relative min-h-[95vh] flex items-center pt-28 pb-20 lg:pb-0 px-6 md:px-12 bg-brand-primary overflow-hidden">
       <div className="relative z-10 w-full max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
         

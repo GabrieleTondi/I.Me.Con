@@ -25,7 +25,7 @@ async function verify() {
     console.log(`Stati di mediazione trovati nel DB: ${states.length}`);
     states.forEach(s => console.log(` - [${s.codice}] ${s.descrizione}`));
 
-    const requiredStates = ["DA_ASSEGNARE", "IN_CORSO", "CONCILIATA", "NON_CONCILIATA", "ARCHIVIATA"];
+    const requiredStates = ["DA_ASSEGNARE", "IN_CORSO", "ACCORDO_RAGGIUNTO", "ASSENZA_CONVENUTO", "ASSENZA_CONVENUTO_PROPOSTA", "MANCATO_ACCORDO", "ESTINTO_ASSENZA_PARTI", "ARCHIVIATA"];
     const foundStateCodes = states.map(s => s.codice);
     const missingStates = requiredStates.filter(code => !foundStateCodes.includes(code));
 

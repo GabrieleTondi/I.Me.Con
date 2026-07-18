@@ -6,7 +6,7 @@ import Link from 'next/link';
 
 export const CTA = () => {
   return (
-    /* COLORE SFONDO SEZIONE: 'bg-brand-primary' (#082F49) */
+    /* COLORE SFONDO SEZIONE: 'bg-brand-primary' (#1E40AF - Deep Royal Blue) */
     <section className="bg-brand-primary py-28 px-6 md:px-12 relative overflow-hidden border-t border-white/10">
       
       {/* EFFETTO VISIVO (BLOB LUMINOSO): Bagliore morbido sullo sfondo */}

@@ -176,7 +176,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
       {/* HEADER DELLA PAGINA */}
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between border-b border-gray-200 pb-5 space-y-4 md:space-y-0">
+      <div className="bg-white p-6 md:p-8 rounded-2xl border border-gray-100 shadow-xl flex flex-col md:flex-row md:items-center md:justify-between space-y-4 md:space-y-0">
         <div>
           <div className="flex items-center gap-3">
             <div className="p-2.5 bg-brand-secondary/10 text-brand-secondary rounded-xl">

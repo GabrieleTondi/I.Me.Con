@@ -80,7 +80,7 @@ export async function GET(req: Request) {
       `inline; filename="${doc.nomeOriginale.replace(/"/g, '\\"')}"`
     );
 
-    return new NextResponse(fileBuffer, { headers });
+    return new NextResponse(new Uint8Array(fileBuffer), { headers });
   } catch (error: any) {
     console.error("Errore nel recupero del documento:", error);
     return new NextResponse(error.message || "Errore Interno del Server", { status: 500 });
