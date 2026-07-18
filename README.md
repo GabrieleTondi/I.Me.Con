@@ -17,12 +17,17 @@ Institutional and management web platform for the **I.Me.Con Mediation and Conci
 
 * **Public Informative Portal**: Dynamic pages presenting institutional services, branch office locations (`OfficesMap`), mission, values, and real-time legal updates and news (`NewsContainer`).
 * **Multi-Step Mediation Wizard**: Guided submission of formal mediation requests (`/contatti`), automatically generating official protocols in the format `ADR-YYYY-XXXXXX` upon submission.
+* **Public Document Download Area (`/modulistica`)**: Public page listing official forms (PDF, Excel, Word docs) fetched dynamically from the filesystem, with security protections against directory traversal attacks.
 * **Role-Based Authentication**: Secure JWT session handling stored in HttpOnly/Secure cookies with role verification (`Amministratore`, `Mediatore`, `Segreteria`, `Utente`).
 * **Online Administration Portal (`/gestionale`)**:
-  * **Quick Navigation**: Directly accessible from the header profile dropdown (`"Vai al gestionale"`) for authenticated administrators.
+  * **Quick Navigation**: Directly accessible from the header profile dropdown (`"Vai al gestionale"`) and mobile menu for authenticated staff.
   * **Real-Time Search & Filtering**: Filter mediation practices by protocol, keywords, dispute object, competent seat (`Sede`), or case status (`Stato`).
-  * **Interactive Case Inspection**: Detailed modal interface presenting full dispute details, involved parties (`soggetti`), scheduled hearings (`sedute`), and financial indicators.
-  * **Browser-Based Document Preview**: Online viewing of uploaded mediation attachments (`/api/gestionale/documento`) directly within the browser without requiring repeated local downloads.
+  * **Interactive Case Inspection**: Detailed modal interface presenting full dispute details, involved parties (`soggetti`), document downloads, and legal parameters.
+  * **Visual Deadlines & Warnings**: Dynamic calculation of legal deadlines (3 months standard, 6 months extended) with color-coded warning indicators (Yellow after 60 days, Red when <10 days remain or expired) next to the deposition date.
+  * **Role-Based Extensions**: Administrators and Secretaries can toggle a 6-month deadline extension (`prorogata`) directly inside the inspection modal.
+  * **Interactive Deadline Calendar (`/gestionale/calendario`)**: An interactive monthly calendar marking procedure starts (green dots) and active deadlines (red dots), with clickable popover details leading to the case details modal.
+  * **Browser-Based Document Preview**: Online viewing of uploaded mediation attachments (`/api/gestionale/documento`) directly within the browser.
+* **Automated Warning Notifications**: Daily batch utility (`deadline-checker.ts`) that scans active mediations exactly 10 days from expiring and triggers simulated email notifications to the assigned mediator.
 * **Enterprise Security & OWASP Hardening**: HTTP security headers (CSP, HSTS, X-Frame-Options) and an in-memory IP Rate Limiter protecting sensitive authentication endpoints.
 
 ---
