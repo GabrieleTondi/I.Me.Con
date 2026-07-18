@@ -93,7 +93,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
     const pending = mediazioni.filter((m) => m.stato.codice === "DA_ASSEGNARE").length;
     const inProgress = mediazioni.filter((m) => m.stato.codice === "IN_CORSO").length;
     const completed = mediazioni.filter((m) => 
-      ["CONCILIATA", "NON_CONCILIATA", "ARCHIVIATA"].includes(m.stato.codice)
+      ["ACCORDO_RAGGIUNTO", "ASSENZA_CONVENUTO", "ASSENZA_CONVENUTO_PROPOSTA", "MANCATO_ACCORDO", "ESTINTO_ASSENZA_PARTI", "ARCHIVIATA"].includes(m.stato.codice)
     ).length;
 
     const totalValue = mediazioni.reduce((sum, m) => {
@@ -137,17 +137,19 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
     });
   }, [mediazioni, searchTerm, selectedArea, selectedStato]);
 
-  // Colore dei badge degli stati
   const getStatoBadgeClass = (codice: string) => {
     switch (codice) {
       case "DA_ASSEGNARE":
         return "bg-yellow-100 text-yellow-800 border-yellow-200";
       case "IN_CORSO":
         return "bg-blue-100 text-blue-800 border-blue-200";
-      case "CONCILIATA":
+      case "ACCORDO_RAGGIUNTO":
         return "bg-green-100 text-green-800 border-green-200";
-      case "NON_CONCILIATA":
+      case "ASSENZA_CONVENUTO":
+      case "ASSENZA_CONVENUTO_PROPOSTA":
+      case "MANCATO_ACCORDO":
         return "bg-red-100 text-red-800 border-red-200";
+      case "ESTINTO_ASSENZA_PARTI":
       case "ARCHIVIATA":
         return "bg-gray-100 text-gray-800 border-gray-200";
       default:

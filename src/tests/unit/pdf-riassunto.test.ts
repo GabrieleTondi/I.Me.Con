@@ -24,7 +24,7 @@ const mockMediationData = {
   oggetto: "Oggetto di test della controversia per il PDF",
   valore: "10000.00",
   dataInserimento: "2026-07-17",
-  stato: { id: 1, codice: "CONCILIATA", descrizione: "Conciliata" },
+  stato: { id: 1, codice: "ACCORDO_RAGGIUNTO", descrizione: "ACCORDO RAGGIUNTO" },
   area: { id: 2, nomeArea: "Lecce" },
   areaId: 2,
   mediatoreId: 3, // Assegnata al mediatore con ID 3

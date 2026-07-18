@@ -414,7 +414,7 @@ async function main() {
       oggetto: "Condominio - Infiltrazioni d'acqua dal lastrico solare e ripartizione spese straordinarie",
       valore: "4500.00",
       dataInserimento: "2023-03-14",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Lecce",
       mediatoreName: "Avv. Marco Bianchi",
       soggetti: [
@@ -433,7 +433,7 @@ async function main() {
       oggetto: "Locazione - Sfratto per morosità canoni locativi e richiesta pagamento arretrati",
       valore: "6200.00",
       dataInserimento: "2023-05-22",
-      statoCodice: "NON_CONCILIATA",
+      statoCodice: "ASSENZA_CONVENUTO",
       areaName: "Maglie",
       mediatoreName: "Dott. Roberto De Santis",
       soggetti: [
@@ -466,7 +466,7 @@ async function main() {
       oggetto: "Successioni ereditarie - Divisione asse ereditario e immobiliari tra eredi legittimi (Valore Indeterminato)",
       valore: "0.00",
       dataInserimento: "2023-11-05",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Lecce",
       mediatoreName: "Avv. Marco Bianchi",
       soggetti: [
@@ -488,7 +488,7 @@ async function main() {
       oggetto: "Contratti bancari e finanziari - Contestazione anatocismo, usura soglia e CMS su conto corrente",
       valore: "35000.00",
       dataInserimento: "2024-02-18",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Lecce",
       mediatoreName: "Avv. Marco Bianchi",
       soggetti: [
@@ -507,7 +507,7 @@ async function main() {
       oggetto: "Contratti commerciali - Inadempimento contratto di appalto lavori edili e ritardo consegna",
       valore: "85000.00",
       dataInserimento: "2024-04-10",
-      statoCodice: "NON_CONCILIATA",
+      statoCodice: "MANCATO_ACCORDO",
       areaName: "Manfredonia",
       mediatoreName: "Dott.ssa Elena Moretti",
       soggetti: [
@@ -525,7 +525,7 @@ async function main() {
       oggetto: "Diritti reali - Usucapione ventennale e regolamento di confini fondi rustici",
       valore: "12000.00",
       dataInserimento: "2024-06-15",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Maglie",
       mediatoreName: "Dott. Roberto De Santis",
       soggetti: [
@@ -559,7 +559,7 @@ async function main() {
       oggetto: "Condominio - Uso delle parti comuni, installazione ascensore e assegnazione posti auto (Valore Indeterminato)",
       valore: "0.00",
       dataInserimento: "2024-11-19",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Manfredonia",
       mediatoreName: "Dott.ssa Elena Moretti",
       soggetti: [
@@ -578,7 +578,7 @@ async function main() {
       oggetto: "Locazione - Restituzione deposito cauzionale e risarcimento danni di ripristino locali",
       valore: "2400.00",
       dataInserimento: "2025-01-20",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Lecce",
       mediatoreName: "Dott. Roberto De Santis",
       soggetti: [
@@ -595,7 +595,7 @@ async function main() {
       oggetto: "Contratti assicurativi - Indennizzo polizza incendio capannone industriale e macchinari",
       valore: "450000.00",
       dataInserimento: "2025-03-11",
-      statoCodice: "NON_CONCILIATA",
+      statoCodice: "ASSENZA_CONVENUTO_PROPOSTA",
       areaName: "Maglie",
       mediatoreName: "Dott. Roberto De Santis",
       soggetti: [
@@ -669,7 +669,7 @@ async function main() {
       oggetto: "Comodato d'uso gratuito immobile commerciale - Richiesta di rilascio immediato per urgenza imprevista",
       valore: "0.00",
       dataInserimento: "2025-12-01",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ACCORDO_RAGGIUNTO",
       areaName: "Lecce",
       mediatoreName: "Avv. Marco Bianchi",
       soggetti: [
@@ -688,7 +688,7 @@ async function main() {
       oggetto: "Condominio - Impugnazione delibera assembleare su rifacimento facciate esterne e criteri millesimali",
       valore: "18500.00",
       dataInserimento: "2026-01-14",
-      statoCodice: "CONCILIATA",
+      statoCodice: "ESTINTO_ASSENZA_PARTI",
       areaName: "Lecce",
       mediatoreName: "Avv. Marco Bianchi",
       soggetti: [
