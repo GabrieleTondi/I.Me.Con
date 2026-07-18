@@ -187,13 +187,15 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
             </h1>
           </div>
           <p className="mt-2 text-sm text-gray-500">
-            Pannello di controllo dell&apos;Amministratore per la visualizzazione delle domande di mediazione.
+            {user.ruoli.includes("Amministratore") && "Pannello di controllo dell'Amministratore per la visualizzazione di tutte le domande di mediazione."}
+            {!user.ruoli.includes("Amministratore") && user.ruoli.includes("Segreteria") && "Pannello di controllo della Segreteria per le domande di mediazione di competenza geografica."}
+            {!user.ruoli.includes("Amministratore") && !user.ruoli.includes("Segreteria") && user.ruoli.includes("Mediatore") && "Pannello di controllo del Mediatore per le pratiche assegnate in carico."}
           </p>
         </div>
         <div className="flex items-center gap-2 bg-brand-neutral px-4 py-2.5 rounded-xl border border-brand-border self-start md:self-auto shadow-sm">
           <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
           <span className="text-xs font-semibold text-gray-700">
-            Connesso come <strong className="text-brand-secondary">{user.nomeCognome}</strong> (Amministratore)
+            Connesso come <strong className="text-brand-secondary">{user.nomeCognome}</strong> ({user.ruoli.join(", ")})
           </span>
         </div>
       </div>

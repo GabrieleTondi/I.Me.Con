@@ -2,7 +2,7 @@ import { getCurrentUser } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { db } from "@/db";
 import { mediazione } from "@/db/schema";
-import { desc } from "drizzle-orm";
+import { desc, inArray, eq } from "drizzle-orm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GestionaleClient } from "./GestionaleClient";
@@ -10,12 +10,34 @@ import { GestionaleClient } from "./GestionaleClient";
 export default async function Page() {
   const user = await getCurrentUser();
 
-  // Sicurezza: solo gli Amministratori possono accedere al gestionale
-  if (!user || !user.ruoli.includes("Amministratore")) {
+  // Sicurezza: solo Amministratori, Mediatori e Segreteria possono accedere
+  if (
+    !user ||
+    (!user.ruoli.includes("Amministratore") &&
+      !user.ruoli.includes("Mediatore") &&
+      !user.ruoli.includes("Segreteria"))
+  ) {
     redirect("/login");
   }
 
+  // Filtro in base al ruolo dell'utente
+  let whereClause = undefined;
+  if (user.ruoli.includes("Amministratore")) {
+    // Vede tutto
+  } else if (user.ruoli.includes("Segreteria")) {
+    // Vede solo le pratiche delle sue aree di competenza
+    if (user.areaIds && user.areaIds.length > 0) {
+      whereClause = inArray(mediazione.areaId, user.areaIds);
+    } else {
+      whereClause = eq(mediazione.id, -1); // Query vuota se non ha aree
+    }
+  } else if (user.ruoli.includes("Mediatore")) {
+    // Vede solo le pratiche a lui assegnate
+    whereClause = eq(mediazione.mediatoreId, user.id);
+  }
+
   const mediazioniList = await db.query.mediazione.findMany({
+    where: whereClause,
     orderBy: [desc(mediazione.id)],
     with: {
       stato: true,

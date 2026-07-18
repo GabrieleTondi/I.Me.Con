@@ -55,9 +55,14 @@ export async function GET(req: Request) {
       return new NextResponse("Parametro 'id' non valido", { status: 400 });
     }
 
-    // 2. Controllo autenticazione e permessi (Solo Amministratori)
+    // 2. Controllo autenticazione e permessi
     const user = await getCurrentUser();
-    if (!user || !user.ruoli.includes("Amministratore")) {
+    if (
+      !user ||
+      (!user.ruoli.includes("Amministratore") &&
+        !user.ruoli.includes("Mediatore") &&
+        !user.ruoli.includes("Segreteria"))
+    ) {
       return new NextResponse("Accesso negato", { status: 403 });
     }
 
@@ -80,6 +85,20 @@ export async function GET(req: Request) {
 
     if (!mediationData) {
       return new NextResponse("Pratica di mediazione non trovata nel database", { status: 404 });
+    }
+
+    // Controllo permessi sulla singola pratica (IDOR check)
+    let hasAccess = false;
+    if (user.ruoli.includes("Amministratore")) {
+      hasAccess = true;
+    } else if (user.ruoli.includes("Segreteria")) {
+      hasAccess = user.areaIds.includes(mediationData.areaId);
+    } else if (user.ruoli.includes("Mediatore")) {
+      hasAccess = mediationData.mediatoreId === user.id;
+    }
+
+    if (!hasAccess) {
+      return new NextResponse("Accesso negato per questa pratica", { status: 403 });
     }
 
     // 4. Inizializzazione PDF

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { getCurrentUser } from "@/lib/auth";
 import { db } from "@/db";
-import { documento } from "@/db/schema";
+import { documento, mediazione } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import fs from "fs/promises";
 
@@ -20,9 +20,14 @@ export async function GET(req: Request) {
       return new NextResponse("Parametro 'id' non valido", { status: 400 });
     }
 
-    // 2. Controllo autenticazione e permessi (Solo Amministratori)
+    // 2. Controllo autenticazione e permessi
     const user = await getCurrentUser();
-    if (!user || !user.ruoli.includes("Amministratore")) {
+    if (
+      !user ||
+      (!user.ruoli.includes("Amministratore") &&
+        !user.ruoli.includes("Mediatore") &&
+        !user.ruoli.includes("Segreteria"))
+    ) {
       return new NextResponse("Accesso negato", { status: 403 });
     }
 
@@ -33,6 +38,28 @@ export async function GET(req: Request) {
 
     if (!doc) {
       return new NextResponse("Documento non trovato nel database", { status: 404 });
+    }
+
+    // 3b. Recupero mediazione associata per controllo permessi (IDOR)
+    const associatedMediation = await db.query.mediazione.findFirst({
+      where: eq(mediazione.id, doc.mediazioneId),
+    });
+
+    if (!associatedMediation) {
+      return new NextResponse("Mediazione associata non trovata", { status: 404 });
+    }
+
+    let hasAccess = false;
+    if (user.ruoli.includes("Amministratore")) {
+      hasAccess = true;
+    } else if (user.ruoli.includes("Segreteria")) {
+      hasAccess = user.areaIds.includes(associatedMediation.areaId);
+    } else if (user.ruoli.includes("Mediatore")) {
+      hasAccess = associatedMediation.mediatoreId === user.id;
+    }
+
+    if (!hasAccess) {
+      return new NextResponse("Accesso negato per questo documento", { status: 403 });
     }
 
     // 4. Verifica e lettura del file dal filesystem locale

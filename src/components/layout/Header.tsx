@@ -110,7 +110,7 @@ export const Header = () => {
                 <div className="px-3.5 py-2.5 border-b border-white/10 text-xs text-contrast/70">
                   Ruolo: <span className="font-semibold text-brand-accent ml-1">{user.ruoli[0] || "Utente"}</span>
                 </div>
-                {user.ruoli.includes("Amministratore") && (
+                {(user.ruoli.includes("Amministratore") || user.ruoli.includes("Mediatore") || user.ruoli.includes("Segreteria")) && (
                   <Link href="/gestionale">
                     <span className="w-full flex items-center gap-2 px-3.5 py-2.5 mt-1.5 text-contrast hover:bg-white/10 rounded-xl text-left transition-colors cursor-pointer block font-medium">
                       Vai al gestionale
@@ -157,7 +157,7 @@ export const Header = () => {
               <div className="text-contrast/80 text-sm px-2 mb-1 font-medium">
                 Ciao, <span className="font-semibold text-contrast">{user.nomeCognome}</span> ({user.ruoli[0] || "Utente"})
               </div>
-              {user.ruoli.includes("Amministratore") && (
+              {(user.ruoli.includes("Amministratore") || user.ruoli.includes("Mediatore") || user.ruoli.includes("Segreteria")) && (
                 <Link href="/gestionale">
                   <Button variant="secondary" className="w-full justify-center gap-2">
                     Vai al gestionale

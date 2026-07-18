@@ -1,7 +1,7 @@
 
 ========================================
 [EMAIL SEND SIMULATION]
-Timestamp: 2026-07-17T17:42:00.523Z
+Timestamp: 2026-07-18T06:56:07.324Z
 Sender: no-reply@imecon.it
 Recipient: info@techsrl.com (Tech S.r.l.)
 Subject: [I.Me.Con] Conferma Presa in Carico Procedura di Mediazione - ADR-TEST-NOTIF-002
@@ -28,7 +28,7 @@ Istituto I.Me.Con.
 
 ========================================
 [EMAIL SEND SIMULATION]
-Timestamp: 2026-07-17T17:42:00.523Z
+Timestamp: 2026-07-18T06:56:07.324Z
 Sender: no-reply@imecon.it
 Recipient: legal@globalcorp.com (Global Corp)
 Subject: [I.Me.Con] Conferma Presa in Carico Procedura di Mediazione - ADR-TEST-NOTIF-002
@@ -55,7 +55,7 @@ Istituto I.Me.Con.
 
 ========================================
 [SMS SEND SIMULATION]
-Timestamp: 2026-07-17T17:42:00.523Z
+Timestamp: 2026-07-18T06:56:07.324Z
 Sender: I.Me.Con. No-Reply
 Recipient: +393334444444 (Global Corp)
 ----------------------------------------
@@ -65,7 +65,7 @@ I.Me.Con. No-Reply: Conferma presa in carico mediazione ADR-TEST-NOTIF-002. Ruol
 
 ========================================
 [EMAIL SEND SIMULATION]
-Timestamp: 2026-07-17T17:42:00.523Z
+Timestamp: 2026-07-18T06:56:07.324Z
 Sender: no-reply@imecon.it
 Recipient: francesco.neri@studiolegale.it (Avv. Francesco Neri)
 Subject: [I.Me.Con] Conferma Presa in Carico Procedura di Mediazione - ADR-TEST-NOTIF-002
@@ -82,6 +82,111 @@ Dettagli della procedura:
 
 Descrizione dei fatti:
 Mancato adempimento termini contrattuali di fornitura merci.
+
+Questa è una comunicazione automatica da un indirizzo non monitorato (no-reply). Si prega di non rispondere a questo messaggio.
+
+Cordiali saluti,
+Istituto I.Me.Con.
+========================================
+
+
+========================================
+[EMAIL SEND SIMULATION]
+Timestamp: 2026-07-18T06:56:11.158Z
+Sender: no-reply@imecon.it
+Recipient: mario.rossi@test.it (Mario Rossi Istante)
+Subject: [I.Me.Con] Conferma Presa in Carico Procedura di Mediazione - ADR-2026-771143
+----------------------------------------
+Gentile Mario Rossi Istante,
+
+Con la presente Le confermiamo l'effettiva presa in carico della richiesta di mediazione da parte dell'Istituto I.Me.Con.
+
+Dettagli della procedura:
+- Numero Protocollo: ADR-2026-771143
+- Il Suo ruolo nella procedura: Istante
+- Data di Nascita/Costituzione: 1980-01-01
+- Residenza/Sede: Via Roma 1, 20100 Milano (MI)
+- Oggetto/Materia della lite: Materia di Test
+- Valore della controversia: € 15000.00
+
+Descrizione dei fatti:
+Descrizione di prova per i fatti di questa lite di test automatizzato.
+
+Questa è una comunicazione automatica da un indirizzo non monitorato (no-reply). Si prega di non rispondere a questo messaggio.
+
+Cordiali saluti,
+Istituto I.Me.Con.
+========================================
+
+
+========================================
+[SMS SEND SIMULATION]
+Timestamp: 2026-07-18T06:56:11.158Z
+Sender: I.Me.Con. No-Reply
+Recipient: 1234567890 (Mario Rossi Istante)
+----------------------------------------
+I.Me.Con. No-Reply: Conferma presa in carico mediazione ADR-2026-771143. Ruolo: Istante. Oggetto: Materia di Test. Valore: EUR 15000.00. Questa è una notifica automatica, si prega di non rispondere.
+========================================
+
+
+========================================
+[EMAIL SEND SIMULATION]
+Timestamp: 2026-07-18T06:56:11.158Z
+Sender: no-reply@imecon.it
+Recipient: info@aziendatest.it (Azienda Convenuto S.R.L.)
+Subject: [I.Me.Con] Conferma Presa in Carico Procedura di Mediazione - ADR-2026-771143
+----------------------------------------
+Gentile Azienda Convenuto S.R.L.,
+
+Con la presente Le confermiamo l'effettiva presa in carico della richiesta di mediazione da parte dell'Istituto I.Me.Con.
+
+Dettagli della procedura:
+- Numero Protocollo: ADR-2026-771143
+- Il Suo ruolo nella procedura: Convenuto
+- Data di Nascita/Costituzione: 1975-05-15
+- Residenza/Sede: Corso Italia 10, 00100 Roma (RM)
+- Oggetto/Materia della lite: Materia di Test
+- Valore della controversia: € 15000.00
+
+Descrizione dei fatti:
+Descrizione di prova per i fatti di questa lite di test automatizzato.
+
+Questa è una comunicazione automatica da un indirizzo non monitorato (no-reply). Si prega di non rispondere a questo messaggio.
+
+Cordiali saluti,
+Istituto I.Me.Con.
+========================================
+
+
+========================================
+[SMS SEND SIMULATION]
+Timestamp: 2026-07-18T06:56:11.158Z
+Sender: I.Me.Con. No-Reply
+Recipient: 0987654321 (Azienda Convenuto S.R.L.)
+----------------------------------------
+I.Me.Con. No-Reply: Conferma presa in carico mediazione ADR-2026-771143. Ruolo: Convenuto. Oggetto: Materia di Test. Valore: EUR 15000.00. Questa è una notifica automatica, si prega di non rispondere.
+========================================
+
+
+========================================
+[EMAIL SEND SIMULATION]
+Timestamp: 2026-07-18T06:56:11.158Z
+Sender: no-reply@imecon.it
+Recipient: luigi.bianchi@test.it (Avv. Luigi Bianchi)
+Subject: [I.Me.Con] Conferma Presa in Carico Procedura di Mediazione - ADR-2026-771143
+----------------------------------------
+Gentile Avv. Luigi Bianchi,
+
+Con la presente Le confermiamo l'effettiva presa in carico della richiesta di mediazione da parte dell'Istituto I.Me.Con.
+
+Dettagli della procedura:
+- Numero Protocollo: ADR-2026-771143
+- Il Suo ruolo nella procedura: Avvocato Istante
+- Oggetto/Materia della lite: Materia di Test
+- Valore della controversia: € 15000.00
+
+Descrizione dei fatti:
+Descrizione di prova per i fatti di questa lite di test automatizzato.
 
 Questa è una comunicazione automatica da un indirizzo non monitorato (no-reply). Si prega di non rispondere a questo messaggio.
 
