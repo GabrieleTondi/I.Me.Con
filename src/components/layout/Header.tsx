@@ -111,11 +111,18 @@ export const Header = () => {
                   Ruolo: <span className="font-semibold text-brand-accent ml-1">{user.ruoli[0] || "Utente"}</span>
                 </div>
                 {(user.ruoli.includes("Amministratore") || user.ruoli.includes("Mediatore") || user.ruoli.includes("Segreteria")) && (
-                  <Link href="/gestionale">
-                    <span className="w-full flex items-center gap-2 px-3.5 py-2.5 mt-1.5 text-contrast hover:bg-white/10 rounded-xl text-left transition-colors cursor-pointer block font-medium">
-                      Vai al gestionale
-                    </span>
-                  </Link>
+                  <>
+                    <Link href="/gestionale">
+                      <span className="w-full flex items-center gap-2 px-3.5 py-2.5 mt-1.5 text-contrast hover:bg-white/10 rounded-xl text-left transition-colors cursor-pointer block font-medium">
+                        Vai al gestionale
+                      </span>
+                    </Link>
+                    <Link href="/gestionale/calendario">
+                      <span className="w-full flex items-center gap-2 px-3.5 py-2.5 mt-1 text-contrast hover:bg-white/10 rounded-xl text-left transition-colors cursor-pointer block font-medium">
+                        Calendario scadenze
+                      </span>
+                    </Link>
+                  </>
                 )}
                 <button
                   onClick={handleLogout}
@@ -158,11 +165,18 @@ export const Header = () => {
                 Ciao, <span className="font-semibold text-contrast">{user.nomeCognome}</span> ({user.ruoli[0] || "Utente"})
               </div>
               {(user.ruoli.includes("Amministratore") || user.ruoli.includes("Mediatore") || user.ruoli.includes("Segreteria")) && (
-                <Link href="/gestionale">
-                  <Button variant="secondary" className="w-full justify-center gap-2">
-                    Vai al gestionale
-                  </Button>
-                </Link>
+                <div className="flex flex-col gap-2">
+                  <Link href="/gestionale">
+                    <Button variant="secondary" className="w-full justify-center gap-2">
+                      Vai al gestionale
+                    </Button>
+                  </Link>
+                  <Link href="/gestionale/calendario">
+                    <Button variant="secondary" className="w-full justify-center gap-2">
+                      Calendario scadenze
+                    </Button>
+                  </Link>
+                </div>
               )}
               <Button variant="secondary" onClick={handleLogout} className="w-full justify-center gap-2 !bg-red-950/40 hover:!bg-red-950/60 !text-red-200 border border-red-900/40">
                 <LogOut size={18} />

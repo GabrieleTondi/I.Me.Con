@@ -66,6 +66,7 @@ export const mediazione = pgTable("mediazione", {
   statoId: integer("stato_id").notNull().references(() => statoMediazione.id, { onDelete: "restrict" }),
   mediatoreId: integer("mediatore_id").references(() => utente.id, { onDelete: "restrict" }),
   areaId: integer("area_id").notNull().references(() => area.id, { onDelete: "restrict" }),
+  prorogata: boolean("prorogata").default(false).notNull(),
 });
 
 // 1.3 Entità Dipendenti

@@ -1,7 +1,9 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Search,
   Filter,
@@ -19,6 +21,8 @@ import {
   CheckCircle,
   FileSpreadsheet
 } from "lucide-react";
+import { getScadenzaStatus } from "@/lib/deadline-utils";
+import { MediationDetailsModal } from "@/components/gestionale/MediationDetailsModal";
 
 interface SubjectDetail {
   ruoloNellaLite: string;
@@ -66,6 +70,8 @@ interface MediationData {
     nomeCognome: string;
     email: string;
   } | null;
+  areaId: number;
+  prorogata: boolean;
   soggetti: SubjectDetail[];
   documenti: DocumentDetail[];
 }
@@ -76,16 +82,29 @@ interface GestionaleClientProps {
     id: number;
     nomeCognome: string;
     email: string;
+    username: string;
     ruoli: string[];
+    areaIds: number[];
   };
 }
 
 export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientProps) => {
-  const [mediazioni] = useState<MediationData[]>(initialMediazioni);
+  const router = useRouter();
+  const [mediazioni, setMediazioni] = useState<MediationData[]>(initialMediazioni);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedArea, setSelectedArea] = useState("all");
   const [selectedStato, setSelectedStato] = useState("all");
   const [selectedMediation, setSelectedMediation] = useState<MediationData | null>(null);
+
+  useEffect(() => {
+    setMediazioni(initialMediazioni);
+    if (selectedMediation) {
+      const updated = initialMediazioni.find((m) => m.id === selectedMediation.id);
+      if (updated) {
+        setSelectedMediation(updated);
+      }
+    }
+  }, [initialMediazioni]);
 
   // Calcolo delle statistiche globali
   const stats = useMemo(() => {
@@ -194,11 +213,19 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
             {!user.ruoli.includes("Amministratore") && !user.ruoli.includes("Segreteria") && user.ruoli.includes("Mediatore") && "Pannello di controllo del Mediatore per le pratiche assegnate in carico."}
           </p>
         </div>
-        <div className="flex items-center gap-2 bg-brand-neutral px-4 py-2.5 rounded-xl border border-brand-border self-start md:self-auto shadow-sm">
-          <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
-          <span className="text-xs font-semibold text-gray-700">
-            Connesso come <strong className="text-brand-secondary">{user.nomeCognome}</strong> ({user.ruoli.join(", ")})
-          </span>
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          <Link href="/gestionale/calendario">
+            <span className="inline-flex items-center gap-2 px-5 py-2.5 text-sm font-bold bg-brand-secondary text-white hover:bg-brand-primary rounded-xl transition-all shadow-md cursor-pointer">
+              <Calendar size={16} />
+              Calendario Scadenze
+            </span>
+          </Link>
+          <div className="flex items-center gap-2 bg-brand-neutral px-4 py-2.5 rounded-xl border border-brand-border shadow-sm">
+            <div className="w-2.5 h-2.5 bg-green-500 rounded-full animate-pulse" />
+            <span className="text-xs font-semibold text-gray-700">
+              Connesso come <strong className="text-brand-secondary">{user.nomeCognome}</strong> ({user.ruoli.join(", ")})
+            </span>
+          </div>
         </div>
       </div>
 
@@ -361,7 +388,33 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                       {m.protocollo}
                     </td>
                     <td className="px-6 py-4 text-gray-500">
-                      {formatDate(m.dataInserimento)}
+                      <div className="flex items-center gap-2">
+                        <span>{formatDate(m.dataInserimento)}</span>
+                        {(() => {
+                          const isConclusa = [
+                            "ACCORDO_RAGGIUNTO",
+                            "ASSENZA_CONVENUTO",
+                            "ASSENZA_CONVENUTO_PROPOSTA",
+                            "MANCATO_ACCORDO",
+                            "ESTINTO_ASSENZA_PARTI",
+                            "ARCHIVIATA"
+                          ].includes(m.stato.codice);
+                          const scadenzaColor = getScadenzaStatus(m.dataInserimento, m.prorogata, isConclusa);
+                          if (!scadenzaColor) return null;
+                          return (
+                            <span
+                              className={`w-2.5 h-2.5 rounded-full inline-block border border-white/50 ${
+                                scadenzaColor === "rosso" ? "bg-red-500 animate-pulse" :
+                                scadenzaColor === "giallo" ? "bg-yellow-500" : "bg-green-500"
+                              }`}
+                              title={
+                                scadenzaColor === "rosso" ? "Scadenza imminente (< 10 giorni) o Scaduto!" :
+                                scadenzaColor === "giallo" ? "Oltre 60 giorni trascorsi" : "Regolare"
+                              }
+                            />
+                          );
+                        })()}
+                      </div>
                     </td>
                     <td className="px-6 py-4">
                       <div className="flex items-center gap-1.5">
@@ -417,198 +470,14 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
       {/* OVERLAY / MODAL DETTAGLI PRATICA */}
       <AnimatePresence>
         {selectedMediation && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
-            {/* Sfondo Oscurato */}
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.5 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setSelectedMediation(null)}
-              className="absolute inset-0 bg-black"
-            />
-
-            {/* Finestra Modale */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 20 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 20 }}
-              className="bg-white rounded-3xl w-full max-w-4xl shadow-2xl border border-gray-100 relative overflow-hidden z-10 flex flex-col max-h-[90vh]"
-            >
-              {/* Testata Modale */}
-              <div className="bg-brand-primary text-white p-6 flex justify-between items-center relative">
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold uppercase tracking-wider text-white/60">Scheda Pratica ADR</span>
-                    <span className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-                      selectedMediation.stato.codice === "DA_ASSEGNARE" ? "bg-yellow-500 text-white" : "bg-brand-accent text-white"
-                    }`}>
-                      {selectedMediation.stato.descrizione}
-                    </span>
-                  </div>
-                  <h2 className="text-2xl font-bold font-chillax mt-1 font-mono tracking-wide">
-                    {selectedMediation.protocollo}
-                  </h2>
-                </div>
-                <button
-                  type="button"
-                  onClick={() => setSelectedMediation(null)}
-                  className="p-2 text-white/80 hover:text-white bg-white/10 hover:bg-white/20 rounded-xl transition-all"
-                  title="Chiudi"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              {/* Corpo Modale Scrollabile */}
-              <div className="p-6 md:p-8 space-y-6 overflow-y-auto flex-1">
-                {/* 1. SEZIONE DATI CONTROVERSIA */}
-                <div className="bg-brand-neutral p-5 rounded-2xl border border-gray-100 space-y-4">
-                  <h3 className="text-sm font-bold text-brand-secondary uppercase tracking-wider flex items-center gap-2">
-                    <FileText size={16} />
-                    Dettagli Controversia
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4 text-xs">
-                    <div>
-                      <p className="text-gray-400 font-bold uppercase">Data Deposito</p>
-                      <p className="text-gray-800 font-semibold text-sm mt-0.5">
-                        {formatDate(selectedMediation.dataInserimento)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 font-bold uppercase">Sede Competente</p>
-                      <p className="text-gray-800 font-semibold text-sm mt-0.5">
-                        {selectedMediation.area.nomeArea}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 font-bold uppercase">Valore Stima</p>
-                      <p className="text-gray-800 font-bold text-sm mt-0.5">
-                        {selectedMediation.valore === "0.00" ? "Indeterminato" : formatCurrency(selectedMediation.valore)}
-                      </p>
-                    </div>
-                    <div>
-                      <p className="text-gray-400 font-bold uppercase">Mediatore Assegnato</p>
-                      <p className="text-gray-800 font-semibold text-sm mt-0.5">
-                        {selectedMediation.mediatore ? selectedMediation.mediatore.nomeCognome : "Non ancora assegnato"}
-                      </p>
-                    </div>
-                  </div>
-                  <div className="border-t border-gray-200/60 pt-3">
-                    <p className="text-xs text-gray-400 font-bold uppercase mb-1">Descrizione dei Fatti</p>
-                    <p className="text-sm text-gray-700 leading-relaxed bg-white p-3 rounded-lg border border-gray-100 whitespace-pre-line font-medium">
-                      {selectedMediation.oggetto}
-                    </p>
-                  </div>
-                </div>
-
-                {/* 2. SEZIONE SOGGETTI COINVOLTI */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-brand-secondary uppercase tracking-wider flex items-center gap-2">
-                    <Users size={16} />
-                    Soggetti Coinvolti nella Lite
-                  </h3>
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {/* PARTE ISTANTE */}
-                    <div className="border border-gray-100 p-4 rounded-xl space-y-3 bg-white">
-                      <h4 className="text-xs font-bold text-gray-400 uppercase border-b pb-1">Parte Istante</h4>
-                      {selectedMediation.soggetti
-                        .filter((s) => s.ruoloNellaLite.includes("Istante"))
-                        .map((s, idx) => (
-                          <div key={idx} className="space-y-1.5 text-xs">
-                            <p className="text-sm font-bold text-gray-900">{s.soggetto.denominazione}</p>
-                            <p className="text-gray-500 font-semibold">Ruolo: {s.ruoloNellaLite}</p>
-                            <p className="text-gray-500">Codice Fiscale/P.IVA: <strong className="font-mono text-gray-700">{s.soggetto.codiceFiscalePiva}</strong></p>
-                            {s.soggetto.dataNascita && <p className="text-gray-500">Data Nascita/Costituzione: <span className="text-gray-700 font-medium">{s.soggetto.dataNascita}</span></p>}
-                            {s.soggetto.indirizzoResidenza && (
-                              <p className="text-gray-500">
-                                Residenza/Sede: <span className="text-gray-700 font-medium">{s.soggetto.indirizzoResidenza}, {s.soggetto.capResidenza || ""} {s.soggetto.comuneResidenza || ""} ({s.soggetto.provinciaResidenza || ""})</span>
-                              </p>
-                            )}
-                            {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-brand-secondary font-semibold">{s.soggetto.email}</span></p>}
-                            {s.soggetto.telefono && <p className="text-gray-500">Tel: {s.soggetto.telefono}</p>}
-                          </div>
-                        ))}
-                    </div>
-
-                    {/* PARTE CONVENUTO */}
-                    <div className="border border-gray-100 p-4 rounded-xl space-y-3 bg-white">
-                      <h4 className="text-xs font-bold text-gray-400 uppercase border-b pb-1">Parte Convenuta</h4>
-                      {selectedMediation.soggetti
-                        .filter((s) => s.ruoloNellaLite.includes("Convenuto"))
-                        .map((s, idx) => (
-                          <div key={idx} className="space-y-1.5 text-xs">
-                            <p className="text-sm font-bold text-gray-900">{s.soggetto.denominazione}</p>
-                            <p className="text-gray-500 font-semibold">Ruolo: {s.ruoloNellaLite}</p>
-                            <p className="text-gray-500">Codice Fiscale/P.IVA: <strong className="font-mono text-gray-700">{s.soggetto.codiceFiscalePiva}</strong></p>
-                            {s.soggetto.dataNascita && <p className="text-gray-500">Data Nascita/Costituzione: <span className="text-gray-700 font-medium">{s.soggetto.dataNascita}</span></p>}
-                            {s.soggetto.indirizzoResidenza && (
-                              <p className="text-gray-500">
-                                Residenza/Sede: <span className="text-gray-700 font-medium">{s.soggetto.indirizzoResidenza}, {s.soggetto.capResidenza || ""} {s.soggetto.comuneResidenza || ""} ({s.soggetto.provinciaResidenza || ""})</span>
-                              </p>
-                            )}
-                            {s.soggetto.email && <p className="text-gray-500">PEC/Email: <span className="text-brand-secondary font-semibold">{s.soggetto.email}</span></p>}
-                            {s.soggetto.telefono && <p className="text-gray-500">Tel: {s.soggetto.telefono}</p>}
-                          </div>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-
-                {/* 3. ALLEGATI DOCUMENTALI */}
-                <div className="space-y-3">
-                  <h3 className="text-sm font-bold text-brand-secondary uppercase tracking-wider flex items-center gap-2">
-                    <Paperclip size={16} />
-                    Documenti ed Allegati depositati ({selectedMediation.documenti.length})
-                  </h3>
-                  {selectedMediation.documenti.length === 0 ? (
-                    <p className="text-xs text-gray-400 italic">Nessun file allegato a questa pratica.</p>
-                  ) : (
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {selectedMediation.documenti.map((doc) => (
-                        <a
-                          key={doc.id}
-                          href={`/api/gestionale/documento?id=${doc.id}`}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-3 bg-gray-50 p-3 rounded-xl border border-gray-100 text-xs hover:bg-brand-neutral hover:border-brand-secondary/30 transition-all cursor-pointer block"
-                        >
-                          <FileText size={20} className="text-brand-secondary shrink-0" />
-                          <div className="truncate flex-1">
-                            <p className="font-bold text-gray-800 truncate" title={doc.nomeOriginale}>
-                              {doc.nomeOriginale}
-                            </p>
-                            <p className="text-gray-400 font-medium">
-                              {(doc.dimensione / (1024 * 1024)).toFixed(2)} MB • {doc.tipoMime.split("/")[1]?.toUpperCase() || "File"}
-                            </p>
-                          </div>
-                        </a>
-                      ))}
-                    </div>
-                  )}
-                </div>
-              </div>
-
-              {/* Piè di pagina Modale */}
-              <div className="bg-brand-neutral p-4 border-t border-gray-100 flex justify-between items-center">
-                <a
-                  href={`/api/gestionale/pdf-riassunto?id=${selectedMediation.id}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="px-6 py-2.5 text-xs font-bold bg-brand-secondary text-white rounded-xl hover:bg-brand-primary transition-all flex items-center gap-2 shadow-sm cursor-pointer"
-                >
-                  <FileText size={14} />
-                  Stampa / Scarica Riassunto PDF
-                </a>
-                <button
-                  type="button"
-                  onClick={() => setSelectedMediation(null)}
-                  className="px-6 py-2.5 text-xs font-bold border border-gray-300 text-gray-700 rounded-xl hover:bg-gray-100 transition-all cursor-pointer"
-                >
-                  Chiudi Dettagli
-                </button>
-              </div>
-            </motion.div>
-          </div>
+          <MediationDetailsModal
+            selectedMediation={selectedMediation as any}
+            currentUser={user}
+            onClose={() => setSelectedMediation(null)}
+            onUpdate={() => {
+              router.refresh();
+            }}
+          />
         )}
       </AnimatePresence>
     </div>

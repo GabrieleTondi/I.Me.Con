@@ -7,6 +7,8 @@ import fs from "fs/promises";
 import path from "path";
 import { z } from "zod";
 import { sendMediationNotifications } from "@/lib/notifications";
+import { getCurrentUser } from "@/lib/auth";
+import { revalidatePath } from "next/cache";
 
 // 1. Schema di validazione Zod per i dati testuali della richiesta di mediazione
 const mediationSchema = z.object({
@@ -427,5 +429,49 @@ export async function createMediationRequestAction(formData: FormData) {
       success: false,
       error: error?.message || "Errore imprevisto durante il salvataggio della pratica. Riprova.",
     };
+  }
+}
+
+export async function prorogaMediationAction(mediationId: number, prorogata: boolean) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "Non autorizzato. Effettua il login." };
+    }
+
+    const isAuthorized = user.ruoli.includes("Amministratore") || user.ruoli.includes("Segreteria");
+    if (!isAuthorized) {
+      return { success: false, error: "Accesso negato. Solo amministratori e segreteria possono prorogare le scadenze." };
+    }
+
+    const med = await db.query.mediazione.findFirst({
+      where: eq(mediazione.id, mediationId),
+    });
+
+    if (!med) {
+      return { success: false, error: "Pratica di mediazione non trovata." };
+    }
+
+    if (!user.ruoli.includes("Amministratore") && user.ruoli.includes("Segreteria")) {
+      if (!user.areaIds.includes(med.areaId)) {
+        return { success: false, error: "Accesso negato. Non sei autorizzato per questa sede." };
+      }
+    }
+
+    await db.update(mediazione)
+      .set({ prorogata })
+      .where(eq(mediazione.id, mediationId));
+
+    try {
+      revalidatePath("/gestionale");
+      revalidatePath("/gestionale/calendario");
+    } catch (e) {
+      // Ignora errori di contesto Next.js nei test unitari Vitest
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Errore in prorogaMediationAction:", error);
+    return { success: false, error: error?.message || "Errore imprevisto." };
   }
 }

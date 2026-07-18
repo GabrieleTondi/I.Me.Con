@@ -5,7 +5,7 @@ import { mediazione } from "@/db/schema";
 import { desc, inArray, eq } from "drizzle-orm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
-import { GestionaleClient } from "./GestionaleClient";
+import { CalendarioClient } from "./CalendarioClient";
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -20,7 +20,7 @@ export default async function Page() {
     redirect("/login");
   }
 
-  // Filtro in base al ruolo dell'utente
+  // Filtro in base al ruolo dell'utente (identico alla pagina principale)
   let whereClause = undefined;
   if (user.ruoli.includes("Amministratore")) {
     // Vede tutto
@@ -29,7 +29,7 @@ export default async function Page() {
     if (user.areaIds && user.areaIds.length > 0) {
       whereClause = inArray(mediazione.areaId, user.areaIds);
     } else {
-      whereClause = eq(mediazione.id, -1); // Query vuota se non ha aree
+      whereClause = eq(mediazione.id, -1);
     }
   } else if (user.ruoli.includes("Mediatore")) {
     // Vede solo le pratiche a lui assegnate
@@ -76,6 +76,11 @@ export default async function Page() {
         codiceFiscalePiva: ms.soggetto.codiceFiscalePiva,
         email: ms.soggetto.email,
         telefono: ms.soggetto.telefono,
+        dataNascita: ms.soggetto.dataNascita,
+        indirizzoResidenza: ms.soggetto.indirizzoResidenza,
+        comuneResidenza: ms.soggetto.comuneResidenza,
+        capResidenza: ms.soggetto.capResidenza,
+        provinciaResidenza: ms.soggetto.provinciaResidenza,
       },
     })),
     documenti: m.documenti.map((d) => ({
@@ -92,7 +97,7 @@ export default async function Page() {
     <main className="flex min-h-screen flex-col bg-brand-bg selection:bg-brand-accent/30 selection:text-white">
       <Header />
       <div className="flex-1 pt-28 pb-16">
-        <GestionaleClient initialMediazioni={serializedMediazioni} user={user} />
+        <CalendarioClient initialMediazioni={serializedMediazioni as any} user={user} />
       </div>
       <Footer />
     </main>
