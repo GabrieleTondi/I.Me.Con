@@ -23,6 +23,19 @@ import {
 import Image from "next/image";
 import { createMediationRequestAction, getAreeAction } from "@/app/actions/mediation-actions";
 
+const MATERIE_OBBLIGATORIE = [
+  "Condominio",
+  "Diritti Reali",
+  "Divisione",
+  "Successioni Ereditarie",
+  "Patti di Famiglia",
+  "Locazione",
+  "Comodato",
+  "Affitto di Aziende",
+  "Risarcimento Danni",
+  "Contratti Assicurativi/Bancari"
+];
+
 export const ContactArea = () => {
   // SELETTORE TAB PRINCIPALE
   const [activeTab, setActiveTab] = useState<"mediazione" | "generale">("mediazione");
@@ -97,7 +110,17 @@ export const ContactArea = () => {
 
   const handleMediationChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
-    setMediationData((prev) => ({ ...prev, [name]: value }));
+    setMediationData((prev) => {
+      const updated = { ...prev, [name]: value };
+      if (name === "materia") {
+        if (MATERIE_OBBLIGATORIE.includes(value)) {
+          updated.haAvvocato = "true";
+        } else {
+          updated.haAvvocato = "false";
+        }
+      }
+      return updated;
+    });
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -743,17 +766,29 @@ export const ContactArea = () => {
 
                         {/* ASSISTENZA LEGALE AVVOCATO */}
                         <div className="bg-white p-5 rounded-2xl border border-brand-border shadow-sm space-y-4">
-                          <div className="flex items-center justify-between">
-                            <span className="text-sm font-bold text-brand-dark">Sei assistito da un Avvocato?</span>
-                            <select
-                              name="haAvvocato"
-                              value={mediationData.haAvvocato}
-                              onChange={handleMediationChange}
-                              className="bg-brand-neutral px-3 py-1.5 rounded-lg text-xs font-bold text-brand-primary border border-brand-border"
-                            >
-                              <option value="false">No</option>
-                              <option value="true">Sì, aggiungi Avvocato</option>
-                            </select>
+                          <div className="flex flex-col space-y-2">
+                            <div className="flex items-center justify-between">
+                              <span className="text-sm font-bold text-brand-dark">Sei assistito da un Avvocato?</span>
+                              <select
+                                name="haAvvocato"
+                                value={mediationData.haAvvocato}
+                                disabled={MATERIE_OBBLIGATORIE.includes(mediationData.materia)}
+                                onChange={handleMediationChange}
+                                className="bg-brand-neutral px-3 py-1.5 rounded-lg text-xs font-bold text-brand-primary border border-brand-border disabled:opacity-75 disabled:cursor-not-allowed"
+                              >
+                                <option value="false">No</option>
+                                <option value="true">Sì, aggiungi Avvocato</option>
+                              </select>
+                            </div>
+                            
+                            {MATERIE_OBBLIGATORIE.includes(mediationData.materia) && (
+                              <div className="p-3 bg-blue-50 border border-blue-100 text-blue-800 text-[11px] rounded-xl flex items-start gap-2 font-medium">
+                                <Info size={14} className="shrink-0 mt-0.5 text-blue-600" />
+                                <span>
+                                  Per la materia selezionata (<strong>{mediationData.materia}</strong>), la mediazione civile e commerciale è obbligatoria per legge (D.Lgs. 28/2010 e successive riforme) e richiede obbligatoriamente l&apos;assistenza di un avvocato per l&apos;intera procedura.
+                                </span>
+                              </div>
+                            )}
                           </div>
 
                           {mediationData.haAvvocato === "true" && (

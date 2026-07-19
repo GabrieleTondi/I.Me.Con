@@ -44,7 +44,7 @@ export const CTA = () => {
            {/* PULSANTE ARANCIONE */}
            <Link href="/contatti?tab=mediazione" className="w-full sm:w-auto">
              <Button variant="primary" className="text-base sm:text-lg px-10 py-4 shadow-xl w-full">
-               Compila il Wizard di Mediazione
+               Compila la richiesta di Mediazione
              </Button>
            </Link>
            {/* PULSANTE BIANCO */}

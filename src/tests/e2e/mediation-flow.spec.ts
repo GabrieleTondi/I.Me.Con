@@ -28,8 +28,8 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
     await expect(page.locator("h1").first()).toContainText("Contatti");
 
     // 3. STEP 1: Dati della Controversia
-    // Seleziona la materia
-    await page.locator('select[name="materia"]').selectOption("Condominio");
+    // Seleziona la materia (non obbligatoria, per evitare di dover compilare per forza l'avvocato nel test E2E)
+    await page.locator('select[name="materia"]').selectOption("Altro civile/commerciale");
     
     // Inserisci il valore stimato
     await page.locator('input[name="valore"]').fill("12500.50");
@@ -120,5 +120,34 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
 
     // 5. Verifica che venga mostrato il messaggio di errore per i campi obbligatori
     await expect(page.locator("body")).toContainText("Compila tutti i campi obbligatori relativi all'Istante (inclusi Nascita e Residenza).");
+  });
+
+  test("Dovrebbe forzare la selezione dell'avvocato a SI e disabilitare il campo se viene scelta una materia obbligatoria", async ({ page }) => {
+    // 1. Registra e logga l'utente per assicurare la sessione attiva
+    await page.goto("/login");
+    await page.getByRole("button", { name: "Registrati", exact: true }).click();
+    await page.locator('input[name="nomeCognome"]').fill("E2E Mediator User 3");
+    await page.locator('input[name="email"]').fill("test_user_unique3@example.com");
+    await page.locator('input[name="username"]').fill("test_user_unique3");
+    await page.locator('input[name="password"]').fill("testPassword123");
+    await page.locator('button[type="submit"]').click();
+    await page.waitForURL("/");
+
+    // 2. Naviga alla pagina dei contatti
+    await page.goto("/contatti");
+
+    // 3. STEP 1: Dati della Controversia - Seleziona Condominio (materia obbligatoria)
+    await page.locator('select[name="materia"]').selectOption("Condominio");
+    await page.locator('input[name="valore"]').fill("5000");
+    await page.locator('textarea[name="descrizioneFatti"]').fill("Fatti controversia condominiale obbligatoria.");
+    await page.getByRole("button", { name: /prosegui/i }).click();
+
+    // 4. STEP 2: Verifica che l'opzione haAvvocato sia disabilitata ed impostata su 'true'
+    const haAvvocatoSelect = page.locator('select[name="haAvvocato"]');
+    await expect(haAvvocatoSelect).toBeDisabled();
+    await expect(haAvvocatoSelect).toHaveValue("true");
+    
+    // Verifica presenza del box informativo sull'obbligatorietà
+    await expect(page.locator("body")).toContainText("la mediazione civile e commerciale è obbligatoria per legge");
   });
 });
