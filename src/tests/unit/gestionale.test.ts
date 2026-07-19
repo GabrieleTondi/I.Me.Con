@@ -42,6 +42,12 @@ const mockMediationData = {
   id: 10,
   areaId: 2,
   mediatoreId: 3, // Assegnata al mediatore con ID 3
+  dataInserimento: "2026-07-17",
+  prorogata: false,
+  stato: {
+    codice: "IN_CORSO",
+    descrizione: "In corso",
+  },
 };
 
 describe("Security Check & Access Control for Document API", () => {

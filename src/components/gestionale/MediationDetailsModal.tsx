@@ -1,9 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { X, FileText, Users, Paperclip, Scale, Shield } from "lucide-react";
+import { X, FileText, Users, Paperclip, Scale, Shield, Edit, Check } from "lucide-react";
 import { useState, useTransition, useEffect } from "react";
-import { prorogaMediationAction } from "@/app/actions/mediation-actions";
+import { prorogaMediationAction, updateCustomDeadlineAction } from "@/app/actions/mediation-actions";
 import { getMediationDeadline, getScadenzaStatus } from "@/lib/deadline-utils";
 
 export interface CurrentUser {
@@ -55,6 +55,7 @@ export interface MediationInfo {
   };
   areaId: number;
   prorogata: boolean;
+  scadenzaPersonalizzata: string | null;
   soggetti: SubjectInfo[];
   documenti: DocumentInfo[];
 }
@@ -73,12 +74,18 @@ export const MediationDetailsModal = ({
   onUpdate,
 }: MediationDetailsModalProps) => {
   const [prorogaChecked, setProrogaChecked] = useState(selectedMediation.prorogata);
+  const [customDateVal, setCustomDateVal] = useState<string | null>(selectedMediation.scadenzaPersonalizzata);
+  const [customDateInput, setCustomDateInput] = useState(selectedMediation.scadenzaPersonalizzata || "");
+  const [isEditingCustomDate, setIsEditingCustomDate] = useState(false);
   const [isPending, startTransition] = useTransition();
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   // Sync state if selected mediation changes
   useEffect(() => {
     setProrogaChecked(selectedMediation.prorogata);
+    setCustomDateVal(selectedMediation.scadenzaPersonalizzata);
+    setCustomDateInput(selectedMediation.scadenzaPersonalizzata || "");
+    setIsEditingCustomDate(false);
     setErrorMsg(null);
   }, [selectedMediation]);
 
@@ -114,6 +121,24 @@ export const MediationDetailsModal = ({
     });
   };
 
+  const handleSaveCustomDate = () => {
+    const finalDate = customDateInput.trim() === "" ? null : customDateInput;
+    setErrorMsg(null);
+
+    startTransition(async () => {
+      const res = await updateCustomDeadlineAction(selectedMediation.id, finalDate);
+      if (!res.success) {
+        setErrorMsg(res.error || "Errore nel salvataggio della scadenza.");
+      } else {
+        setCustomDateVal(finalDate);
+        setIsEditingCustomDate(false);
+        if (onUpdate) {
+          onUpdate();
+        }
+      }
+    });
+  };
+
   const isConclusa = [
     "ACCORDO_RAGGIUNTO",
     "ASSENZA_CONVENUTO",
@@ -124,8 +149,8 @@ export const MediationDetailsModal = ({
   ].includes(selectedMediation.stato.codice);
 
   // Ricalcola il bollino in tempo reale in base allo stato di proroga selezionato
-  const scadenzaColor = getScadenzaStatus(selectedMediation.dataInserimento, prorogaChecked, isConclusa);
-  const deadlineDate = getMediationDeadline(selectedMediation.dataInserimento, prorogaChecked);
+  const scadenzaColor = getScadenzaStatus(selectedMediation.dataInserimento, prorogaChecked, isConclusa, customDateVal);
+  const deadlineDate = getMediationDeadline(selectedMediation.dataInserimento, prorogaChecked, customDateVal);
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
@@ -214,7 +239,48 @@ export const MediationDetailsModal = ({
               <div>
                 <p className="text-gray-400 font-bold uppercase">Scadenza Legale</p>
                 <div className="text-gray-800 font-bold text-sm mt-0.5 flex items-center gap-1.5">
-                  <span>{formatDate(deadlineDate.toISOString().split("T")[0])}</span>
+                  {currentUser.ruoli.includes("Amministratore") ? (
+                    isEditingCustomDate ? (
+                      <div className="flex items-center gap-1">
+                        <input
+                          type="date"
+                          value={customDateInput}
+                          onChange={(e) => setCustomDateInput(e.target.value)}
+                          className="border border-gray-300 rounded px-1.5 py-0.5 text-xs text-gray-800 focus:outline-none focus:border-brand-secondary font-mono"
+                        />
+                        <button
+                          onClick={handleSaveCustomDate}
+                          disabled={isPending}
+                          className="p-1 text-green-600 hover:text-green-800 hover:bg-green-50 rounded cursor-pointer"
+                          title="Salva"
+                        >
+                          <Check size={14} />
+                        </button>
+                        <button
+                          onClick={() => {
+                            setCustomDateInput(customDateVal || "");
+                            setIsEditingCustomDate(false);
+                          }}
+                          disabled={isPending}
+                          className="p-1 text-red-600 hover:text-red-800 hover:bg-red-50 rounded cursor-pointer"
+                          title="Annulla"
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setIsEditingCustomDate(true)}
+                        className="hover:underline underline-offset-2 decoration-dashed decoration-brand-secondary flex items-center gap-1 text-left cursor-pointer"
+                        title="Clicca per impostare una scadenza personalizzata"
+                      >
+                        <span>{formatDate(deadlineDate.toISOString().split("T")[0])}</span>
+                        <Edit size={12} className="text-gray-400 shrink-0" />
+                      </button>
+                    )
+                  ) : (
+                    <span>{formatDate(deadlineDate.toISOString().split("T")[0])}</span>
+                  )}
                   {scadenzaColor && (
                     <span
                       className={`w-3.5 h-3.5 rounded-full inline-block border-2 border-white ${
@@ -243,7 +309,7 @@ export const MediationDetailsModal = ({
                     Proroga Termini Procedimento
                   </p>
                   <p className="text-[11px] text-gray-400 font-medium">
-                    Estende il termine perentorio di conclusione da 3 a 6 mesi complessivi.
+                    Estende il termine perentorio di conclusione da 6 a 12 mesi complessivi.
                   </p>
                 </div>
                 <label className="relative inline-flex items-center cursor-pointer select-none">
@@ -256,7 +322,7 @@ export const MediationDetailsModal = ({
                   />
                   <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-brand-secondary"></div>
                   <span className="ml-3 text-xs font-bold text-gray-700">
-                    {prorogaChecked ? "Esteso (6 mesi)" : "Standard (3 mesi)"}
+                    {prorogaChecked ? "Esteso (12 mesi)" : "Standard (6 mesi)"}
                   </span>
                 </label>
               </div>
@@ -266,8 +332,8 @@ export const MediationDetailsModal = ({
                   <p className="text-gray-400 font-bold uppercase">Stato Proroga</p>
                   <p className="text-gray-800 font-semibold mt-0.5">
                     {selectedMediation.prorogata
-                      ? "Proroga a 6 mesi attiva (d'intesa con le parti)."
-                      : "Termine standard a 3 mesi (nessuna proroga attiva)."}
+                      ? "Proroga a 12 mesi attiva (d'intesa con le parti)."
+                      : "Termine standard a 6 mesi (nessuna proroga attiva)."}
                   </p>
                 </div>
                 <span className={`px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${

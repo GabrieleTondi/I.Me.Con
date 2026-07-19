@@ -4,6 +4,7 @@ import { db } from "@/db";
 import { mediazione } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import { SimplePDF } from "@/lib/pdf-generator";
+import { getMediationDeadline } from "@/lib/deadline-utils";
 
 function formatDate(dateStr: string | null | Date): string {
   if (!dateStr) return "-";
@@ -99,6 +100,32 @@ export async function GET(req: Request) {
 
     if (!hasAccess) {
       return new NextResponse("Accesso negato per questa pratica", { status: 403 });
+    }
+
+    // Controllo scadenza pratica per ruolo Mediatore
+    const isConclusa = [
+      "ACCORDO_RAGGIUNTO",
+      "ASSENZA_CONVENUTO",
+      "ASSENZA_CONVENUTO_PROPOSTA",
+      "MANCATO_ACCORDO",
+      "ESTINTO_ASSENZA_PARTI",
+      "ARCHIVIATA",
+    ].includes(mediationData.stato.codice);
+
+    const deadline = getMediationDeadline(
+      mediationData.dataInserimento,
+      mediationData.prorogata,
+      mediationData.scadenzaPersonalizzata
+    );
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    deadline.setHours(0, 0, 0, 0);
+    const isExpired = !isConclusa && now.getTime() > deadline.getTime();
+    
+    const isOnlyMediator = user.ruoli.includes("Mediatore") && !user.ruoli.includes("Amministratore") && !user.ruoli.includes("Segreteria");
+
+    if (isExpired && isOnlyMediator) {
+      return new NextResponse("Accesso negato. La pratica è scaduta.", { status: 403 });
     }
 
     // 4. Inizializzazione PDF

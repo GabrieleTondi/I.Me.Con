@@ -72,6 +72,7 @@ interface MediationData {
   } | null;
   areaId: number;
   prorogata: boolean;
+  scadenzaPersonalizzata: string | null;
   soggetti: SubjectDetail[];
   documenti: DocumentDetail[];
 }
@@ -399,7 +400,7 @@ export const GestionaleClient = ({ initialMediazioni, user }: GestionaleClientPr
                             "ESTINTO_ASSENZA_PARTI",
                             "ARCHIVIATA"
                           ].includes(m.stato.codice);
-                          const scadenzaColor = getScadenzaStatus(m.dataInserimento, m.prorogata, isConclusa);
+                          const scadenzaColor = getScadenzaStatus(m.dataInserimento, m.prorogata, isConclusa, m.scadenzaPersonalizzata);
                           if (!scadenzaColor) return null;
                           return (
                             <span

@@ -475,3 +475,41 @@ export async function prorogaMediationAction(mediationId: number, prorogata: boo
     return { success: false, error: error?.message || "Errore imprevisto." };
   }
 }
+
+export async function updateCustomDeadlineAction(mediationId: number, dateStr: string | null) {
+  try {
+    const user = await getCurrentUser();
+    if (!user) {
+      return { success: false, error: "Non autorizzato. Effettua il login." };
+    }
+
+    const isAdmin = user.ruoli.includes("Amministratore");
+    if (!isAdmin) {
+      return { success: false, error: "Accesso negato. Solo gli amministratori possono impostare scadenze personalizzate." };
+    }
+
+    const med = await db.query.mediazione.findFirst({
+      where: eq(mediazione.id, mediationId),
+    });
+
+    if (!med) {
+      return { success: false, error: "Pratica di mediazione non trovata." };
+    }
+
+    await db.update(mediazione)
+      .set({ scadenzaPersonalizzata: dateStr })
+      .where(eq(mediazione.id, mediationId));
+
+    try {
+      revalidatePath("/gestionale");
+      revalidatePath("/gestionale/calendario");
+    } catch (e) {
+      // Ignora errori di contesto Next.js nei test unitari Vitest
+    }
+
+    return { success: true };
+  } catch (error: any) {
+    console.error("Errore in updateCustomDeadlineAction:", error);
+    return { success: false, error: error?.message || "Errore imprevisto." };
+  }
+}

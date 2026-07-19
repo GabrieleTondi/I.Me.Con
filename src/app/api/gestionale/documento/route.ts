@@ -5,6 +5,8 @@ import { documento, mediazione } from "@/db/schema";
 import { eq } from "drizzle-orm";
 import fs from "fs/promises";
 
+import { getMediationDeadline } from "@/lib/deadline-utils";
+
 export async function GET(req: Request) {
   try {
     // 1. Estrazione e validazione dell'ID del documento
@@ -43,10 +45,39 @@ export async function GET(req: Request) {
     // 3b. Recupero mediazione associata per controllo permessi (IDOR)
     const associatedMediation = await db.query.mediazione.findFirst({
       where: eq(mediazione.id, doc.mediazioneId),
+      with: {
+        stato: true,
+      },
     });
 
     if (!associatedMediation) {
       return new NextResponse("Mediazione associata non trovata", { status: 404 });
+    }
+
+    // Controllo scadenza pratica per ruolo Mediatore
+    const isConclusa = [
+      "ACCORDO_RAGGIUNTO",
+      "ASSENZA_CONVENUTO",
+      "ASSENZA_CONVENUTO_PROPOSTA",
+      "MANCATO_ACCORDO",
+      "ESTINTO_ASSENZA_PARTI",
+      "ARCHIVIATA",
+    ].includes(associatedMediation.stato.codice);
+
+    const deadline = getMediationDeadline(
+      associatedMediation.dataInserimento,
+      associatedMediation.prorogata,
+      associatedMediation.scadenzaPersonalizzata
+    );
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    deadline.setHours(0, 0, 0, 0);
+    const isExpired = !isConclusa && now.getTime() > deadline.getTime();
+    
+    const isOnlyMediator = user.ruoli.includes("Mediatore") && !user.ruoli.includes("Amministratore") && !user.ruoli.includes("Segreteria");
+
+    if (isExpired && isOnlyMediator) {
+      return new NextResponse("Accesso negato. La pratica è scaduta.", { status: 403 });
     }
 
     let hasAccess = false;

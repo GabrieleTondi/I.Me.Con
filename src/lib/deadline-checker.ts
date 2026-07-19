@@ -39,7 +39,7 @@ export async function checkDeadlinesAndNotify(referenceDate?: Date): Promise<War
       continue;
     }
 
-    const deadlineDate = getMediationDeadline(med.dataInserimento, med.prorogata);
+    const deadlineDate = getMediationDeadline(med.dataInserimento, med.prorogata, med.scadenzaPersonalizzata);
     deadlineDate.setHours(0, 0, 0, 0);
 
     const daysRemaining = Math.ceil((deadlineDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24));
@@ -64,7 +64,7 @@ Dettagli della procedura:
 - Numero Protocollo: ${med.protocollo}
 - Oggetto/Materia: ${med.oggetto}
 - Data Inserimento: ${med.dataInserimento}
-- Prorogata: ${med.prorogata ? "Sì (limite 6 mesi)" : "No (limite 3 mesi)"}
+- Prorogata: ${med.prorogata ? "Sì (limite 12 mesi)" : "No (limite 6 mesi)"}${med.scadenzaPersonalizzata ? `\n- Scadenza Personalizzata: ${med.scadenzaPersonalizzata}` : ""}
 - Giorni alla scadenza: 10 giorni
 
 La preghiamo di concludere il procedimento registrandone l'esito o di richiedere un'eventuale proroga d'intesa con le parti se applicabile.

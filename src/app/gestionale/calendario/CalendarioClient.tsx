@@ -109,7 +109,7 @@ export const CalendarioClient = ({ initialMediazioni, user }: CalendarioClientPr
       // Le scadenze visualizzate sono solo per le pratiche non concluse
       if (isConclusa) return false;
 
-      const deadline = getMediationDeadline(m.dataInserimento, m.prorogata);
+      const deadline = getMediationDeadline(m.dataInserimento, m.prorogata, m.scadenzaPersonalizzata);
       return deadline.toISOString().split("T")[0] === compareDateStr;
     });
 
@@ -153,7 +153,7 @@ export const CalendarioClient = ({ initialMediazioni, user }: CalendarioClientPr
           </div>
           <div className="flex items-center gap-2">
             <span className="w-3 h-3 bg-red-500 rounded-full inline-block" />
-            <span>Bollino Rosso: Data limite di scadenza (3/6 mesi)</span>
+            <span>Bollino Rosso: Data limite di scadenza (6/12 mesi)</span>
           </div>
         </div>
       </div>

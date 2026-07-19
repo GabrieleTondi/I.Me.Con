@@ -6,6 +6,7 @@ import { desc, inArray, eq } from "drizzle-orm";
 import { Header } from "@/components/layout/Header";
 import { Footer } from "@/components/layout/Footer";
 import { GestionaleClient } from "./GestionaleClient";
+import { getMediationDeadline } from "@/lib/deadline-utils";
 
 export default async function Page() {
   const user = await getCurrentUser();
@@ -52,47 +53,76 @@ export default async function Page() {
     },
   });
 
-  const serializedMediazioni = mediazioniList.map((m) => ({
-    id: m.id,
-    protocollo: m.protocollo,
-    oggetto: m.oggetto,
-    valore: m.valore,
-    dataInserimento: m.dataInserimento,
-    stato: m.stato,
-    area: m.area,
-    areaId: m.areaId,
-    prorogata: m.prorogata,
-    mediatore: m.mediatore ? {
-      id: m.mediatore.id,
-      nomeCognome: m.mediatore.nomeCognome,
-      email: m.mediatore.email,
-    } : null,
-    soggetti: m.soggetti.map((ms) => ({
-      ruoloNellaLite: ms.ruoloNellaLite,
-      soggetto: {
-        id: ms.soggetto.id,
-        tipoSoggetto: ms.soggetto.tipoSoggetto,
-        denominazione: ms.soggetto.denominazione,
-        codiceFiscalePiva: ms.soggetto.codiceFiscalePiva,
-        email: ms.soggetto.email,
-        telefono: ms.soggetto.telefono,
-      },
-    })),
-    documenti: m.documenti.map((d) => ({
-      id: d.id,
-      nomeFile: d.nomeFile,
-      nomeOriginale: d.nomeOriginale,
-      tipoMime: d.tipoMime,
-      dimensione: d.dimensione,
-      dataCaricamento: d.dataCaricamento.toISOString(),
-    })),
-  }));
+  const isOnlyMediator = user.ruoli.includes("Mediatore") && !user.ruoli.includes("Amministratore") && !user.ruoli.includes("Segreteria");
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const serializedMediazioni = mediazioniList
+    .map((m) => {
+      const isConclusa = [
+        "ACCORDO_RAGGIUNTO",
+        "ASSENZA_CONVENUTO",
+        "ASSENZA_CONVENUTO_PROPOSTA",
+        "MANCATO_ACCORDO",
+        "ESTINTO_ASSENZA_PARTI",
+        "ARCHIVIATA",
+      ].includes(m.stato.codice);
+
+      const deadline = getMediationDeadline(m.dataInserimento, m.prorogata, m.scadenzaPersonalizzata);
+      deadline.setHours(0, 0, 0, 0);
+      const isExpired = !isConclusa && today.getTime() > deadline.getTime();
+
+      return {
+        id: m.id,
+        protocollo: m.protocollo,
+        oggetto: m.oggetto,
+        valore: m.valore,
+        dataInserimento: m.dataInserimento,
+        stato: m.stato,
+        area: m.area,
+        areaId: m.areaId,
+        prorogata: m.prorogata,
+        scadenzaPersonalizzata: m.scadenzaPersonalizzata,
+        isExpired,
+        mediatore: m.mediatore ? {
+          id: m.mediatore.id,
+          nomeCognome: m.mediatore.nomeCognome,
+          email: m.mediatore.email,
+        } : null,
+        soggetti: m.soggetti.map((ms) => ({
+          ruoloNellaLite: ms.ruoloNellaLite,
+          soggetto: {
+            id: ms.soggetto.id,
+            tipoSoggetto: ms.soggetto.tipoSoggetto,
+            denominazione: ms.soggetto.denominazione,
+            codiceFiscalePiva: ms.soggetto.codiceFiscalePiva,
+            email: ms.soggetto.email,
+            telefono: ms.soggetto.telefono,
+          },
+        })),
+        documenti: m.documenti.map((d) => ({
+          id: d.id,
+          nomeFile: d.nomeFile,
+          nomeOriginale: d.nomeOriginale,
+          tipoMime: d.tipoMime,
+          dimensione: d.dimensione,
+          dataCaricamento: d.dataCaricamento.toISOString(),
+        })),
+      };
+    })
+    .filter((m) => {
+      // Se l'utente è solo mediatore e la pratica è scaduta, non la mostriamo
+      if (isOnlyMediator && m.isExpired) {
+        return false;
+      }
+      return true;
+    });
 
   return (
     <main className="flex min-h-screen flex-col bg-brand-bg selection:bg-brand-accent/30 selection:text-white">
       <Header />
       <div className="flex-1 pt-28 pb-16">
-        <GestionaleClient initialMediazioni={serializedMediazioni} user={user} />
+        <GestionaleClient initialMediazioni={serializedMediazioni as any} user={user} />
       </div>
       <Footer />
     </main>
