@@ -10,6 +10,8 @@ import { sendMediationNotifications } from "@/lib/notifications";
 import { getCurrentUser } from "@/lib/auth";
 import { revalidatePath } from "next/cache";
 
+import { calcolaCodiceFiscale } from "@/lib/codice-fiscale";
+
 // 1. Schema di validazione Zod per i dati testuali della richiesta di mediazione
 const mediationSchema = z.object({
   // Sezione 1: Dati della Controversia (qui verranno allegati i documenti)
@@ -22,7 +24,7 @@ const mediationSchema = z.object({
   // Sezione 2: Dati Istante
   istanteTipo: z.enum(["PF", "PG"], { error: "Tipo istante non valido" }),
   istanteDenominazione: z.string().min(2, "Nome o Denominazione istante obbligatoria").max(255),
-  istanteCodiceFiscale: z.string().min(5, "Codice Fiscale / P.IVA non valido").max(50),
+  istanteCodiceFiscale: z.string().max(50).optional(),
   istanteEmail: z.string().email("Email istante non valida").max(255),
   istanteTelefono: z.string().max(50).nullable().optional(),
   istanteDataNascita: z.string().min(1, "Data di nascita o costituzione dell'istante obbligatoria"),
@@ -83,6 +85,34 @@ const MAX_FILE_SIZE_BYTES = 10 * 1024 * 1024; // 10 MB per file
 export async function createMediationRequestAction(formData: FormData) {
   try {
     // 1. Estrazione dati testuali dal FormData
+    const istanteTipoInput = (formData.get("istanteTipo")?.toString() || "PF") as "PF" | "PG";
+    const istanteDenomInput = formData.get("istanteDenominazione")?.toString().trim() || "";
+    const istanteNascitaInput = formData.get("istanteDataNascita")?.toString().trim() || "";
+    const istanteComuneInput = formData.get("istanteComune")?.toString().trim() || "";
+
+    const convenutoTipoInput = (formData.get("convenutoTipo")?.toString() || "PF") as "PF" | "PG";
+    const convenutoDenomInput = formData.get("convenutoDenominazione")?.toString().trim() || "";
+    const convenutoNascitaInput = formData.get("convenutoDataNascita")?.toString().trim() || "";
+    const convenutoComuneInput = formData.get("convenutoComune")?.toString().trim() || "";
+
+    const haAvvocatoInput = formData.get("haAvvocato")?.toString() || "false";
+    const avvocatoNomeInput = formData.get("avvocatoNome")?.toString().trim() || "";
+
+    // Calcolo automatico Codici Fiscali
+    const istanteCF =
+      formData.get("istanteCodiceFiscale")?.toString().trim().toUpperCase() ||
+      calcolaCodiceFiscale(istanteDenomInput, istanteNascitaInput, istanteTipoInput, istanteComuneInput);
+
+    const convenutoCF =
+      formData.get("convenutoCodiceFiscale")?.toString().trim().toUpperCase() ||
+      calcolaCodiceFiscale(convenutoDenomInput, convenutoNascitaInput, convenutoTipoInput, convenutoComuneInput);
+
+    const avvocatoCF =
+      formData.get("avvocatoCodiceFiscale")?.toString().trim().toUpperCase() ||
+      (haAvvocatoInput === "true" && avvocatoNomeInput
+        ? calcolaCodiceFiscale(avvocatoNomeInput, istanteNascitaInput || "1980-01-01", "PF", istanteComuneInput)
+        : "");
+
     const rawData = {
       areaId: formData.get("areaId")?.toString() || "1",
       materia: formData.get("materia")?.toString().trim() || "",
@@ -90,30 +120,30 @@ export async function createMediationRequestAction(formData: FormData) {
       valoreIndeterminato: formData.get("valoreIndeterminato")?.toString() || "false",
       descrizioneFatti: formData.get("descrizioneFatti")?.toString().trim() || "",
 
-      istanteTipo: formData.get("istanteTipo")?.toString() || "PF",
-      istanteDenominazione: formData.get("istanteDenominazione")?.toString().trim() || "",
-      istanteCodiceFiscale: formData.get("istanteCodiceFiscale")?.toString().trim().toUpperCase() || "",
+      istanteTipo: istanteTipoInput,
+      istanteDenominazione: istanteDenomInput,
+      istanteCodiceFiscale: istanteCF,
       istanteEmail: formData.get("istanteEmail")?.toString().trim().toLowerCase() || "",
       istanteTelefono: formData.get("istanteTelefono")?.toString().trim() || null,
-      istanteDataNascita: formData.get("istanteDataNascita")?.toString().trim() || "",
+      istanteDataNascita: istanteNascitaInput,
       istanteIndirizzo: formData.get("istanteIndirizzo")?.toString().trim() || "",
-      istanteComune: formData.get("istanteComune")?.toString().trim() || "",
+      istanteComune: istanteComuneInput,
       istanteCap: formData.get("istanteCap")?.toString().trim() || "",
       istanteProvincia: formData.get("istanteProvincia")?.toString().trim().toUpperCase() || "",
 
-      haAvvocato: formData.get("haAvvocato")?.toString() || "false",
-      avvocatoNome: formData.get("avvocatoNome")?.toString().trim() || "",
-      avvocatoCodiceFiscale: formData.get("avvocatoCodiceFiscale")?.toString().trim().toUpperCase() || "",
+      haAvvocato: haAvvocatoInput,
+      avvocatoNome: avvocatoNomeInput,
+      avvocatoCodiceFiscale: avvocatoCF,
       avvocatoEmail: formData.get("avvocatoEmail")?.toString().trim().toLowerCase() || "",
 
-      convenutoTipo: formData.get("convenutoTipo")?.toString() || "PF",
-      convenutoDenominazione: formData.get("convenutoDenominazione")?.toString().trim() || "",
-      convenutoCodiceFiscale: formData.get("convenutoCodiceFiscale")?.toString().trim().toUpperCase() || null,
+      convenutoTipo: convenutoTipoInput,
+      convenutoDenominazione: convenutoDenomInput,
+      convenutoCodiceFiscale: convenutoCF,
       convenutoEmail: formData.get("convenutoEmail")?.toString().trim().toLowerCase() || "",
       convenutoTelefono: formData.get("convenutoTelefono")?.toString().trim() || null,
-      convenutoDataNascita: formData.get("convenutoDataNascita")?.toString().trim() || "",
+      convenutoDataNascita: convenutoNascitaInput,
       convenutoIndirizzo: formData.get("convenutoIndirizzo")?.toString().trim() || "",
-      convenutoComune: formData.get("convenutoComune")?.toString().trim() || "",
+      convenutoComune: convenutoComuneInput,
       convenutoCap: formData.get("convenutoCap")?.toString().trim() || "",
       convenutoProvincia: formData.get("convenutoProvincia")?.toString().trim().toUpperCase() || "",
     };
@@ -130,9 +160,6 @@ export async function createMediationRequestAction(formData: FormData) {
     if (data.haAvvocato === "true") {
       if (!data.avvocatoNome || data.avvocatoNome.length < 2) {
         return { success: false, error: "Inserisci il nome e cognome dell'avvocato" };
-      }
-      if (!data.avvocatoCodiceFiscale || data.avvocatoCodiceFiscale.length < 5) {
-        return { success: false, error: "Inserisci un Codice Fiscale valido per l'avvocato" };
       }
       if (!data.avvocatoEmail || !data.avvocatoEmail.includes("@")) {
         return { success: false, error: "Inserisci un indirizzo PEC o Email valido per l'avvocato" };
@@ -243,7 +270,7 @@ export async function createMediationRequestAction(formData: FormData) {
         .values({
           tipoSoggetto: data.istanteTipo,
           denominazione: data.istanteDenominazione,
-          codiceFiscalePiva: data.istanteCodiceFiscale,
+          codiceFiscalePiva: data.istanteCodiceFiscale || istanteCF,
           email: data.istanteEmail,
           telefono: data.istanteTelefono || null,
           dataNascita: data.istanteDataNascita || null,
@@ -269,13 +296,13 @@ export async function createMediationRequestAction(formData: FormData) {
 
       // B. Inserimento o upsert del Soggetto Avvocato (se presente)
       let soggettoAvvocato = null;
-      if (data.haAvvocato === "true" && data.avvocatoCodiceFiscale) {
+      if (data.haAvvocato === "true" && (data.avvocatoCodiceFiscale || avvocatoCF)) {
         const [avv] = await tx
           .insert(soggetto)
           .values({
             tipoSoggetto: "PF",
             denominazione: data.avvocatoNome || "Avvocato Istante",
-            codiceFiscalePiva: data.avvocatoCodiceFiscale,
+            codiceFiscalePiva: data.avvocatoCodiceFiscale || avvocatoCF,
             email: data.avvocatoEmail || null,
           })
           .onConflictDoUpdate({
@@ -290,18 +317,14 @@ export async function createMediationRequestAction(formData: FormData) {
       }
 
       // C. Inserimento o upsert del Soggetto Convenuto
-      // Nota: se non ha un CF, ne generiamo un identificativo provvisorio per non fallire il vincolo di univocità o usiamo il CF fornito
-      const convenutoCF =
-        data.convenutoCodiceFiscale && data.convenutoCodiceFiscale.length >= 5
-          ? data.convenutoCodiceFiscale
-          : `TEMP-CONV-${Date.now()}-${Math.random().toString(36).substring(2, 6).toUpperCase()}`;
+      const convenutoFinalCF = data.convenutoCodiceFiscale || convenutoCF;
 
       const [soggettoConvenuto] = await tx
         .insert(soggetto)
         .values({
           tipoSoggetto: data.convenutoTipo,
           denominazione: data.convenutoDenominazione,
-          codiceFiscalePiva: convenutoCF,
+          codiceFiscalePiva: convenutoFinalCF,
           email: data.convenutoEmail,
           telefono: data.convenutoTelefono || null,
           dataNascita: data.convenutoDataNascita || null,

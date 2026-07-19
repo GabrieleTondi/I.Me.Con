@@ -42,7 +42,6 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
 
     // 4. STEP 2: Dati Istante
     await page.locator('input[name="istanteDenominazione"]').fill("Mario Rossi Istante");
-    await page.locator('input[name="istanteCodiceFiscale"]').fill("TESTISTANTE12345");
     await page.locator('input[name="istanteEmail"]').fill("mario.rossi@test.it");
     await page.locator('input[name="istanteTelefono"]').fill("3331112222");
     await page.locator('input[name="istanteDataNascita"]').fill("1985-06-15");
@@ -56,7 +55,6 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
 
     // 5. STEP 3: Dati Convenuto
     await page.locator('input[name="convenutoDenominazione"]').fill("Luigi Verdi Convenuto");
-    await page.locator('input[name="convenutoCodiceFiscale"]').fill("TESTCONVENUTO123");
     await page.locator('input[name="convenutoEmail"]').fill("luigi.verdi@test.it");
     await page.locator('input[name="convenutoTelefono"]').fill("3334445555");
     await page.locator('input[name="convenutoDataNascita"]').fill("1978-11-20");
@@ -112,7 +110,6 @@ test.describe("Flusso di Richiesta di Mediazione (E2E)", () => {
 
     // 4. STEP 2: Dati Istante - Compila solo i campi base e tralascia nascita e residenza
     await page.locator('input[name="istanteDenominazione"]').fill("Mario Rossi Senza Dati");
-    await page.locator('input[name="istanteCodiceFiscale"]').fill("TESTISTANTE54321");
     await page.locator('input[name="istanteEmail"]').fill("mario.rossi.no.dati@test.it");
     
     // Clicca prosegui

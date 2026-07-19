@@ -22,6 +22,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import { createMediationRequestAction, getAreeAction } from "@/app/actions/mediation-actions";
+import { calcolaCodiceFiscale } from "@/lib/codice-fiscale";
 
 const MATERIE_OBBLIGATORIE = [
   "Condominio",
@@ -35,6 +36,8 @@ const MATERIE_OBBLIGATORIE = [
   "Risarcimento Danni",
   "Contratti Assicurativi/Bancari"
 ];
+
+
 
 export const ContactArea = () => {
   // SELETTORE TAB PRINCIPALE
@@ -135,7 +138,23 @@ export const ContactArea = () => {
 
   const nextStep = () => {
     setMediationError(null);
-    // Validazioni step-specifiche veloci
+
+    const calcIstanteCF = calcolaCodiceFiscale(
+      mediationData.istanteDenominazione,
+      mediationData.istanteDataNascita,
+      mediationData.istanteTipo,
+      mediationData.istanteComune
+    );
+    const calcConvenutoCF = calcolaCodiceFiscale(
+      mediationData.convenutoDenominazione,
+      mediationData.convenutoDataNascita,
+      mediationData.convenutoTipo,
+      mediationData.convenutoComune
+    );
+    const calcAvvocatoCF = mediationData.haAvvocato === "true"
+      ? calcolaCodiceFiscale(mediationData.avvocatoNome, mediationData.istanteDataNascita || "1980-01-01", "PF", mediationData.istanteComune)
+      : "";
+
     if (step === 1) {
       if (!mediationData.materia) {
         setMediationError("Seleziona la materia della controversia.");
@@ -148,7 +167,6 @@ export const ContactArea = () => {
     } else if (step === 2) {
       if (
         !mediationData.istanteDenominazione.trim() ||
-        !mediationData.istanteCodiceFiscale.trim() ||
         !mediationData.istanteEmail.trim() ||
         !mediationData.istanteDataNascita.trim() ||
         !mediationData.istanteIndirizzo.trim() ||
@@ -167,7 +185,7 @@ export const ContactArea = () => {
         setMediationError("La Provincia dell'Istante deve essere di almeno 2 caratteri.");
         return;
       }
-      if (mediationData.haAvvocato === "true" && (!mediationData.avvocatoNome || !mediationData.avvocatoCodiceFiscale || !mediationData.avvocatoEmail)) {
+      if (mediationData.haAvvocato === "true" && (!mediationData.avvocatoNome || !mediationData.avvocatoEmail)) {
         setMediationError("Compila tutti i campi relativi all'Avvocato assistente.");
         return;
       }
@@ -193,6 +211,15 @@ export const ContactArea = () => {
         return;
       }
     }
+
+    // Aggiorna lo stato in modo che il riepilogo (Step 4) e l'invio finale leggano i valori calcolati
+    setMediationData((prev) => ({
+      ...prev,
+      istanteCodiceFiscale: calcIstanteCF,
+      convenutoCodiceFiscale: calcConvenutoCF,
+      avvocatoCodiceFiscale: calcAvvocatoCF,
+    }));
+
     setStep((s) => Math.min(4, s + 1));
   };
 
@@ -207,6 +234,22 @@ export const ContactArea = () => {
     setMediationError(null);
 
     try {
+      const calcIstanteCF = calcolaCodiceFiscale(
+        mediationData.istanteDenominazione,
+        mediationData.istanteDataNascita,
+        mediationData.istanteTipo,
+        mediationData.istanteComune
+      );
+      const calcConvenutoCF = calcolaCodiceFiscale(
+        mediationData.convenutoDenominazione,
+        mediationData.convenutoDataNascita,
+        mediationData.convenutoTipo,
+        mediationData.convenutoComune
+      );
+      const calcAvvocatoCF = mediationData.haAvvocato === "true"
+        ? calcolaCodiceFiscale(mediationData.avvocatoNome, mediationData.istanteDataNascita || "1980-01-01", "PF", mediationData.istanteComune)
+        : "";
+
       const formData = new FormData();
       formData.append("areaId", mediationData.areaId);
       formData.append("materia", mediationData.materia);
@@ -216,7 +259,7 @@ export const ContactArea = () => {
 
       formData.append("istanteTipo", mediationData.istanteTipo);
       formData.append("istanteDenominazione", mediationData.istanteDenominazione);
-      formData.append("istanteCodiceFiscale", mediationData.istanteCodiceFiscale);
+      formData.append("istanteCodiceFiscale", calcIstanteCF);
       formData.append("istanteEmail", mediationData.istanteEmail);
       if (mediationData.istanteTelefono) formData.append("istanteTelefono", mediationData.istanteTelefono);
       if (mediationData.istanteDataNascita) formData.append("istanteDataNascita", mediationData.istanteDataNascita);
@@ -228,7 +271,7 @@ export const ContactArea = () => {
       formData.append("haAvvocato", mediationData.haAvvocato);
       if (mediationData.haAvvocato === "true") {
         formData.append("avvocatoNome", mediationData.avvocatoNome);
-        formData.append("avvocatoCodiceFiscale", mediationData.avvocatoCodiceFiscale);
+        formData.append("avvocatoCodiceFiscale", calcAvvocatoCF);
         formData.append("avvocatoEmail", mediationData.avvocatoEmail);
       }
 
@@ -638,7 +681,7 @@ export const ContactArea = () => {
                           </label>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                           <div>
                             <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               {mediationData.istanteTipo === "PF" ? "Nome e Cognome *" : "Ragione Sociale *"}
@@ -650,20 +693,6 @@ export const ContactArea = () => {
                               onChange={handleMediationChange}
                               placeholder={mediationData.istanteTipo === "PF" ? "Mario Rossi" : "Condominio Via Roma 10"}
                               className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
-                              Codice Fiscale / P.IVA *
-                            </label>
-                            <input
-                              type="text"
-                              name="istanteCodiceFiscale"
-                              value={mediationData.istanteCodiceFiscale}
-                              onChange={handleMediationChange}
-                              placeholder="RSSMRA80A01H501Z oppure 01234567890"
-                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 uppercase"
                             />
                           </div>
                         </div>
@@ -792,7 +821,7 @@ export const ContactArea = () => {
                           </div>
 
                           {mediationData.haAvvocato === "true" && (
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-3 pt-2">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3 pt-2">
                               <div>
                                 <label className="block text-xs font-semibold text-brand-muted mb-1">Nome Avvocato *</label>
                                 <input
@@ -802,17 +831,6 @@ export const ContactArea = () => {
                                   onChange={handleMediationChange}
                                   placeholder="Avv. Luigi Bianchi"
                                   className="w-full bg-brand-neutral/50 border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs outline-none focus:ring-2 focus:ring-brand-primary/30"
-                                />
-                              </div>
-                              <div>
-                                <label className="block text-xs font-semibold text-brand-muted mb-1">Codice Fiscale Avv. *</label>
-                                <input
-                                  type="text"
-                                  name="avvocatoCodiceFiscale"
-                                  value={mediationData.avvocatoCodiceFiscale}
-                                  onChange={handleMediationChange}
-                                  placeholder="BNCLGU75..."
-                                  className="w-full bg-brand-neutral/50 border border-brand-border text-brand-dark px-3 py-2 rounded-lg text-xs uppercase outline-none focus:ring-2 focus:ring-brand-primary/30"
                                 />
                               </div>
                               <div>
@@ -867,7 +885,7 @@ export const ContactArea = () => {
                           </label>
                         </div>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div className="grid grid-cols-1 gap-4">
                           <div>
                             <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
                               Denominazione Convenuto *
@@ -879,20 +897,6 @@ export const ContactArea = () => {
                               onChange={handleMediationChange}
                               placeholder="Nome Cognome o Società Controparte"
                               className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30"
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-xs font-bold text-brand-dark uppercase mb-1">
-                              Codice Fiscale / P.IVA (Se noto)
-                            </label>
-                            <input
-                              type="text"
-                              name="convenutoCodiceFiscale"
-                              value={mediationData.convenutoCodiceFiscale}
-                              onChange={handleMediationChange}
-                              placeholder="CF o P.IVA controparte"
-                              className="w-full bg-white text-brand-dark px-4 py-3 rounded-xl border border-brand-border text-sm font-medium outline-none focus:ring-2 focus:ring-brand-primary/30 uppercase"
                             />
                           </div>
                         </div>
@@ -1019,13 +1023,18 @@ export const ContactArea = () => {
                             </div>
                           </div>
 
-                          <div className="grid grid-cols-2 gap-2 border-b border-brand-border/60 pb-3">
+                          <div className="grid grid-cols-2 gap-4 border-b border-brand-border/60 pb-3">
                             <div>
                               <p className="text-brand-muted font-bold uppercase">Istante</p>
                               <p className="text-brand-dark font-semibold">{mediationData.istanteDenominazione}</p>
                               <p className="text-brand-muted">{mediationData.istanteEmail}</p>
                               {mediationData.istanteDataNascita && (
                                 <p className="text-brand-muted text-[11px]">Nato/a il: {mediationData.istanteDataNascita}</p>
+                              )}
+                              {mediationData.istanteCodiceFiscale && (
+                                <p className="text-brand-muted text-[11px]">
+                                  Codice Fiscale/P.IVA (calcolato): <strong className="text-brand-primary">{mediationData.istanteCodiceFiscale}</strong>
+                                </p>
                               )}
                               {mediationData.istanteIndirizzo && (
                                 <p className="text-brand-muted text-[11px]">
@@ -1040,6 +1049,11 @@ export const ContactArea = () => {
                               {mediationData.convenutoDataNascita && (
                                 <p className="text-brand-muted text-[11px]">Nato/a il: {mediationData.convenutoDataNascita}</p>
                               )}
+                              {mediationData.convenutoCodiceFiscale && (
+                                <p className="text-brand-muted text-[11px]">
+                                  Codice Fiscale/P.IVA (calcolato): <strong className="text-brand-primary">{mediationData.convenutoCodiceFiscale}</strong>
+                                </p>
+                              )}
                               {mediationData.convenutoIndirizzo && (
                                 <p className="text-brand-muted text-[11px]">
                                   Residenza/Sede: {mediationData.convenutoIndirizzo}, {mediationData.convenutoCap} {mediationData.convenutoComune} ({mediationData.convenutoProvincia})
@@ -1047,6 +1061,19 @@ export const ContactArea = () => {
                               )}
                             </div>
                           </div>
+
+                          {mediationData.haAvvocato === "true" && (
+                            <div className="border-b border-brand-border/60 pb-3">
+                              <p className="text-brand-muted font-bold uppercase">Avvocato Assistente</p>
+                              <p className="text-brand-dark font-semibold">{mediationData.avvocatoNome}</p>
+                              <p className="text-brand-muted">{mediationData.avvocatoEmail}</p>
+                              {mediationData.avvocatoCodiceFiscale && (
+                                <p className="text-brand-muted text-[11px]">
+                                  Codice Fiscale (calcolato): <strong className="text-brand-primary">{mediationData.avvocatoCodiceFiscale}</strong>
+                                </p>
+                              )}
+                            </div>
+                          )}
 
                           <div>
                             <p className="text-brand-muted font-bold uppercase mb-1">
